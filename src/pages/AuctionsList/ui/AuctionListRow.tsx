@@ -1,9 +1,12 @@
 import { Link } from "@tanstack/react-router"
-import { Badge } from "@/components/ui/badge"
+import { RiArrowRightLine } from "@remixicon/react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types"
 import { formatPrice } from "@/shared/lib/FormatPrice"
+import { AuctionCargoChips } from "./AuctionCargoChips"
+import { AuctionListBadges } from "./AuctionListBadges"
+import { AuctionRoutePreview } from "./AuctionRoutePreview"
 
 interface AuctionListRowProps {
   auction: AuctionListItem
@@ -11,33 +14,49 @@ interface AuctionListRowProps {
 
 export function AuctionListRow({ auction }: AuctionListRowProps) {
   const currentPrice = auction.trading.price?.current ?? null
+  const sideBarClass = auction.trading.status_mobile === "Leading"
+    ? "bg-emerald-500"
+    : auction.trading.status_mobile === "Losing"
+      ? "bg-rose-600"
+      : "bg-slate-200"
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex flex-wrap items-center gap-2">
-          <span>{auction.main.cargo_num}</span>
-          <Badge variant="outline">{auction.main.auc_type}</Badge>
-          <Badge variant={auction.trading.can_set_bet ? "default" : "secondary"}>
-            {auction.trading.status_mobile}
-          </Badge>
-        </CardTitle>
-        <CardDescription>{auction.organizer.organization_name}</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-3 text-sm sm:grid-cols-[1fr_auto] sm:items-end">
-        <div className="grid gap-1">
-          <div>
-            {auction.route.load.city} - {auction.route.unload.city}
+    <Card className="relative gap-0 overflow-hidden rounded-2xl border-slate-200 bg-white py-0 shadow-sm transition-shadow hover:shadow-lg">
+      <div className={`absolute bottom-0 left-0 top-0 w-1 ${sideBarClass}`} />
+      <CardContent className="grid gap-4 p-5 pl-6 lg:grid-cols-[minmax(0,1fr)_190px]">
+        <div className="min-w-0">
+          <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="font-mono text-[13px] font-bold tracking-tight text-slate-900">
+                {auction.main.cargo_num}
+              </div>
+              <div className="mt-0.5 truncate text-xs text-slate-500">
+                {auction.organizer.organization_name}
+              </div>
+            </div>
+            <AuctionListBadges auction={auction} />
           </div>
-          <div className="text-muted-foreground">
-            {auction.cargo.name}, {auction.cargo.weight} т, {auction.cargo.volume} м3
-          </div>
+
+          <AuctionRoutePreview auction={auction} />
+          <AuctionCargoChips auction={auction} />
         </div>
-        <div className="grid gap-2 sm:justify-items-end">
-          <div className="font-medium">{formatPrice(currentPrice)}</div>
-          <Button asChild variant="outline">
+
+        <div className="flex flex-col justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+          <div>
+            <div className="mb-1 text-[10px] font-medium uppercase text-slate-500">
+              Текущая цена
+            </div>
+            <div className="font-mono text-xl font-bold tracking-tight text-slate-900">
+              {formatPrice(currentPrice)}
+            </div>
+            <div className="mt-2 text-[11px] text-slate-500">
+              {auction.trading.can_set_bet ? "Ставка доступна" : "Ставка недоступна"}
+            </div>
+          </div>
+          <Button asChild className="w-full" variant={auction.trading.can_set_bet ? "default" : "outline"}>
             <Link to="/auctions/$auctionUuid" params={{ auctionUuid: auction.main.order_uid }}>
               Открыть
+              <RiArrowRightLine />
             </Link>
           </Button>
         </div>

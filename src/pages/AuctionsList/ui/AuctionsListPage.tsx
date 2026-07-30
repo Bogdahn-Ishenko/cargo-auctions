@@ -51,13 +51,8 @@ export function AuctionsListPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6 lg:px-8">
-      <section className="mx-auto flex w-full max-w-5xl flex-col gap-4">
-        <header className="flex flex-col gap-1">
-          <h1 className="font-heading text-2xl font-semibold">Аукционы</h1>
-          <p className="text-sm text-muted-foreground">Базовый список заявок из API.</p>
-        </header>
-
+    <main className="flex min-h-screen bg-slate-950 text-slate-100">
+      <section className="flex min-h-screen w-full flex-col lg:flex-row">
         <AuctionsListFilters
           cargoNum={search.cargo_num ?? ""}
           isAvailable={search.is_available}
@@ -65,27 +60,44 @@ export function AuctionsListPage() {
           onReset={resetFilters}
         />
 
-        {auctionsQuery.isLoading ? <AuctionsListSkeleton /> : null}
-
-        {auctionsQuery.isError ? (
-          <AuctionsListErrorState onRetry={() => void auctionsQuery.refetch()} />
-        ) : null}
-
-        {auctionsQuery.data?.data.length === 0 ? (
-          <AuctionsListEmptyState />
-        ) : null}
-
-        {auctionsQuery.data?.data.length ? (
-          <div className="grid gap-3">
-            <div className="text-sm text-muted-foreground">
-              Показано {auctionsQuery.data.meta.from}-{auctionsQuery.data.meta.to} из {auctionsQuery.data.meta.total}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 bg-slate-900/60 px-5 py-4">
+            <div>
+              <h1 className="font-heading text-[15px] font-bold leading-tight text-slate-100">
+                Список аукционов
+              </h1>
+              <p className="mt-0.5 text-[11px] text-slate-500">
+                {auctionsQuery.data
+                  ? `Показано ${auctionsQuery.data.meta.from}-${auctionsQuery.data.meta.to} из ${auctionsQuery.data.meta.total}`
+                  : "Загрузка результатов"}
+              </p>
             </div>
-            {auctionsQuery.data.data.map((auction) => (
-              <AuctionListRow key={auction.main.order_uid} auction={auction} />
-            ))}
-            <AuctionsListPagination meta={auctionsQuery.data.meta} onPageChange={updatePage} />
+          </header>
+
+          <div className="flex-1 overflow-y-auto p-5">
+            {auctionsQuery.isLoading ? <AuctionsListSkeleton /> : null}
+
+            {auctionsQuery.isError ? (
+              <AuctionsListErrorState onRetry={() => void auctionsQuery.refetch()} />
+            ) : null}
+
+            {auctionsQuery.data?.data.length === 0 ? (
+              <AuctionsListEmptyState />
+            ) : null}
+
+            {auctionsQuery.data?.data.length ? (
+              <div className="grid max-w-[1100px] gap-4 xl:grid-cols-2">
+                {auctionsQuery.data.data.map((auction) => (
+                  <AuctionListRow key={auction.main.order_uid} auction={auction} />
+                ))}
+              </div>
+            ) : null}
           </div>
-        ) : null}
+
+          {auctionsQuery.data ? (
+            <AuctionsListPagination meta={auctionsQuery.data.meta} onPageChange={updatePage} />
+          ) : null}
+        </div>
       </section>
     </main>
   )

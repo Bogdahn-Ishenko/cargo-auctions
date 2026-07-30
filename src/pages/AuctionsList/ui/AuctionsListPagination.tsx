@@ -8,12 +8,13 @@ interface AuctionsListPaginationProps {
 
 export function AuctionsListPagination({ meta, onPageChange }: AuctionsListPaginationProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <div className="text-sm text-muted-foreground">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 bg-slate-900/60 px-5 py-3">
+      <div className="text-sm text-slate-500">
         Страница {meta.current_page} из {meta.last_page}
       </div>
       <div className="flex items-center gap-2">
         <Button
+          className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
           type="button"
           variant="outline"
           disabled={meta.current_page <= 1}
@@ -22,6 +23,7 @@ export function AuctionsListPagination({ meta, onPageChange }: AuctionsListPagin
           Назад
         </Button>
         <Button
+          className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
           type="button"
           variant="outline"
           disabled={meta.current_page >= meta.last_page}

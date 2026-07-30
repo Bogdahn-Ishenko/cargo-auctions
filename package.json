@@ -13,6 +13,7 @@
     "check:pre-push": "tsc -b && vite build",
     "commitlint": "commitlint",
     "prepare": "husky",
+    "msw:init": "msw init public/ --save",
     "test": "echo \"No tests configured yet\"",
     "test:run": "echo \"No tests configured yet\""
   },
@@ -24,6 +25,7 @@
     "@tanstack/react-router": "^1.123.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "msw": "^2.15.0",
     "radix-ui": "^1.6.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -50,6 +52,11 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^6.3.5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   },
   "packageManager": "pnpm@11.9.0"
 }

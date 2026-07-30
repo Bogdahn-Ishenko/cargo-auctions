@@ -23,3 +23,7 @@ export const BetListResponseSchema = z
     bets: z.array(BetItemSchema),
   })
   .passthrough()
+
+export const SetBetRequestSchema = z.object({
+  price: z.number().positive(),
+})

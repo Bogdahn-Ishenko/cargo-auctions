@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types"
 import { formatPrice } from "@/shared/lib/FormatPrice"
+import { AuctionBetForm } from "./AuctionBetForm"
 
 interface AuctionDetailPriceCardProps {
   auction: AuctionDetailResponse
@@ -40,9 +41,7 @@ export function AuctionDetailPriceCard({ auction }: AuctionDetailPriceCardProps)
 
         <Separator className="bg-slate-800" />
 
-        <Button className="h-10 w-full bg-blue-600 text-white hover:bg-blue-700" disabled={!auction.trading.can_set_bet}>
-          {auction.trading.can_set_bet ? "Сделать ставку" : "Ставка недоступна"}
-        </Button>
+        <AuctionBetForm auction={auction} />
         <Button className="h-10 w-full border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white" variant="outline">
           <RiBookmarkLine />
           В избранное

@@ -8,7 +8,11 @@ import { AuctionsListFilters } from "./AuctionsListFilters"
 import { AuctionsListPagination } from "./AuctionsListPagination"
 import { AuctionsListSkeleton } from "./AuctionsListSkeleton"
 import { AuctionsListToolbar } from "./AuctionsListToolbar"
-import type { AuctionsListSort, AuctionsListTypeSearch } from "../model/AuctionsListSearch.schema"
+import type {
+  AuctionsListSort,
+  AuctionsListTradingStatusSearch,
+  AuctionsListTypeSearch,
+} from "../model/AuctionsListSearch.schema"
 
 export function AuctionsListPage() {
   const search = useSearch({ from: "/" })
@@ -18,6 +22,7 @@ export function AuctionsListPage() {
     per_page: search.per_page,
     sort: getApiSort(search.sort),
     ...(search.auc_type === "all" ? {} : { auc_type: [search.auc_type] }),
+    ...(search.status === "all" ? {} : { status: [search.status] }),
     ...(search.cargo_num ? { cargo_num: search.cargo_num } : {}),
     ...(search.is_available === undefined ? {} : { is_available: search.is_available }),
   }
@@ -42,7 +47,12 @@ export function AuctionsListPage() {
     })
   }
 
-  function updateFilters(filters: { auctionType: AuctionsListTypeSearch; cargoNum: string; isAvailable?: boolean }) {
+  function updateFilters(filters: {
+    auctionType: AuctionsListTypeSearch
+    cargoNum: string
+    isAvailable?: boolean
+    tradingStatus: AuctionsListTradingStatusSearch
+  }) {
     void navigate({
       search: (previous) => ({
         ...previous,
@@ -50,6 +60,7 @@ export function AuctionsListPage() {
         auc_type: filters.auctionType,
         cargo_num: filters.cargoNum || undefined,
         is_available: filters.isAvailable,
+        status: filters.tradingStatus,
       }),
     })
   }
@@ -63,6 +74,7 @@ export function AuctionsListPage() {
         auc_type: "all",
         cargo_num: undefined,
         is_available: undefined,
+        status: "all",
       }),
     })
   }
@@ -86,6 +98,7 @@ export function AuctionsListPage() {
           isAvailable={search.is_available}
           onApply={updateFilters}
           onReset={resetFilters}
+          tradingStatus={search.status}
         />
 
         <div className="flex min-w-0 flex-1 flex-col">

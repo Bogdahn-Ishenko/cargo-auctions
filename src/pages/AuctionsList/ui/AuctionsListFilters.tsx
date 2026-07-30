@@ -5,20 +5,34 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
-import type { AuctionsListTypeSearch } from "../model/AuctionsListSearch.schema"
+import type { AuctionsListTradingStatusSearch, AuctionsListTypeSearch } from "../model/AuctionsListSearch.schema"
 
 interface AuctionsListFiltersProps {
   auctionType: AuctionsListTypeSearch
   cargoNum: string
   isAvailable?: boolean
-  onApply: (filters: { auctionType: AuctionsListTypeSearch; cargoNum: string; isAvailable?: boolean }) => void
+  onApply: (filters: {
+    auctionType: AuctionsListTypeSearch
+    cargoNum: string
+    isAvailable?: boolean
+    tradingStatus: AuctionsListTradingStatusSearch
+  }) => void
   onReset: () => void
+  tradingStatus: AuctionsListTradingStatusSearch
 }
 
-export function AuctionsListFilters({ auctionType, cargoNum, isAvailable, onApply, onReset }: AuctionsListFiltersProps) {
+export function AuctionsListFilters({
+  auctionType,
+  cargoNum,
+  isAvailable,
+  onApply,
+  onReset,
+  tradingStatus,
+}: AuctionsListFiltersProps) {
   const [draftAuctionType, setDraftAuctionType] = useState<AuctionsListTypeSearch>(auctionType)
   const [draftCargoNum, setDraftCargoNum] = useState(cargoNum)
   const [draftIsAvailable, setDraftIsAvailable] = useState(isAvailable ?? false)
+  const [draftTradingStatus, setDraftTradingStatus] = useState<AuctionsListTradingStatusSearch>(tradingStatus)
 
   return (
     <form
@@ -29,6 +43,7 @@ export function AuctionsListFilters({ auctionType, cargoNum, isAvailable, onAppl
           auctionType: draftAuctionType,
           cargoNum: draftCargoNum.trim(),
           isAvailable: draftIsAvailable ? true : undefined,
+          tradingStatus: draftTradingStatus,
         })
       }}
     >
@@ -71,6 +86,27 @@ export function AuctionsListFilters({ auctionType, cargoNum, isAvailable, onAppl
         </NativeSelect>
       </div>
 
+      <div className="grid gap-2">
+        <Label className="text-xs text-slate-400" htmlFor="trading-status">
+          Участие
+        </Label>
+        <NativeSelect
+          className="w-full"
+          id="trading-status"
+          onChange={(event) => setDraftTradingStatus(event.target.value as AuctionsListTradingStatusSearch)}
+          value={draftTradingStatus}
+        >
+          <NativeSelectOption value="all">Любой статус</NativeSelectOption>
+          <NativeSelectOption value="NotParticipating">Не участвуете</NativeSelectOption>
+          <NativeSelectOption value="Leading">Вы лидируете</NativeSelectOption>
+          <NativeSelectOption value="Losing">Вас обогнали</NativeSelectOption>
+          <NativeSelectOption value="Confirmed">Подтверждено</NativeSelectOption>
+          <NativeSelectOption value="ChoosingWinner">Выбор победителя</NativeSelectOption>
+          <NativeSelectOption value="Winner">Победа</NativeSelectOption>
+          <NativeSelectOption value="Unknown">Без участия</NativeSelectOption>
+        </NativeSelect>
+      </div>
+
       <div className="flex items-center gap-2">
         <Checkbox
           className="border-slate-600"
@@ -95,6 +131,7 @@ export function AuctionsListFilters({ auctionType, cargoNum, isAvailable, onAppl
             setDraftAuctionType("all")
             setDraftCargoNum("")
             setDraftIsAvailable(false)
+            setDraftTradingStatus("all")
             onReset()
           }}
         >

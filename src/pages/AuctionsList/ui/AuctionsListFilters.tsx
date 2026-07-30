@@ -15,11 +15,15 @@ interface AuctionsListFiltersProps {
     auctionType: AuctionsListTypeSearch
     cargoNum: string
     isAvailable?: boolean
+    pricePerKmFrom: string
+    pricePerKmTo: string
     tradingStatus: AuctionsListTradingStatusSearch
     weightFrom: string
     weightTo: string
   }) => void
   onReset: () => void
+  pricePerKmFrom: string
+  pricePerKmTo: string
   tradingStatus: AuctionsListTradingStatusSearch
   weightFrom: string
   weightTo: string
@@ -31,6 +35,8 @@ export function AuctionsListFilters({
   isAvailable,
   onApply,
   onReset,
+  pricePerKmFrom,
+  pricePerKmTo,
   tradingStatus,
   weightFrom,
   weightTo,
@@ -38,6 +44,8 @@ export function AuctionsListFilters({
   const [draftAuctionType, setDraftAuctionType] = useState<AuctionsListTypeSearch>(auctionType)
   const [draftCargoNum, setDraftCargoNum] = useState(cargoNum)
   const [draftIsAvailable, setDraftIsAvailable] = useState(isAvailable ?? false)
+  const [draftPricePerKmFrom, setDraftPricePerKmFrom] = useState(pricePerKmFrom)
+  const [draftPricePerKmTo, setDraftPricePerKmTo] = useState(pricePerKmTo)
   const [draftTradingStatus, setDraftTradingStatus] = useState<AuctionsListTradingStatusSearch>(tradingStatus)
   const [draftWeightFrom, setDraftWeightFrom] = useState(weightFrom)
   const [draftWeightTo, setDraftWeightTo] = useState(weightTo)
@@ -51,6 +59,8 @@ export function AuctionsListFilters({
           auctionType: draftAuctionType,
           cargoNum: draftCargoNum.trim(),
           isAvailable: draftIsAvailable ? true : undefined,
+          pricePerKmFrom: draftPricePerKmFrom.trim(),
+          pricePerKmTo: draftPricePerKmTo.trim(),
           tradingStatus: draftTradingStatus,
           weightFrom: draftWeightFrom.trim(),
           weightTo: draftWeightTo.trim(),
@@ -141,6 +151,30 @@ export function AuctionsListFilters({
         </div>
       </div>
 
+      <div className="grid gap-2">
+        <Label className="text-xs text-slate-400">Цена за км, ₽</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            inputMode="decimal"
+            min={0}
+            onChange={(event) => setDraftPricePerKmFrom(event.target.value)}
+            placeholder="От"
+            type="number"
+            value={draftPricePerKmFrom}
+          />
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            inputMode="decimal"
+            min={0}
+            onChange={(event) => setDraftPricePerKmTo(event.target.value)}
+            placeholder="До"
+            type="number"
+            value={draftPricePerKmTo}
+          />
+        </div>
+      </div>
+
       <div className="flex items-center gap-2">
         <Checkbox
           className="border-slate-600"
@@ -165,6 +199,8 @@ export function AuctionsListFilters({
             setDraftAuctionType("all")
             setDraftCargoNum("")
             setDraftIsAvailable(false)
+            setDraftPricePerKmFrom("")
+            setDraftPricePerKmTo("")
             setDraftTradingStatus("all")
             setDraftWeightFrom("")
             setDraftWeightTo("")

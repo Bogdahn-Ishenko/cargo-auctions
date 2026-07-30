@@ -24,6 +24,8 @@ export function AuctionsListPage() {
     ...(search.auc_type === "all" ? {} : { auc_type: [search.auc_type] }),
     ...(search.status === "all" ? {} : { status: [search.status] }),
     ...(search.cargo_num ? { cargo_num: search.cargo_num } : {}),
+    ...(search.price_per_km_from ? { price_per_km_from: search.price_per_km_from } : {}),
+    ...(search.price_per_km_to ? { price_per_km_to: search.price_per_km_to } : {}),
     ...(search.weight_from ? { weight_from: search.weight_from } : {}),
     ...(search.weight_to ? { weight_to: search.weight_to } : {}),
     ...(search.is_available === undefined ? {} : { is_available: search.is_available }),
@@ -53,12 +55,16 @@ export function AuctionsListPage() {
     auctionType: AuctionsListTypeSearch
     cargoNum: string
     isAvailable?: boolean
+    pricePerKmFrom: string
+    pricePerKmTo: string
     tradingStatus: AuctionsListTradingStatusSearch
     weightFrom: string
     weightTo: string
   }) {
     const weightFrom = Number(filters.weightFrom)
     const weightTo = Number(filters.weightTo)
+    const pricePerKmFrom = Number(filters.pricePerKmFrom)
+    const pricePerKmTo = Number(filters.pricePerKmTo)
 
     void navigate({
       search: (previous) => ({
@@ -67,6 +73,8 @@ export function AuctionsListPage() {
         auc_type: filters.auctionType,
         cargo_num: filters.cargoNum || undefined,
         is_available: filters.isAvailable,
+        price_per_km_from: Number.isFinite(pricePerKmFrom) && pricePerKmFrom > 0 ? pricePerKmFrom : undefined,
+        price_per_km_to: Number.isFinite(pricePerKmTo) && pricePerKmTo > 0 ? pricePerKmTo : undefined,
         status: filters.tradingStatus,
         weight_from: Number.isFinite(weightFrom) && weightFrom > 0 ? weightFrom : undefined,
         weight_to: Number.isFinite(weightTo) && weightTo > 0 ? weightTo : undefined,
@@ -83,6 +91,8 @@ export function AuctionsListPage() {
         auc_type: "all",
         cargo_num: undefined,
         is_available: undefined,
+        price_per_km_from: undefined,
+        price_per_km_to: undefined,
         status: "all",
         weight_from: undefined,
         weight_to: undefined,
@@ -109,6 +119,8 @@ export function AuctionsListPage() {
           isAvailable={search.is_available}
           onApply={updateFilters}
           onReset={resetFilters}
+          pricePerKmFrom={search.price_per_km_from ? String(search.price_per_km_from) : ""}
+          pricePerKmTo={search.price_per_km_to ? String(search.price_per_km_to) : ""}
           tradingStatus={search.status}
           weightFrom={search.weight_from ? String(search.weight_from) : ""}
           weightTo={search.weight_to ? String(search.weight_to) : ""}

@@ -19,6 +19,20 @@ export const handlers = [
       if (body.cargo_num && !auction.main.cargo_num.includes(body.cargo_num)) return false
       if (body.auc_type?.length && !body.auc_type.includes(auction.main.auc_type)) return false
       if (body.status?.length && !body.status.includes(auction.trading.status_mobile)) return false
+      if (
+        body.price_per_km_from !== undefined &&
+        body.price_per_km_from !== null &&
+        (auction.main.price_per_km ?? 0) < body.price_per_km_from
+      ) {
+        return false
+      }
+      if (
+        body.price_per_km_to !== undefined &&
+        body.price_per_km_to !== null &&
+        (auction.main.price_per_km ?? 0) > body.price_per_km_to
+      ) {
+        return false
+      }
       if (body.weight_from !== undefined && body.weight_from !== null && auction.cargo.weight < body.weight_from) return false
       if (body.weight_to !== undefined && body.weight_to !== null && auction.cargo.weight > body.weight_to) return false
       if (body.is_available !== undefined && auction.trading.is_available !== body.is_available) return false

@@ -12,6 +12,8 @@ export const AuctionsListSearchSchema = z.object({
   auc_type: AuctionsListTypeSearchSchema.catch("all"),
   status: AuctionsListTradingStatusSearchSchema.catch("all"),
   cargo_num: z.string().trim().catch("").optional(),
+  price_per_km_from: z.coerce.number().nonnegative().catch(0).optional(),
+  price_per_km_to: z.coerce.number().nonnegative().catch(0).optional(),
   weight_from: z.coerce.number().nonnegative().catch(0).optional(),
   weight_to: z.coerce.number().nonnegative().catch(0).optional(),
   is_available: z

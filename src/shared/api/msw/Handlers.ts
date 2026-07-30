@@ -10,12 +10,20 @@ export const handlers = [
     const body = AuctionListRequestSchema.parse(payload)
     const page = body.page ?? 1
     const perPage = body.per_page ?? 20
-    const total = auctionListMock.data.length
+
+    const filtered = auctionListMock.data.filter((auction) => {
+      if (body.cargo_num && !auction.main.cargo_num.includes(body.cargo_num)) return false
+      if (body.is_available !== undefined && auction.trading.is_available !== body.is_available) return false
+
+      return true
+    })
+
+    const total = filtered.length
     const from = total === 0 ? 0 : (page - 1) * perPage + 1
     const to = Math.min(page * perPage, total)
 
     const response: AuctionListResponse = {
-      data: auctionListMock.data.slice((page - 1) * perPage, page * perPage),
+      data: filtered.slice((page - 1) * perPage, page * perPage),
       meta: {
         current_page: page,
         from,

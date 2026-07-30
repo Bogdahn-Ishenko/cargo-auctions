@@ -30,6 +30,8 @@ export const AuctionListRequestSchema = z
   .object({
     page: z.number().int().positive().optional(),
     per_page: z.number().int().positive().optional(),
+    cargo_num: z.string().trim().optional(),
+    is_available: z.boolean().optional(),
     sort: z.record(z.string(), z.enum(["asc", "desc"])).nullable().optional(),
   })
   .passthrough()

@@ -1,7 +1,8 @@
-import { RiBookmarkLine } from "@remixicon/react"
+import { RiBookmarkFill, RiBookmarkLine } from "@remixicon/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { useToggleAuctionFavorite } from "@/entities/Auction/api/UseToggleAuctionFavorite"
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types"
 import { formatPrice } from "@/shared/lib/FormatPrice"
 import { AuctionBetForm } from "./AuctionBetForm"
@@ -12,6 +13,8 @@ interface AuctionDetailPriceCardProps {
 
 export function AuctionDetailPriceCard({ auction }: AuctionDetailPriceCardProps) {
   const price = auction.trading.price
+  const favoriteMutation = useToggleAuctionFavorite(auction.main.order_uid)
+  const isFavorite = auction.trading.is_favorite
 
   return (
     <Card className="h-fit rounded-2xl border-slate-800 bg-slate-950 py-0 text-slate-100 shadow-sm">
@@ -42,9 +45,15 @@ export function AuctionDetailPriceCard({ auction }: AuctionDetailPriceCardProps)
         <Separator className="bg-slate-800" />
 
         <AuctionBetForm auction={auction} />
-        <Button className="h-10 w-full border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white" variant="outline">
-          <RiBookmarkLine />
-          В избранное
+        <Button
+          className="h-10 w-full border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white"
+          disabled={favoriteMutation.isPending}
+          onClick={() => favoriteMutation.mutate()}
+          type="button"
+          variant="outline"
+        >
+          {isFavorite ? <RiBookmarkFill className="text-amber-500" /> : <RiBookmarkLine />}
+          {isFavorite ? "В избранном" : "В избранное"}
         </Button>
       </CardContent>
     </Card>

@@ -2,7 +2,7 @@ import { delay, http, HttpResponse } from "msw"
 import { SetBetRequestSchema } from "@/entities/Auction/model/AuctionBets.schema"
 import type { BetItem } from "@/entities/Auction/model/AuctionBets.types"
 import { AuctionListRequestSchema } from "@/entities/Auction/model/AuctionList.schema"
-import type { AuctionListResponse } from "@/entities/Auction/model/AuctionList.types"
+import type { AuctionListItem, AuctionListResponse } from "@/entities/Auction/model/AuctionList.types"
 import { auctionBetsMocks } from "./AuctionBets.mock"
 import { auctionDetailMocks } from "./AuctionDetail.mock"
 import { auctionListMock } from "./AuctionList.mock"
@@ -21,13 +21,14 @@ export const handlers = [
 
       return true
     })
+    const sorted = sortAuctions(filtered, body.sort)
 
-    const total = filtered.length
+    const total = sorted.length
     const from = total === 0 ? 0 : (page - 1) * perPage + 1
     const to = Math.min(page * perPage, total)
 
     const response: AuctionListResponse = {
-      data: filtered.slice((page - 1) * perPage, page * perPage),
+      data: sorted.slice((page - 1) * perPage, page * perPage),
       meta: {
         current_page: page,
         from,
@@ -157,3 +158,22 @@ export const handlers = [
     return HttpResponse.json({ ok: true })
   }),
 ]
+
+function sortAuctions(items: AuctionListItem[], sort: Record<string, "asc" | "desc"> | null | undefined) {
+  const [field, direction] = Object.entries(sort ?? {})[0] ?? ["trading.stop_time", "asc"]
+  const multiplier = direction === "desc" ? -1 : 1
+
+  return [...items].sort((left, right) => compareAuctionField(left, right, field) * multiplier)
+}
+
+function compareAuctionField(left: AuctionListItem, right: AuctionListItem, field: string) {
+  if (field === "trading.price.current") {
+    return (left.trading.price?.current ?? 0) - (right.trading.price?.current ?? 0)
+  }
+
+  if (field === "route.load.date") {
+    return new Date(left.route.load.date).getTime() - new Date(right.route.load.date).getTime()
+  }
+
+  return new Date(left.trading.stop_time).getTime() - new Date(right.trading.stop_time).getTime()
+}

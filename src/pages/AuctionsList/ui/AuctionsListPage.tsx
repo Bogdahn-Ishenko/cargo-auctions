@@ -7,6 +7,8 @@ import { AuctionsListErrorState } from "./AuctionsListErrorState"
 import { AuctionsListFilters } from "./AuctionsListFilters"
 import { AuctionsListPagination } from "./AuctionsListPagination"
 import { AuctionsListSkeleton } from "./AuctionsListSkeleton"
+import { AuctionsListToolbar } from "./AuctionsListToolbar"
+import type { AuctionsListSort } from "../model/AuctionsListSearch.schema"
 
 export function AuctionsListPage() {
   const search = useSearch({ from: "/" })
@@ -14,6 +16,7 @@ export function AuctionsListPage() {
   const request: AuctionListRequest = {
     page: search.page,
     per_page: search.per_page,
+    sort: getApiSort(search.sort),
     ...(search.cargo_num ? { cargo_num: search.cargo_num } : {}),
     ...(search.is_available === undefined ? {} : { is_available: search.is_available }),
   }
@@ -44,8 +47,19 @@ export function AuctionsListPage() {
       search: () => ({
         page: 1,
         per_page: search.per_page,
+        sort: search.sort,
         cargo_num: undefined,
         is_available: undefined,
+      }),
+    })
+  }
+
+  function updateSort(sort: AuctionsListSort) {
+    void navigate({
+      search: (previous) => ({
+        ...previous,
+        page: 1,
+        sort,
       }),
     })
   }
@@ -61,18 +75,13 @@ export function AuctionsListPage() {
         />
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 bg-slate-900/60 px-5 py-4">
-            <div>
-              <h1 className="font-heading text-[15px] font-bold leading-tight text-slate-100">
-                Список аукционов
-              </h1>
-              <p className="mt-0.5 text-[11px] text-slate-500">
-                {auctionsQuery.data
-                  ? `Показано ${auctionsQuery.data.meta.from}-${auctionsQuery.data.meta.to} из ${auctionsQuery.data.meta.total}`
-                  : "Загрузка результатов"}
-              </p>
-            </div>
-          </header>
+          <AuctionsListToolbar
+            from={auctionsQuery.data?.meta.from}
+            onSortChange={updateSort}
+            sort={search.sort}
+            to={auctionsQuery.data?.meta.to}
+            total={auctionsQuery.data?.meta.total}
+          />
 
           <div className="flex-1 overflow-y-auto p-5">
             {auctionsQuery.isLoading ? <AuctionsListSkeleton /> : null}
@@ -101,4 +110,15 @@ export function AuctionsListPage() {
       </section>
     </main>
   )
+}
+
+function getApiSort(sort: AuctionsListSort): AuctionListRequest["sort"] {
+  const sortMap: Record<AuctionsListSort, NonNullable<AuctionListRequest["sort"]>> = {
+    stop_time_asc: { "trading.stop_time": "asc" },
+    price_asc: { "trading.price.current": "asc" },
+    price_desc: { "trading.price.current": "desc" },
+    load_date_asc: { "route.load.date": "asc" },
+  }
+
+  return sortMap[sort]
 }

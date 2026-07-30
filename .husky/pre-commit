@@ -1,0 +1,8 @@
+if command -v pnpm >/dev/null 2>&1; then
+  pnpm check:pre-commit
+elif command -v corepack >/dev/null 2>&1; then
+  corepack pnpm check:pre-commit
+else
+  echo "pnpm is not available. Install pnpm or enable Corepack." >&2
+  exit 127
+fi

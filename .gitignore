@@ -1,0 +1,89 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Build outputs
+dist/
+build/
+.vite/
+.turbo/
+.next/
+out/
+
+# Test and coverage artifacts
+coverage/
+playwright-report/
+test-results/
+vitest-report/
+*.lcov
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Local env files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# TypeScript incremental cache
+*.tsbuildinfo
+
+# Package manager caches
+.npm/
+.pnpm-store/
+.yarn/
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# AI and local agent artifacts
+.codex/
+.openai/
+.cursor/
+.claude/
+.aider*
+.continue/
+.windsurf/
+CLAUDE.md
+AI_LOGS/
+ai-logs/
+ai-output/
+ai-transcripts/
+codex-logs/
+chatgpt-logs/
+*.ai.log
+*.codex.log
+*.prompt.log
+
+# Local planning/docs drafts
+*.md
+docs/
+
+# Husky generated internals
+.husky/_/
+
+# Generated reports and temporary exports
+reports/
+tmp/
+temp/
+*.tmp
+*.bak

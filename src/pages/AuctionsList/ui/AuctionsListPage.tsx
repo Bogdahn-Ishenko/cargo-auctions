@@ -44,6 +44,7 @@ export function AuctionsListPage() {
     auctionType: AuctionsListTypeSearch
     cargoNum: string
     isAvailable?: boolean
+    isFavorite?: boolean
     pricePerKmFrom: string
     pricePerKmTo: string
     tradingStatus: AuctionsListTradingStatusSearch
@@ -62,6 +63,7 @@ export function AuctionsListPage() {
         auc_type: filters.auctionType,
         cargo_num: filters.cargoNum || undefined,
         is_available: filters.isAvailable,
+        is_favorite: filters.isFavorite,
         price_per_km_from: Number.isFinite(pricePerKmFrom) && pricePerKmFrom > 0 ? pricePerKmFrom : undefined,
         price_per_km_to: Number.isFinite(pricePerKmTo) && pricePerKmTo > 0 ? pricePerKmTo : undefined,
         status: filters.tradingStatus,
@@ -80,6 +82,7 @@ export function AuctionsListPage() {
         auc_type: "all",
         cargo_num: undefined,
         is_available: undefined,
+        is_favorite: undefined,
         price_per_km_from: undefined,
         price_per_km_to: undefined,
         status: "all",
@@ -106,6 +109,7 @@ export function AuctionsListPage() {
           auctionType={search.auc_type}
           cargoNum={search.cargo_num ?? ""}
           isAvailable={search.is_available}
+          isFavorite={search.is_favorite}
           onApply={updateFilters}
           onReset={resetFilters}
           pricePerKmFrom={search.price_per_km_from ? String(search.price_per_km_from) : ""}

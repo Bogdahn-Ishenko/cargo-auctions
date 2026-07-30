@@ -14,6 +14,7 @@ export function buildAuctionsListRequest(search: AuctionsListSearch): AuctionLis
     ...(search.weight_from ? { weight_from: search.weight_from } : {}),
     ...(search.weight_to ? { weight_to: search.weight_to } : {}),
     ...(search.is_available === undefined ? {} : { is_available: search.is_available }),
+    ...(search.is_favorite === undefined ? {} : { is_favorite: search.is_favorite }),
   }
 }
 

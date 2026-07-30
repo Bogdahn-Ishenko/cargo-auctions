@@ -20,6 +20,10 @@ export const AuctionsListSearchSchema = z.object({
     .union([z.literal("true"), z.literal("false"), z.boolean()])
     .transform((value) => (typeof value === "boolean" ? value : value === "true"))
     .optional(),
+  is_favorite: z
+    .union([z.literal("true"), z.literal("false"), z.boolean()])
+    .transform((value) => (typeof value === "boolean" ? value : value === "true"))
+    .optional(),
 })
 
 export type AuctionsListSort = z.infer<typeof AuctionsListSortSchema>

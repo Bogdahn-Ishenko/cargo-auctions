@@ -15,6 +15,7 @@ interface AuctionsListFiltersProps {
     auctionType: AuctionsListTypeSearch
     cargoNum: string
     isAvailable?: boolean
+    isFavorite?: boolean
     pricePerKmFrom: string
     pricePerKmTo: string
     tradingStatus: AuctionsListTradingStatusSearch
@@ -22,6 +23,7 @@ interface AuctionsListFiltersProps {
     weightTo: string
   }) => void
   onReset: () => void
+  isFavorite?: boolean
   pricePerKmFrom: string
   pricePerKmTo: string
   tradingStatus: AuctionsListTradingStatusSearch
@@ -33,6 +35,7 @@ export function AuctionsListFilters({
   auctionType,
   cargoNum,
   isAvailable,
+  isFavorite,
   onApply,
   onReset,
   pricePerKmFrom,
@@ -44,6 +47,7 @@ export function AuctionsListFilters({
   const [draftAuctionType, setDraftAuctionType] = useState<AuctionsListTypeSearch>(auctionType)
   const [draftCargoNum, setDraftCargoNum] = useState(cargoNum)
   const [draftIsAvailable, setDraftIsAvailable] = useState(isAvailable ?? false)
+  const [draftIsFavorite, setDraftIsFavorite] = useState(isFavorite ?? false)
   const [draftPricePerKmFrom, setDraftPricePerKmFrom] = useState(pricePerKmFrom)
   const [draftPricePerKmTo, setDraftPricePerKmTo] = useState(pricePerKmTo)
   const [draftTradingStatus, setDraftTradingStatus] = useState<AuctionsListTradingStatusSearch>(tradingStatus)
@@ -59,6 +63,7 @@ export function AuctionsListFilters({
           auctionType: draftAuctionType,
           cargoNum: draftCargoNum.trim(),
           isAvailable: draftIsAvailable ? true : undefined,
+          isFavorite: draftIsFavorite ? true : undefined,
           pricePerKmFrom: draftPricePerKmFrom.trim(),
           pricePerKmTo: draftPricePerKmTo.trim(),
           tradingStatus: draftTradingStatus,
@@ -187,6 +192,18 @@ export function AuctionsListFilters({
         </Label>
       </div>
 
+      <div className="flex items-center gap-2">
+        <Checkbox
+          className="border-slate-600"
+          id="is-favorite"
+          checked={draftIsFavorite}
+          onCheckedChange={(value) => setDraftIsFavorite(value === true)}
+        />
+        <Label className="text-xs text-slate-300" htmlFor="is-favorite">
+          Только избранные
+        </Label>
+      </div>
+
       <div className="mt-auto grid gap-2">
         <Button className="w-full bg-blue-600 text-white hover:bg-blue-700" type="submit">
           Применить
@@ -199,6 +216,7 @@ export function AuctionsListFilters({
             setDraftAuctionType("all")
             setDraftCargoNum("")
             setDraftIsAvailable(false)
+            setDraftIsFavorite(false)
             setDraftPricePerKmFrom("")
             setDraftPricePerKmTo("")
             setDraftTradingStatus("all")

@@ -8,6 +8,7 @@ describe("AuctionListRequestSchema", () => {
         auc_type: ["Down"],
         cargo_num: "00000001059",
         is_available: true,
+        is_favorite: true,
         page: 1,
         per_page: 6,
         price_per_km_from: 100,
@@ -19,6 +20,7 @@ describe("AuctionListRequestSchema", () => {
     ).toMatchObject({
       auc_type: ["Down"],
       is_available: true,
+      is_favorite: true,
       price_per_km_from: 100,
       status: ["Leading"],
       weight_to: 20,

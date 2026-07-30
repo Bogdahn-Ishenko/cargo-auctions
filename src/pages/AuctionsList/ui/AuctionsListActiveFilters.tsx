@@ -41,6 +41,7 @@ function getActiveFilters(search: AuctionsListSearch) {
   if (search.auc_type !== "all") filters.push(`Тип: ${getAuctionTypeLabel(search.auc_type)}`)
   if (search.status !== "all") filters.push(`Участие: ${getTradingStatusLabel(search.status)}`)
   if (search.is_available) filters.push("Только доступные")
+  if (search.is_favorite) filters.push("Только избранные")
   if (search.weight_from) filters.push(`Вес от ${search.weight_from} т`)
   if (search.weight_to) filters.push(`Вес до ${search.weight_to} т`)
   if (search.price_per_km_from) filters.push(`Цена/км от ${search.price_per_km_from} ₽`)

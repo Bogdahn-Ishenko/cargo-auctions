@@ -36,6 +36,7 @@ export const handlers = [
       if (body.weight_from !== undefined && body.weight_from !== null && auction.cargo.weight < body.weight_from) return false
       if (body.weight_to !== undefined && body.weight_to !== null && auction.cargo.weight > body.weight_to) return false
       if (body.is_available !== undefined && auction.trading.is_available !== body.is_available) return false
+      if (body.is_favorite !== undefined && auction.trading.is_favorite !== body.is_favorite) return false
 
       return true
     })

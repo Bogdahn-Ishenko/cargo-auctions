@@ -38,6 +38,7 @@ export const AuctionListRequestSchema = z
     weight_from: z.number().nonnegative().nullable().optional(),
     weight_to: z.number().nonnegative().nullable().optional(),
     is_available: z.boolean().optional(),
+    is_favorite: z.boolean().optional(),
     sort: z.record(z.string(), z.enum(["asc", "desc"])).nullable().optional(),
   })
   .passthrough()

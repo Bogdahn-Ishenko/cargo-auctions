@@ -16,6 +16,7 @@ describe("AuctionsListSearchSchema", () => {
     expect(
       AuctionsListSearchSchema.parse({
         is_available: "true",
+        is_favorite: "true",
         page: "2",
         per_page: "10",
         price_per_km_from: "100",
@@ -23,6 +24,7 @@ describe("AuctionsListSearchSchema", () => {
       }),
     ).toMatchObject({
       is_available: true,
+      is_favorite: true,
       page: 2,
       per_page: 10,
       price_per_km_from: 100,

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router"
-import { RiArrowRightLine } from "@remixicon/react"
+import { RiArrowRightLine, RiBookmarkFill } from "@remixicon/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types"
@@ -27,8 +27,11 @@ export function AuctionListRow({ auction }: AuctionListRowProps) {
         <div className="min-w-0">
           <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
             <div className="min-w-0">
-              <div className="font-mono text-[13px] font-bold tracking-tight text-slate-900">
-                {auction.main.cargo_num}
+              <div className="flex items-center gap-2 font-mono text-[13px] font-bold tracking-tight text-slate-900">
+                <span>{auction.main.cargo_num}</span>
+                {auction.trading.is_favorite ? (
+                  <RiBookmarkFill className="size-4 shrink-0 text-amber-500" aria-label="В избранном" />
+                ) : null}
               </div>
               <div className="mt-0.5 truncate text-xs text-slate-500">
                 {auction.organizer.organization_name}

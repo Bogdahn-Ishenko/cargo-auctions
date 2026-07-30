@@ -1,6 +1,7 @@
 import { useNavigate, useSearch } from "@tanstack/react-router"
 import { useAuctionsList } from "@/entities/Auction/api/UseAuctionsList"
 import type { AuctionListRequest } from "@/entities/Auction/model/AuctionList.types"
+import { AuctionsListActiveFilters } from "./AuctionsListActiveFilters"
 import { AuctionListRow } from "./AuctionListRow"
 import { AuctionsListEmptyState } from "./AuctionsListEmptyState"
 import { AuctionsListErrorState } from "./AuctionsListErrorState"
@@ -128,6 +129,7 @@ export function AuctionsListPage() {
 
         <div className="flex min-w-0 flex-1 flex-col">
           <AuctionsListToolbar
+            activeFilters={<AuctionsListActiveFilters onReset={resetFilters} search={search} />}
             from={auctionsQuery.data?.meta.from}
             onSortChange={updateSort}
             sort={search.sort}

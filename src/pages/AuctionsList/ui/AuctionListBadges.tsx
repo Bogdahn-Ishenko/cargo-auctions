@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
+import { getAuctionStatusLabel, getAuctionTypeLabel, getTradingStatusLabel } from "@/entities/Auction/lib/GetAuctionLabels"
 import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types"
-import { getAuctionStatusLabel, getAuctionTypeLabel, getTradingStatusLabel } from "../lib/GetAuctionLabels"
 
 interface AuctionListBadgesProps {
   auction: AuctionListItem

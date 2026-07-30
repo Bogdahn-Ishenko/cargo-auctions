@@ -1,5 +1,8 @@
+import type { ReactNode } from "react"
+import { RiBox3Line, RiMapPin2Line, RiTruckLine } from "@remixicon/react"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
+import { getAuctionStatusLabel, getAuctionTypeLabel, getTradingStatusLabel } from "@/entities/Auction/lib/GetAuctionLabels"
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types"
 import { formatDateTime } from "../lib/FormatDateTime"
 
@@ -8,32 +11,68 @@ interface AuctionDetailHeaderProps {
 }
 
 export function AuctionDetailHeader({ auction }: AuctionDetailHeaderProps) {
+  const loadPoint = auction.routes.find((route) => route.op_type === "Loading")
+  const unloadPoint = auction.routes.find((route) => route.op_type === "Unloading")
+  const statusClass =
+    auction.trading.status_mobile === "Leading"
+      ? "bg-emerald-500"
+      : auction.trading.status_mobile === "Losing"
+        ? "bg-rose-600"
+        : "bg-slate-400"
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex flex-wrap items-center gap-2">
-          <span>{auction.main.cargo_num}</span>
-          <Badge variant="outline">{auction.main.auc_type}</Badge>
-          <Badge variant={auction.trading.can_set_bet ? "default" : "secondary"}>
-            {auction.trading.status_mobile}
-          </Badge>
-        </CardTitle>
-        <CardDescription>{auction.organizer.organization_name}</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-3 text-sm sm:grid-cols-3">
-        <InfoItem label="Груз" value={auction.cargo.name ?? "Не указан"} />
-        <InfoItem label="Кузов" value={auction.cargo.body_type} />
-        <InfoItem label="Окончание торгов" value={formatDateTime(auction.trading.stop_time)} />
+    <Card className="relative overflow-hidden rounded-2xl border-slate-200 bg-white py-0 shadow-sm">
+      <div className={`absolute bottom-0 left-0 top-0 w-1 ${statusClass}`} />
+      <CardContent className="p-6 pl-7">
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="font-mono text-xl font-bold tracking-tight text-slate-900">
+              {auction.main.cargo_num}
+            </h1>
+            <p className="mt-1 text-sm text-slate-500">
+              Заказчик:{" "}
+              <span className="font-medium text-slate-700">{auction.organizer.organization_name}</span>
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Badge className="border-sky-200 bg-sky-50 text-sky-700" variant="outline">
+              {getAuctionTypeLabel(auction.main.auc_type)}
+            </Badge>
+            <Badge className="border-emerald-200 bg-emerald-50 text-emerald-700" variant="outline">
+              {getAuctionStatusLabel(auction.trading.status)}
+            </Badge>
+            <Badge className="border-slate-200 bg-slate-50 text-slate-600" variant="outline">
+              {getTradingStatusLabel(auction.trading.status_mobile)}
+            </Badge>
+          </div>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-3">
+          <InfoItem icon={<RiBox3Line />} label="Груз" value={auction.cargo.name ?? "Не указан"} />
+          <InfoItem
+            icon={<RiMapPin2Line />}
+            label="Маршрут"
+            value={`${loadPoint?.location.city_name ?? "Не указано"} - ${unloadPoint?.location.city_name ?? "Не указано"}`}
+          />
+          <InfoItem
+            icon={<RiTruckLine />}
+            label="Окончание торгов"
+            value={formatDateTime(auction.trading.stop_time)}
+          />
+        </div>
       </CardContent>
     </Card>
   )
 }
 
-function InfoItem({ label, value }: { label: string; value: string }) {
+function InfoItem({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
   return (
-    <div className="grid gap-1">
-      <div className="text-xs text-muted-foreground">{label}</div>
-      <div className="font-medium">{value}</div>
+    <div className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+      <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+        <span className="[&_svg]:size-4">{icon}</span>
+        {label}
+      </div>
+      <div className="text-sm font-semibold text-slate-800">{value}</div>
     </div>
   )
 }

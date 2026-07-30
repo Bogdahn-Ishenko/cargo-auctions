@@ -1,4 +1,4 @@
-import type { AuctionStatus, AuctionType, TradingStatus } from "@/entities/Auction/model/AuctionList.types"
+import type { AuctionStatus, AuctionType, TradingStatus } from "../model/AuctionList.types"
 
 export function getAuctionTypeLabel(type: AuctionType) {
   const labels: Record<AuctionType, string> = {

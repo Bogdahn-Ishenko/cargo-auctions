@@ -24,7 +24,10 @@ export function AuctionDetailPage() {
           className="text-slate-400 hover:bg-slate-800 hover:text-slate-100"
           variant="ghost"
         >
-          <Link to="/" search={{ page: 1, per_page: 6, sort: "stop_time_asc", auc_type: "all", status: "all" }}>
+          <Link
+            to="/"
+            search={{ page: 1, per_page: 6, sort: "stop_time_asc", auc_type: "all", status: "all" }}
+          >
             <RiArrowLeftLine />
             Список аукционов
           </Link>

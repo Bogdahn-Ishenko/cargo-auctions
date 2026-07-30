@@ -12,6 +12,8 @@ export const AuctionsListSearchSchema = z.object({
   auc_type: AuctionsListTypeSearchSchema.catch("all"),
   status: AuctionsListTradingStatusSearchSchema.catch("all"),
   cargo_num: z.string().trim().catch("").optional(),
+  weight_from: z.coerce.number().nonnegative().catch(0).optional(),
+  weight_to: z.coerce.number().nonnegative().catch(0).optional(),
   is_available: z
     .union([z.literal("true"), z.literal("false"), z.boolean()])
     .transform((value) => (typeof value === "boolean" ? value : value === "true"))

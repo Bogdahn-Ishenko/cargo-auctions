@@ -24,6 +24,8 @@ export function AuctionsListPage() {
     ...(search.auc_type === "all" ? {} : { auc_type: [search.auc_type] }),
     ...(search.status === "all" ? {} : { status: [search.status] }),
     ...(search.cargo_num ? { cargo_num: search.cargo_num } : {}),
+    ...(search.weight_from ? { weight_from: search.weight_from } : {}),
+    ...(search.weight_to ? { weight_to: search.weight_to } : {}),
     ...(search.is_available === undefined ? {} : { is_available: search.is_available }),
   }
   const auctionsQuery = useAuctionsList(request)
@@ -52,7 +54,12 @@ export function AuctionsListPage() {
     cargoNum: string
     isAvailable?: boolean
     tradingStatus: AuctionsListTradingStatusSearch
+    weightFrom: string
+    weightTo: string
   }) {
+    const weightFrom = Number(filters.weightFrom)
+    const weightTo = Number(filters.weightTo)
+
     void navigate({
       search: (previous) => ({
         ...previous,
@@ -61,6 +68,8 @@ export function AuctionsListPage() {
         cargo_num: filters.cargoNum || undefined,
         is_available: filters.isAvailable,
         status: filters.tradingStatus,
+        weight_from: Number.isFinite(weightFrom) && weightFrom > 0 ? weightFrom : undefined,
+        weight_to: Number.isFinite(weightTo) && weightTo > 0 ? weightTo : undefined,
       }),
     })
   }
@@ -75,6 +84,8 @@ export function AuctionsListPage() {
         cargo_num: undefined,
         is_available: undefined,
         status: "all",
+        weight_from: undefined,
+        weight_to: undefined,
       }),
     })
   }
@@ -99,6 +110,8 @@ export function AuctionsListPage() {
           onApply={updateFilters}
           onReset={resetFilters}
           tradingStatus={search.status}
+          weightFrom={search.weight_from ? String(search.weight_from) : ""}
+          weightTo={search.weight_to ? String(search.weight_to) : ""}
         />
 
         <div className="flex min-w-0 flex-1 flex-col">

@@ -16,9 +16,13 @@ interface AuctionsListFiltersProps {
     cargoNum: string
     isAvailable?: boolean
     tradingStatus: AuctionsListTradingStatusSearch
+    weightFrom: string
+    weightTo: string
   }) => void
   onReset: () => void
   tradingStatus: AuctionsListTradingStatusSearch
+  weightFrom: string
+  weightTo: string
 }
 
 export function AuctionsListFilters({
@@ -28,11 +32,15 @@ export function AuctionsListFilters({
   onApply,
   onReset,
   tradingStatus,
+  weightFrom,
+  weightTo,
 }: AuctionsListFiltersProps) {
   const [draftAuctionType, setDraftAuctionType] = useState<AuctionsListTypeSearch>(auctionType)
   const [draftCargoNum, setDraftCargoNum] = useState(cargoNum)
   const [draftIsAvailable, setDraftIsAvailable] = useState(isAvailable ?? false)
   const [draftTradingStatus, setDraftTradingStatus] = useState<AuctionsListTradingStatusSearch>(tradingStatus)
+  const [draftWeightFrom, setDraftWeightFrom] = useState(weightFrom)
+  const [draftWeightTo, setDraftWeightTo] = useState(weightTo)
 
   return (
     <form
@@ -44,6 +52,8 @@ export function AuctionsListFilters({
           cargoNum: draftCargoNum.trim(),
           isAvailable: draftIsAvailable ? true : undefined,
           tradingStatus: draftTradingStatus,
+          weightFrom: draftWeightFrom.trim(),
+          weightTo: draftWeightTo.trim(),
         })
       }}
     >
@@ -107,6 +117,30 @@ export function AuctionsListFilters({
         </NativeSelect>
       </div>
 
+      <div className="grid gap-2">
+        <Label className="text-xs text-slate-400">Вес, т</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            inputMode="decimal"
+            min={0}
+            onChange={(event) => setDraftWeightFrom(event.target.value)}
+            placeholder="От"
+            type="number"
+            value={draftWeightFrom}
+          />
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            inputMode="decimal"
+            min={0}
+            onChange={(event) => setDraftWeightTo(event.target.value)}
+            placeholder="До"
+            type="number"
+            value={draftWeightTo}
+          />
+        </div>
+      </div>
+
       <div className="flex items-center gap-2">
         <Checkbox
           className="border-slate-600"
@@ -132,6 +166,8 @@ export function AuctionsListFilters({
             setDraftCargoNum("")
             setDraftIsAvailable(false)
             setDraftTradingStatus("all")
+            setDraftWeightFrom("")
+            setDraftWeightTo("")
             onReset()
           }}
         >

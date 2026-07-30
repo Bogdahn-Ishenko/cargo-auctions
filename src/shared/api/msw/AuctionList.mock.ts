@@ -169,7 +169,7 @@ export const auctionListMock: AuctionListResponse = {
     current_page: 1,
     from: 1,
     last_page: 1,
-    per_page: 20,
+    per_page: 6,
     to: auctionListItemsMock.length,
     total: auctionListItemsMock.length,
   },

@@ -31,6 +31,16 @@ export function AuctionsListPage() {
     })
   }
 
+  function updatePageSize(perPage: number) {
+    void navigate({
+      search: (previous) => ({
+        ...previous,
+        page: 1,
+        per_page: perPage,
+      }),
+    })
+  }
+
   function updateFilters(filters: { cargoNum: string; isAvailable?: boolean }) {
     void navigate({
       search: (previous) => ({
@@ -104,7 +114,11 @@ export function AuctionsListPage() {
           </div>
 
           {auctionsQuery.data ? (
-            <AuctionsListPagination meta={auctionsQuery.data.meta} onPageChange={updatePage} />
+            <AuctionsListPagination
+              meta={auctionsQuery.data.meta}
+              onPageChange={updatePage}
+              onPageSizeChange={updatePageSize}
+            />
           ) : null}
         </div>
       </section>

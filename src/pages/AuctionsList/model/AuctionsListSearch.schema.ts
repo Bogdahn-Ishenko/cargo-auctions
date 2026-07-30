@@ -4,7 +4,7 @@ export const AuctionsListSortSchema = z.enum(["stop_time_asc", "price_asc", "pri
 
 export const AuctionsListSearchSchema = z.object({
   page: z.coerce.number().int().positive().catch(1),
-  per_page: z.coerce.number().int().positive().catch(20),
+  per_page: z.coerce.number().int().positive().catch(6),
   sort: AuctionsListSortSchema.catch("stop_time_asc"),
   cargo_num: z.string().trim().catch("").optional(),
   is_available: z

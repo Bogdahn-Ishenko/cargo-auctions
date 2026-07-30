@@ -13,7 +13,7 @@ export const handlers = [
     const payload: unknown = await request.json().catch(() => ({}))
     const body = AuctionListRequestSchema.parse(payload)
     const page = body.page ?? 1
-    const perPage = body.per_page ?? 20
+    const perPage = body.per_page ?? 6
 
     const filtered = auctionListMock.data.filter((auction) => {
       if (body.cargo_num && !auction.main.cargo_num.includes(body.cargo_num)) return false

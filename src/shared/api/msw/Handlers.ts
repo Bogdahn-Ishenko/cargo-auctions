@@ -17,6 +17,7 @@ export const handlers = [
 
     const filtered = auctionListMock.data.filter((auction) => {
       if (body.cargo_num && !auction.main.cargo_num.includes(body.cargo_num)) return false
+      if (body.auc_type?.length && !body.auc_type.includes(auction.main.auc_type)) return false
       if (body.is_available !== undefined && auction.trading.is_available !== body.is_available) return false
 
       return true

@@ -8,7 +8,7 @@ import { AuctionsListFilters } from "./AuctionsListFilters"
 import { AuctionsListPagination } from "./AuctionsListPagination"
 import { AuctionsListSkeleton } from "./AuctionsListSkeleton"
 import { AuctionsListToolbar } from "./AuctionsListToolbar"
-import type { AuctionsListSort } from "../model/AuctionsListSearch.schema"
+import type { AuctionsListSort, AuctionsListTypeSearch } from "../model/AuctionsListSearch.schema"
 
 export function AuctionsListPage() {
   const search = useSearch({ from: "/" })
@@ -17,6 +17,7 @@ export function AuctionsListPage() {
     page: search.page,
     per_page: search.per_page,
     sort: getApiSort(search.sort),
+    ...(search.auc_type === "all" ? {} : { auc_type: [search.auc_type] }),
     ...(search.cargo_num ? { cargo_num: search.cargo_num } : {}),
     ...(search.is_available === undefined ? {} : { is_available: search.is_available }),
   }
@@ -41,11 +42,12 @@ export function AuctionsListPage() {
     })
   }
 
-  function updateFilters(filters: { cargoNum: string; isAvailable?: boolean }) {
+  function updateFilters(filters: { auctionType: AuctionsListTypeSearch; cargoNum: string; isAvailable?: boolean }) {
     void navigate({
       search: (previous) => ({
         ...previous,
         page: 1,
+        auc_type: filters.auctionType,
         cargo_num: filters.cargoNum || undefined,
         is_available: filters.isAvailable,
       }),
@@ -58,6 +60,7 @@ export function AuctionsListPage() {
         page: 1,
         per_page: search.per_page,
         sort: search.sort,
+        auc_type: "all",
         cargo_num: undefined,
         is_available: undefined,
       }),
@@ -78,6 +81,7 @@ export function AuctionsListPage() {
     <main className="flex min-h-screen bg-slate-950 text-slate-100">
       <section className="flex min-h-screen w-full flex-col lg:flex-row">
         <AuctionsListFilters
+          auctionType={search.auc_type}
           cargoNum={search.cargo_num ?? ""}
           isAvailable={search.is_available}
           onApply={updateFilters}

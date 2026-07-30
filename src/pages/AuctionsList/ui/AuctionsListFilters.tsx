@@ -4,15 +4,19 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
+import type { AuctionsListTypeSearch } from "../model/AuctionsListSearch.schema"
 
 interface AuctionsListFiltersProps {
+  auctionType: AuctionsListTypeSearch
   cargoNum: string
   isAvailable?: boolean
-  onApply: (filters: { cargoNum: string; isAvailable?: boolean }) => void
+  onApply: (filters: { auctionType: AuctionsListTypeSearch; cargoNum: string; isAvailable?: boolean }) => void
   onReset: () => void
 }
 
-export function AuctionsListFilters({ cargoNum, isAvailable, onApply, onReset }: AuctionsListFiltersProps) {
+export function AuctionsListFilters({ auctionType, cargoNum, isAvailable, onApply, onReset }: AuctionsListFiltersProps) {
+  const [draftAuctionType, setDraftAuctionType] = useState<AuctionsListTypeSearch>(auctionType)
   const [draftCargoNum, setDraftCargoNum] = useState(cargoNum)
   const [draftIsAvailable, setDraftIsAvailable] = useState(isAvailable ?? false)
 
@@ -22,6 +26,7 @@ export function AuctionsListFilters({ cargoNum, isAvailable, onApply, onReset }:
       onSubmit={(event) => {
         event.preventDefault()
         onApply({
+          auctionType: draftAuctionType,
           cargoNum: draftCargoNum.trim(),
           isAvailable: draftIsAvailable ? true : undefined,
         })
@@ -48,6 +53,24 @@ export function AuctionsListFilters({ cargoNum, isAvailable, onApply, onReset }:
         </div>
       </div>
 
+      <div className="grid gap-2">
+        <Label className="text-xs text-slate-400" htmlFor="auction-type">
+          Тип аукциона
+        </Label>
+        <NativeSelect
+          className="w-full"
+          id="auction-type"
+          onChange={(event) => setDraftAuctionType(event.target.value as AuctionsListTypeSearch)}
+          value={draftAuctionType}
+        >
+          <NativeSelectOption value="all">Любой тип</NativeSelectOption>
+          <NativeSelectOption value="Request">Заявка</NativeSelectOption>
+          <NativeSelectOption value="Up">Повышение</NativeSelectOption>
+          <NativeSelectOption value="Down">Понижение</NativeSelectOption>
+          <NativeSelectOption value="FixPrice">Фикс</NativeSelectOption>
+        </NativeSelect>
+      </div>
+
       <div className="flex items-center gap-2">
         <Checkbox
           className="border-slate-600"
@@ -69,6 +92,7 @@ export function AuctionsListFilters({ cargoNum, isAvailable, onApply, onReset }:
           type="button"
           variant="outline"
           onClick={() => {
+            setDraftAuctionType("all")
             setDraftCargoNum("")
             setDraftIsAvailable(false)
             onReset()

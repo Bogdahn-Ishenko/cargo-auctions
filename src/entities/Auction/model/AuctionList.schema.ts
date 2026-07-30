@@ -31,6 +31,7 @@ export const AuctionListRequestSchema = z
     page: z.number().int().positive().optional(),
     per_page: z.number().int().positive().optional(),
     cargo_num: z.string().trim().optional(),
+    auc_type: z.array(AuctionTypeSchema).nullable().optional(),
     is_available: z.boolean().optional(),
     sort: z.record(z.string(), z.enum(["asc", "desc"])).nullable().optional(),
   })

@@ -1,16 +1,29 @@
+import { useNavigate, useSearch } from "@tanstack/react-router"
 import { useAuctionsList } from "@/entities/Auction/api/UseAuctionsList"
+import type { AuctionListRequest } from "@/entities/Auction/model/AuctionList.types"
 import { AuctionListRow } from "./AuctionListRow"
 import { AuctionsListEmptyState } from "./AuctionsListEmptyState"
 import { AuctionsListErrorState } from "./AuctionsListErrorState"
+import { AuctionsListPagination } from "./AuctionsListPagination"
 import { AuctionsListSkeleton } from "./AuctionsListSkeleton"
 
-const initialRequest = {
-  page: 1,
-  per_page: 20,
-}
-
 export function AuctionsListPage() {
-  const auctionsQuery = useAuctionsList(initialRequest)
+  const search = useSearch({ from: "/" })
+  const navigate = useNavigate({ from: "/" })
+  const request: AuctionListRequest = {
+    page: search.page,
+    per_page: search.per_page,
+  }
+  const auctionsQuery = useAuctionsList(request)
+
+  function updatePage(page: number) {
+    void navigate({
+      search: (previous) => ({
+        ...previous,
+        page,
+      }),
+    })
+  }
 
   return (
     <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6 lg:px-8">
@@ -38,6 +51,7 @@ export function AuctionsListPage() {
             {auctionsQuery.data.data.map((auction) => (
               <AuctionListRow key={auction.main.order_uid} auction={auction} />
             ))}
+            <AuctionsListPagination meta={auctionsQuery.data.meta} onPageChange={updatePage} />
           </div>
         ) : null}
       </section>

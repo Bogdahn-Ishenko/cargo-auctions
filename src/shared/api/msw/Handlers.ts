@@ -176,6 +176,29 @@ export const handlers = [
 
     return HttpResponse.json({ ok: true })
   }),
+  http.post<{ auctionUuid: string }>("/api/v1/auctions/:auctionUuid/favorite", async ({ params }) => {
+    await delay(200)
+
+    const auction = auctionDetailMocks[params.auctionUuid]
+    const listAuction = auctionListMock.data.find((item) => item.main.order_uid === params.auctionUuid)
+
+    if (!auction || !listAuction) {
+      return HttpResponse.json(
+        {
+          code: "resource_not_found",
+          title: "Не найдено",
+          message: "Аукцион не найден",
+        },
+        { status: 404 },
+      )
+    }
+
+    const nextFavoriteState = !listAuction.trading.is_favorite
+    listAuction.trading.is_favorite = nextFavoriteState
+    auction.trading.is_favorite = nextFavoriteState
+
+    return HttpResponse.json({ is_favorite: nextFavoriteState })
+  }),
 ]
 
 function sortAuctions(items: AuctionListItem[], sort: Record<string, "asc" | "desc"> | null | undefined) {

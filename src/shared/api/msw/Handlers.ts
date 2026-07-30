@@ -1,6 +1,7 @@
 import { delay, http, HttpResponse } from "msw"
 import { AuctionListRequestSchema } from "@/entities/Auction/model/AuctionList.schema"
 import type { AuctionListResponse } from "@/entities/Auction/model/AuctionList.types"
+import { auctionDetailMocks } from "./AuctionDetail.mock"
 import { auctionListMock } from "./AuctionList.mock"
 
 export const handlers = [
@@ -35,5 +36,23 @@ export const handlers = [
     }
 
     return HttpResponse.json(response)
+  }),
+  http.get<{ auctionUuid: string }>("/api/v1/auctions/:auctionUuid", async ({ params }) => {
+    await delay(250)
+
+    const auction = auctionDetailMocks[params.auctionUuid]
+
+    if (!auction) {
+      return HttpResponse.json(
+        {
+          code: "resource_not_found",
+          title: "Не найдено",
+          message: "Аукцион не найден",
+        },
+        { status: 404 },
+      )
+    }
+
+    return HttpResponse.json(auction)
   }),
 ]

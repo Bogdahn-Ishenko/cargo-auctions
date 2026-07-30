@@ -1,7 +1,9 @@
+import { Link } from "@tanstack/react-router"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types"
-import { formatPrice } from "../lib/FormatPrice"
+import { formatPrice } from "@/shared/lib/FormatPrice"
 
 interface AuctionListRowProps {
   auction: AuctionListItem
@@ -31,7 +33,14 @@ export function AuctionListRow({ auction }: AuctionListRowProps) {
             {auction.cargo.name}, {auction.cargo.weight} т, {auction.cargo.volume} м3
           </div>
         </div>
-        <div className="font-medium">{formatPrice(currentPrice)}</div>
+        <div className="grid gap-2 sm:justify-items-end">
+          <div className="font-medium">{formatPrice(currentPrice)}</div>
+          <Button asChild variant="outline">
+            <Link to="/auctions/$auctionUuid" params={{ auctionUuid: auction.main.order_uid }}>
+              Открыть
+            </Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )

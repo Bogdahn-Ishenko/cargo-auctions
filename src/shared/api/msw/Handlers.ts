@@ -1,6 +1,7 @@
 import { delay, http, HttpResponse } from "msw"
 import { AuctionListRequestSchema } from "@/entities/Auction/model/AuctionList.schema"
 import type { AuctionListResponse } from "@/entities/Auction/model/AuctionList.types"
+import { auctionBetsMocks } from "./AuctionBets.mock"
 import { auctionDetailMocks } from "./AuctionDetail.mock"
 import { auctionListMock } from "./AuctionList.mock"
 
@@ -54,5 +55,23 @@ export const handlers = [
     }
 
     return HttpResponse.json(auction)
+  }),
+  http.get<{ auctionUuid: string }>("/api/v1/auctions/:auctionUuid/bets", async ({ params }) => {
+    await delay(250)
+
+    const bets = auctionBetsMocks[params.auctionUuid]
+
+    if (!bets) {
+      return HttpResponse.json(
+        {
+          code: "resource_not_found",
+          title: "Не найдено",
+          message: "Ставки аукциона не найдены",
+        },
+        { status: 404 },
+      )
+    }
+
+    return HttpResponse.json(bets)
   }),
 ]

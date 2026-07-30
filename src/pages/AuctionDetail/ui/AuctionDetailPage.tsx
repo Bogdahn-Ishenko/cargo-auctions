@@ -1,7 +1,9 @@
 import { Link, useParams } from "@tanstack/react-router"
 import { RiArrowLeftLine } from "@remixicon/react"
 import { Button } from "@/components/ui/button"
+import { useAuctionBets } from "@/entities/Auction/api/UseAuctionBets"
 import { useAuctionDetail } from "@/entities/Auction/api/UseAuctionDetail"
+import { AuctionBidsTable } from "./AuctionBidsTable"
 import { AuctionDetailErrorState } from "./AuctionDetailErrorState"
 import { AuctionDetailHeader } from "./AuctionDetailHeader"
 import { AuctionDetailInfoTable } from "./AuctionDetailInfoTable"
@@ -12,6 +14,7 @@ import { AuctionDetailSkeleton } from "./AuctionDetailSkeleton"
 export function AuctionDetailPage() {
   const { auctionUuid } = useParams({ from: "/auctions/$auctionUuid" })
   const detailQuery = useAuctionDetail(auctionUuid)
+  const betsQuery = useAuctionBets(auctionUuid)
 
   return (
     <main className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
@@ -51,6 +54,11 @@ export function AuctionDetailPage() {
               <div className="grid gap-4">
                 <AuctionDetailRouteCard routes={detailQuery.data.routes} />
                 <AuctionDetailInfoTable auction={detailQuery.data} />
+                <AuctionBidsTable
+                  bets={betsQuery.data?.bets ?? []}
+                  isError={betsQuery.isError}
+                  isLoading={betsQuery.isLoading}
+                />
               </div>
               <AuctionDetailPriceCard auction={detailQuery.data} />
             </div>

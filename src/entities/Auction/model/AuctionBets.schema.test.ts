@@ -15,6 +15,15 @@ describe("BetListResponseSchema", () => {
   it("accepts an empty bets list", () => {
     expect(BetListResponseSchema.parse({ bets: [] })).toEqual({ bets: [] })
   })
+
+  it("keeps rejected bet edge cases", () => {
+    const rejectedBet = Object.values(auctionBetsMocks)
+      .flatMap((betList) => betList.bets)
+      .find((bet) => bet.is_rejected)
+
+    expect(rejectedBet).toBeDefined()
+    expect(rejectedBet?.cancel_reason).toBeTruthy()
+  })
 })
 
 describe("SetBetRequestSchema", () => {

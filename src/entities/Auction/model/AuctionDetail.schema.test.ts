@@ -28,4 +28,12 @@ describe("AuctionDetailResponseSchema", () => {
     expect(parsed.trading.settings?.prolong_after_bet).toBeTypeOf("number")
     expect(parsed.trading.your?.bet).toBeTypeOf("boolean")
   })
+
+  it("keeps visibility restriction edge cases from detail DTO", () => {
+    const details = Object.values(auctionDetailMocks).map((auction) => AuctionDetailResponseSchema.parse(auction))
+
+    expect(details.some((auction) => auction.trading.hide_places)).toBe(true)
+    expect(details.some((auction) => auction.trading.no_view_cargo_price)).toBe(true)
+    expect(details.some((auction) => auction.trading.hide_points_address_and_contacts)).toBe(true)
+  })
 })

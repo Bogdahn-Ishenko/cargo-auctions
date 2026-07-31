@@ -224,14 +224,13 @@ export function AuctionsListFilters({
         </div>
         <Calendar
           buttonVariant="ghost"
-          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-2 text-slate-300 [--cell-size:--spacing(6)]"
+          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-2 text-slate-300 [--cell-size:--spacing(6)] [&_.rdp-button_next]:text-slate-400 [&_.rdp-button_next]:hover:bg-slate-700 [&_.rdp-button_next]:hover:text-slate-100 [&_.rdp-button_previous]:text-slate-400 [&_.rdp-button_previous]:hover:bg-slate-700 [&_.rdp-button_previous]:hover:text-slate-100 [&_.rdp-nav]:z-10"
           classNames={{
             caption_label: "text-[11px] font-semibold text-slate-300",
             day_button: "text-[10px] text-slate-300 hover:bg-slate-700 hover:text-slate-100",
-            month: "w-full gap-2",
+            month: "flex w-full flex-col gap-2",
             month_grid: "w-full",
-            months: "w-full",
-            nav: "text-slate-400",
+            months: "relative flex w-full flex-col gap-4",
             outside: "text-slate-600",
             range_end: "bg-blue-600 text-white",
             range_middle: "bg-blue-600/20 text-blue-200",

@@ -193,7 +193,7 @@ export function AuctionsListFilters({
         </button>
       </div>
 
-      <div className="flex-1 space-y-6 overflow-y-auto p-5">
+      <div className="sidebar-scrollbar flex-1 space-y-6 overflow-y-auto p-5">
         <div className="grid gap-2">
           <Label className={labelClassName} htmlFor="cargo-num">
             Номер заявки

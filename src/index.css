@@ -114,6 +114,7 @@ body {
 }
 
 @theme inline {
+  --font-sans: "Instrument Sans Variable", system-ui, sans-serif;
   --font-mono: "Geist Mono Variable", monospace;
   --font-heading: "Instrument Sans Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
@@ -161,9 +162,9 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-foreground;
   }
   html {
-    @apply font-mono;
+    @apply font-sans;
   }
 }

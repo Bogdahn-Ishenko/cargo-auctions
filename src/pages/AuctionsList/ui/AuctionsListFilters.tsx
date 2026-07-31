@@ -11,6 +11,7 @@ interface AuctionsListFiltersProps {
   auctionType: AuctionsListTypeSearch
   cargoNum: string
   isAvailable?: boolean
+  isOpen: boolean
   onApply: (filters: {
     auctionType: AuctionsListTypeSearch
     cargoNum: string
@@ -36,6 +37,7 @@ export function AuctionsListFilters({
   cargoNum,
   isAvailable,
   isFavorite,
+  isOpen,
   onApply,
   onReset,
   pricePerKmFrom,
@@ -56,7 +58,7 @@ export function AuctionsListFilters({
 
   return (
     <form
-      className="flex flex-col gap-5 border-b border-slate-800 bg-slate-950 p-4 text-slate-200 lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r"
+      className={`${isOpen ? "flex" : "hidden"} flex-col gap-5 border-b border-slate-800 bg-slate-950 p-4 text-slate-200 lg:flex lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r`}
       onSubmit={(event) => {
         event.preventDefault()
         onApply({

@@ -1,6 +1,7 @@
 import { useNavigate, useSearch } from "@tanstack/react-router"
 import { useAuctionsList } from "@/entities/Auction/api/UseAuctionsList"
 import { buildAuctionsListRequest } from "../model/BuildAuctionsListRequest"
+import { useAuctionsListUiStore } from "../model/UseAuctionsListUiStore"
 import { AuctionsListActiveFilters } from "./AuctionsListActiveFilters"
 import { AuctionListRow } from "./AuctionListRow"
 import { AuctionsListEmptyState } from "./AuctionsListEmptyState"
@@ -20,6 +21,7 @@ export function AuctionsListPage() {
   const navigate = useNavigate({ from: "/" })
   const request = buildAuctionsListRequest(search)
   const auctionsQuery = useAuctionsList(request)
+  const { closeFilters, isFiltersOpen, toggleFilters } = useAuctionsListUiStore()
 
   function updatePage(page: number) {
     void navigate({
@@ -71,6 +73,7 @@ export function AuctionsListPage() {
         weight_to: Number.isFinite(weightTo) && weightTo > 0 ? weightTo : undefined,
       }),
     })
+    closeFilters()
   }
 
   function resetFilters() {
@@ -90,6 +93,7 @@ export function AuctionsListPage() {
         weight_to: undefined,
       }),
     })
+    closeFilters()
   }
 
   function updateSort(sort: AuctionsListSort) {
@@ -110,6 +114,7 @@ export function AuctionsListPage() {
           cargoNum={search.cargo_num ?? ""}
           isAvailable={search.is_available}
           isFavorite={search.is_favorite}
+          isOpen={isFiltersOpen}
           onApply={updateFilters}
           onReset={resetFilters}
           pricePerKmFrom={search.price_per_km_from ? String(search.price_per_km_from) : ""}
@@ -123,6 +128,8 @@ export function AuctionsListPage() {
           <AuctionsListToolbar
             activeFilters={<AuctionsListActiveFilters onReset={resetFilters} search={search} />}
             from={auctionsQuery.data?.meta.from}
+            isFiltersOpen={isFiltersOpen}
+            onFiltersToggle={toggleFilters}
             onSortChange={updateSort}
             sort={search.sort}
             to={auctionsQuery.data?.meta.to}

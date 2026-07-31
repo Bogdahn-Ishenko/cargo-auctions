@@ -10,8 +10,10 @@ export function useSetAuctionBet(auctionUuid: string) {
 
   return useMutation({
     mutationFn: (price: number) => setAuctionBet(auctionUuid, { price }),
-    onSuccess: async () => {
-      await Promise.all([
+    onSuccess: () => {
+      toast.success("Ставка отправлена");
+
+      void Promise.all([
         queryClient.invalidateQueries({ queryKey: ["auctions", "list"] }),
         queryClient.invalidateQueries({
           queryKey: auctionBetsQueryKey(auctionUuid),
@@ -20,7 +22,6 @@ export function useSetAuctionBet(auctionUuid: string) {
           queryKey: auctionDetailQueryKey(auctionUuid),
         }),
       ]);
-      toast.success("Ставка отправлена");
     },
     onError: (error) => {
       toast.error(getToastErrorMessage(error, "Не удалось отправить ставку"));

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RiSendPlaneLine } from "@remixicon/react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,17 +19,25 @@ interface AuctionBetFormProps {
 }
 
 const BetFormSchema = z.object({
-  price: z
-    .string()
-    .trim()
-    .min(1, "Укажите сумму ставки")
-    .transform(Number)
-    .pipe(
-      z
-        .number({ error: "Укажите сумму ставки" })
-        .finite("Укажите корректную сумму")
-        .positive("Укажите сумму больше 0"),
-    ),
+  price: z.preprocess(
+    (value) => {
+      if (typeof value === "string") return value;
+      if (typeof value === "number") return String(value);
+
+      return "";
+    },
+    z
+      .string()
+      .trim()
+      .min(1, "Укажите сумму ставки")
+      .transform(Number)
+      .pipe(
+        z
+          .number({ error: "Укажите сумму ставки" })
+          .finite("Укажите корректную сумму")
+          .positive("Укажите сумму больше 0"),
+      ),
+  ),
 });
 
 type BetFormValues = z.infer<typeof BetFormSchema>;
@@ -61,6 +70,7 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
     const validationError = validateAuctionBet(auction, values.price);
     if (validationError) {
       setError(validationError);
+      toast.error(validationError);
       return;
     }
 
@@ -69,7 +79,13 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   };
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    void form.handleSubmit(submitBet)(event);
+    void form.handleSubmit(submitBet, (errors) => {
+      const message = errors.price?.message;
+
+      if (message) {
+        toast.error(message);
+      }
+    })(event);
   }
 
   return (
@@ -91,7 +107,9 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
           inputMode="numeric"
           max={auction.trading.price?.max ?? undefined}
           min={auction.trading.price?.min ?? 1}
-          placeholder={initialBidValue ? String(initialBidValue) : "Введите сумму"}
+          placeholder={
+            initialBidValue ? String(initialBidValue) : "Введите сумму"
+          }
           step={auction.trading.price?.step ?? 1}
           type="number"
           {...priceField}

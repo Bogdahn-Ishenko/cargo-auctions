@@ -1,6 +1,9 @@
 import { useState } from "react"
+import { ru } from "date-fns/locale"
+import type { DateRange } from "react-day-picker"
 import { RiFilter3Line, RiRefreshLine, RiSearchLine } from "@remixicon/react"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -92,6 +95,7 @@ export function AuctionsListFilters({
   const [draftUnloadDateTo, setDraftUnloadDateTo] = useState(unloadDateTo)
   const [draftWeightFrom, setDraftWeightFrom] = useState(weightFrom)
   const [draftWeightTo, setDraftWeightTo] = useState(weightTo)
+  const loadDateRange = getDateRange(draftLoadDateFrom, draftLoadDateTo)
 
   function resetDraftFilters() {
     setDraftAuctionType("all")
@@ -113,6 +117,11 @@ export function AuctionsListFilters({
     setDraftWeightFrom("")
     setDraftWeightTo("")
     onReset()
+  }
+
+  function selectLoadDateRange(range: DateRange | undefined) {
+    setDraftLoadDateFrom(toDateInputValue(range?.from))
+    setDraftLoadDateTo(toDateInputValue(range?.to))
   }
 
   return (
@@ -171,6 +180,73 @@ export function AuctionsListFilters({
             value={draftCargoNum}
           />
         </div>
+      </div>
+
+      <div className="grid gap-2">
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Текущая цена, ₽</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            inputMode="decimal"
+            min={0}
+            onChange={(event) => setDraftCurrentPriceFrom(event.target.value)}
+            placeholder="От"
+            type="number"
+            value={draftCurrentPriceFrom}
+          />
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            inputMode="decimal"
+            min={0}
+            onChange={(event) => setDraftCurrentPriceTo(event.target.value)}
+            placeholder="До"
+            type="number"
+            value={draftCurrentPriceTo}
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Дата погрузки</Label>
+        <div className="grid min-w-0 grid-cols-2 gap-2">
+          <Input
+            className="min-w-0 border-slate-700 bg-slate-900 px-2 text-[11px] text-slate-100 focus-visible:border-blue-500"
+            onChange={(event) => setDraftLoadDateFrom(event.target.value)}
+            type="date"
+            value={draftLoadDateFrom}
+          />
+          <Input
+            className="min-w-0 border-slate-700 bg-slate-900 px-2 text-[11px] text-slate-100 focus-visible:border-blue-500"
+            onChange={(event) => setDraftLoadDateTo(event.target.value)}
+            type="date"
+            value={draftLoadDateTo}
+          />
+        </div>
+        <Calendar
+          buttonVariant="ghost"
+          className="w-full rounded-xl border border-slate-700 bg-slate-800 p-2 text-slate-300 [--cell-size:--spacing(6)]"
+          classNames={{
+            caption_label: "text-[11px] font-semibold text-slate-300",
+            day_button: "text-[10px] text-slate-300 hover:bg-slate-700 hover:text-slate-100",
+            month: "w-full gap-2",
+            month_grid: "w-full",
+            months: "w-full",
+            nav: "text-slate-400",
+            outside: "text-slate-600",
+            range_end: "bg-blue-600 text-white",
+            range_middle: "bg-blue-600/20 text-blue-200",
+            range_start: "bg-blue-600 text-white",
+            selected: "bg-blue-600 text-white",
+            today: "bg-slate-700 text-slate-100",
+            weekday: "text-[9px] text-slate-600",
+            root: "w-full",
+          }}
+          locale={ru}
+          mode="range"
+          onSelect={selectLoadDateRange}
+          selected={loadDateRange}
+          showOutsideDays={false}
+        />
       </div>
 
       <div className="grid gap-2">
@@ -251,34 +327,16 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Дата погрузки</Label>
-        <div className="grid grid-cols-2 gap-2">
-          <Input
-            className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
-            onChange={(event) => setDraftLoadDateFrom(event.target.value)}
-            type="date"
-            value={draftLoadDateFrom}
-          />
-          <Input
-            className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
-            onChange={(event) => setDraftLoadDateTo(event.target.value)}
-            type="date"
-            value={draftLoadDateTo}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-2">
         <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Дата выгрузки</Label>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid min-w-0 grid-cols-2 gap-2">
           <Input
-            className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
+            className="min-w-0 border-slate-700 bg-slate-900 px-2 text-[11px] text-slate-100 focus-visible:border-blue-500"
             onChange={(event) => setDraftUnloadDateFrom(event.target.value)}
             type="date"
             value={draftUnloadDateFrom}
           />
           <Input
-            className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
+            className="min-w-0 border-slate-700 bg-slate-900 px-2 text-[11px] text-slate-100 focus-visible:border-blue-500"
             onChange={(event) => setDraftUnloadDateTo(event.target.value)}
             type="date"
             value={draftUnloadDateTo}
@@ -306,30 +364,6 @@ export function AuctionsListFilters({
             placeholder="До"
             type="number"
             value={draftWeightTo}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-2">
-        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Текущая цена, ₽</Label>
-        <div className="grid grid-cols-2 gap-2">
-          <Input
-            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
-            inputMode="decimal"
-            min={0}
-            onChange={(event) => setDraftCurrentPriceFrom(event.target.value)}
-            placeholder="От"
-            type="number"
-            value={draftCurrentPriceFrom}
-          />
-          <Input
-            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
-            inputMode="decimal"
-            min={0}
-            onChange={(event) => setDraftCurrentPriceTo(event.target.value)}
-            placeholder="До"
-            type="number"
-            value={draftCurrentPriceTo}
           />
         </div>
       </div>
@@ -413,4 +447,35 @@ export function AuctionsListFilters({
       </div>
     </form>
   )
+}
+
+function getDateRange(from: string, to: string): DateRange | undefined {
+  const fromDate = parseDateInputValue(from)
+  const toDate = parseDateInputValue(to)
+
+  if (!fromDate && !toDate) return undefined
+
+  return {
+    from: fromDate,
+    to: toDate,
+  }
+}
+
+function parseDateInputValue(value: string) {
+  if (!value) return undefined
+
+  const [year, month, day] = value.split("-").map(Number)
+  if (!year || !month || !day) return undefined
+
+  return new Date(year, month - 1, day)
+}
+
+function toDateInputValue(date: Date | undefined) {
+  if (!date) return ""
+
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+
+  return `${year}-${month}-${day}`
 }

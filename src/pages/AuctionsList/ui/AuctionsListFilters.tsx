@@ -5,29 +5,48 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
+import { auctionCityOptions } from "../model/AuctionCityOptions"
 import type { AuctionsListTradingStatusSearch, AuctionsListTypeSearch } from "../model/AuctionsListSearch.schema"
 
 interface AuctionsListFiltersProps {
   auctionType: AuctionsListTypeSearch
   cargoNum: string
+  currentPriceFrom: string
+  currentPriceTo: string
   isAvailable?: boolean
+  isBidder?: boolean
   isOpen: boolean
   onApply: (filters: {
     auctionType: AuctionsListTypeSearch
     cargoNum: string
+    currentPriceFrom: string
+    currentPriceTo: string
     isAvailable?: boolean
+    isBidder?: boolean
     isFavorite?: boolean
+    loadCity: string
+    loadDateFrom: string
+    loadDateTo: string
     pricePerKmFrom: string
     pricePerKmTo: string
     tradingStatus: AuctionsListTradingStatusSearch
+    unloadCity: string
+    unloadDateFrom: string
+    unloadDateTo: string
     weightFrom: string
     weightTo: string
   }) => void
   onReset: () => void
   isFavorite?: boolean
+  loadCity: string
+  loadDateFrom: string
+  loadDateTo: string
   pricePerKmFrom: string
   pricePerKmTo: string
   tradingStatus: AuctionsListTradingStatusSearch
+  unloadCity: string
+  unloadDateFrom: string
+  unloadDateTo: string
   weightFrom: string
   weightTo: string
 }
@@ -35,24 +54,42 @@ interface AuctionsListFiltersProps {
 export function AuctionsListFilters({
   auctionType,
   cargoNum,
+  currentPriceFrom,
+  currentPriceTo,
   isAvailable,
+  isBidder,
   isFavorite,
   isOpen,
+  loadCity,
+  loadDateFrom,
+  loadDateTo,
   onApply,
   onReset,
   pricePerKmFrom,
   pricePerKmTo,
   tradingStatus,
+  unloadCity,
+  unloadDateFrom,
+  unloadDateTo,
   weightFrom,
   weightTo,
 }: AuctionsListFiltersProps) {
   const [draftAuctionType, setDraftAuctionType] = useState<AuctionsListTypeSearch>(auctionType)
   const [draftCargoNum, setDraftCargoNum] = useState(cargoNum)
+  const [draftCurrentPriceFrom, setDraftCurrentPriceFrom] = useState(currentPriceFrom)
+  const [draftCurrentPriceTo, setDraftCurrentPriceTo] = useState(currentPriceTo)
   const [draftIsAvailable, setDraftIsAvailable] = useState(isAvailable ?? false)
+  const [draftIsBidder, setDraftIsBidder] = useState(isBidder ?? false)
   const [draftIsFavorite, setDraftIsFavorite] = useState(isFavorite ?? false)
+  const [draftLoadCity, setDraftLoadCity] = useState(loadCity)
+  const [draftLoadDateFrom, setDraftLoadDateFrom] = useState(loadDateFrom)
+  const [draftLoadDateTo, setDraftLoadDateTo] = useState(loadDateTo)
   const [draftPricePerKmFrom, setDraftPricePerKmFrom] = useState(pricePerKmFrom)
   const [draftPricePerKmTo, setDraftPricePerKmTo] = useState(pricePerKmTo)
   const [draftTradingStatus, setDraftTradingStatus] = useState<AuctionsListTradingStatusSearch>(tradingStatus)
+  const [draftUnloadCity, setDraftUnloadCity] = useState(unloadCity)
+  const [draftUnloadDateFrom, setDraftUnloadDateFrom] = useState(unloadDateFrom)
+  const [draftUnloadDateTo, setDraftUnloadDateTo] = useState(unloadDateTo)
   const [draftWeightFrom, setDraftWeightFrom] = useState(weightFrom)
   const [draftWeightTo, setDraftWeightTo] = useState(weightTo)
 
@@ -64,11 +101,20 @@ export function AuctionsListFilters({
         onApply({
           auctionType: draftAuctionType,
           cargoNum: draftCargoNum.trim(),
+          currentPriceFrom: draftCurrentPriceFrom.trim(),
+          currentPriceTo: draftCurrentPriceTo.trim(),
           isAvailable: draftIsAvailable ? true : undefined,
+          isBidder: draftIsBidder ? true : undefined,
           isFavorite: draftIsFavorite ? true : undefined,
+          loadCity: draftLoadCity,
+          loadDateFrom: draftLoadDateFrom,
+          loadDateTo: draftLoadDateTo,
           pricePerKmFrom: draftPricePerKmFrom.trim(),
           pricePerKmTo: draftPricePerKmTo.trim(),
           tradingStatus: draftTradingStatus,
+          unloadCity: draftUnloadCity,
+          unloadDateFrom: draftUnloadDateFrom,
+          unloadDateTo: draftUnloadDateTo,
           weightFrom: draftWeightFrom.trim(),
           weightTo: draftWeightTo.trim(),
         })
@@ -135,6 +181,80 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
+        <Label className="text-xs text-slate-400" htmlFor="load-city">
+          Город погрузки
+        </Label>
+        <NativeSelect
+          className="w-full"
+          id="load-city"
+          onChange={(event) => setDraftLoadCity(event.target.value)}
+          value={draftLoadCity}
+        >
+          <NativeSelectOption value="">Любой город</NativeSelectOption>
+          {auctionCityOptions.map((city) => (
+            <NativeSelectOption key={city} value={city}>
+              {city}
+            </NativeSelectOption>
+          ))}
+        </NativeSelect>
+      </div>
+
+      <div className="grid gap-2">
+        <Label className="text-xs text-slate-400" htmlFor="unload-city">
+          Город выгрузки
+        </Label>
+        <NativeSelect
+          className="w-full"
+          id="unload-city"
+          onChange={(event) => setDraftUnloadCity(event.target.value)}
+          value={draftUnloadCity}
+        >
+          <NativeSelectOption value="">Любой город</NativeSelectOption>
+          {auctionCityOptions.map((city) => (
+            <NativeSelectOption key={city} value={city}>
+              {city}
+            </NativeSelectOption>
+          ))}
+        </NativeSelect>
+      </div>
+
+      <div className="grid gap-2">
+        <Label className="text-xs text-slate-400">Дата погрузки</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
+            onChange={(event) => setDraftLoadDateFrom(event.target.value)}
+            type="date"
+            value={draftLoadDateFrom}
+          />
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
+            onChange={(event) => setDraftLoadDateTo(event.target.value)}
+            type="date"
+            value={draftLoadDateTo}
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        <Label className="text-xs text-slate-400">Дата выгрузки</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
+            onChange={(event) => setDraftUnloadDateFrom(event.target.value)}
+            type="date"
+            value={draftUnloadDateFrom}
+          />
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
+            onChange={(event) => setDraftUnloadDateTo(event.target.value)}
+            type="date"
+            value={draftUnloadDateTo}
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-2">
         <Label className="text-xs text-slate-400">Вес, т</Label>
         <div className="grid grid-cols-2 gap-2">
           <Input
@@ -154,6 +274,30 @@ export function AuctionsListFilters({
             placeholder="До"
             type="number"
             value={draftWeightTo}
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        <Label className="text-xs text-slate-400">Текущая цена, ₽</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            inputMode="decimal"
+            min={0}
+            onChange={(event) => setDraftCurrentPriceFrom(event.target.value)}
+            placeholder="От"
+            type="number"
+            value={draftCurrentPriceFrom}
+          />
+          <Input
+            className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            inputMode="decimal"
+            min={0}
+            onChange={(event) => setDraftCurrentPriceTo(event.target.value)}
+            placeholder="До"
+            type="number"
+            value={draftCurrentPriceTo}
           />
         </div>
       </div>
@@ -180,6 +324,18 @@ export function AuctionsListFilters({
             value={draftPricePerKmTo}
           />
         </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Checkbox
+          checked={draftIsBidder}
+          className="border-slate-600"
+          id="is-bidder"
+          onCheckedChange={(value) => setDraftIsBidder(value === true)}
+        />
+        <Label className="text-xs text-slate-300" htmlFor="is-bidder">
+          Только с моим участием
+        </Label>
       </div>
 
       <div className="flex items-center gap-2">
@@ -217,11 +373,20 @@ export function AuctionsListFilters({
           onClick={() => {
             setDraftAuctionType("all")
             setDraftCargoNum("")
+            setDraftCurrentPriceFrom("")
+            setDraftCurrentPriceTo("")
             setDraftIsAvailable(false)
+            setDraftIsBidder(false)
             setDraftIsFavorite(false)
+            setDraftLoadCity("")
+            setDraftLoadDateFrom("")
+            setDraftLoadDateTo("")
             setDraftPricePerKmFrom("")
             setDraftPricePerKmTo("")
             setDraftTradingStatus("all")
+            setDraftUnloadCity("")
+            setDraftUnloadDateFrom("")
+            setDraftUnloadDateTo("")
             setDraftWeightFrom("")
             setDraftWeightTo("")
             onReset()

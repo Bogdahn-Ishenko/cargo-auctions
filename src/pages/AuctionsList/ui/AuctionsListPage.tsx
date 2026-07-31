@@ -45,16 +45,27 @@ export function AuctionsListPage() {
   function updateFilters(filters: {
     auctionType: AuctionsListTypeSearch
     cargoNum: string
+    currentPriceFrom: string
+    currentPriceTo: string
     isAvailable?: boolean
+    isBidder?: boolean
     isFavorite?: boolean
+    loadCity: string
+    loadDateFrom: string
+    loadDateTo: string
     pricePerKmFrom: string
     pricePerKmTo: string
     tradingStatus: AuctionsListTradingStatusSearch
+    unloadCity: string
+    unloadDateFrom: string
+    unloadDateTo: string
     weightFrom: string
     weightTo: string
   }) {
     const weightFrom = Number(filters.weightFrom)
     const weightTo = Number(filters.weightTo)
+    const currentPriceFrom = Number(filters.currentPriceFrom)
+    const currentPriceTo = Number(filters.currentPriceTo)
     const pricePerKmFrom = Number(filters.pricePerKmFrom)
     const pricePerKmTo = Number(filters.pricePerKmTo)
 
@@ -64,11 +75,20 @@ export function AuctionsListPage() {
         page: 1,
         auc_type: filters.auctionType,
         cargo_num: filters.cargoNum || undefined,
+        current_price_from: Number.isFinite(currentPriceFrom) && currentPriceFrom > 0 ? currentPriceFrom : undefined,
+        current_price_to: Number.isFinite(currentPriceTo) && currentPriceTo > 0 ? currentPriceTo : undefined,
         is_available: filters.isAvailable,
+        is_bidder: filters.isBidder,
         is_favorite: filters.isFavorite,
+        load_city: filters.loadCity || undefined,
+        load_date_from: filters.loadDateFrom || undefined,
+        load_date_to: filters.loadDateTo || undefined,
         price_per_km_from: Number.isFinite(pricePerKmFrom) && pricePerKmFrom > 0 ? pricePerKmFrom : undefined,
         price_per_km_to: Number.isFinite(pricePerKmTo) && pricePerKmTo > 0 ? pricePerKmTo : undefined,
         status: filters.tradingStatus,
+        unload_city: filters.unloadCity || undefined,
+        unload_date_from: filters.unloadDateFrom || undefined,
+        unload_date_to: filters.unloadDateTo || undefined,
         weight_from: Number.isFinite(weightFrom) && weightFrom > 0 ? weightFrom : undefined,
         weight_to: Number.isFinite(weightTo) && weightTo > 0 ? weightTo : undefined,
       }),
@@ -84,11 +104,20 @@ export function AuctionsListPage() {
         sort: search.sort,
         auc_type: "all",
         cargo_num: undefined,
+        current_price_from: undefined,
+        current_price_to: undefined,
         is_available: undefined,
+        is_bidder: undefined,
         is_favorite: undefined,
+        load_city: undefined,
+        load_date_from: undefined,
+        load_date_to: undefined,
         price_per_km_from: undefined,
         price_per_km_to: undefined,
         status: "all",
+        unload_city: undefined,
+        unload_date_from: undefined,
+        unload_date_to: undefined,
         weight_from: undefined,
         weight_to: undefined,
       }),
@@ -112,14 +141,23 @@ export function AuctionsListPage() {
         <AuctionsListFilters
           auctionType={search.auc_type}
           cargoNum={search.cargo_num ?? ""}
+          currentPriceFrom={search.current_price_from ? String(search.current_price_from) : ""}
+          currentPriceTo={search.current_price_to ? String(search.current_price_to) : ""}
           isAvailable={search.is_available}
+          isBidder={search.is_bidder}
           isFavorite={search.is_favorite}
           isOpen={isFiltersOpen}
+          loadCity={search.load_city ?? ""}
+          loadDateFrom={search.load_date_from ?? ""}
+          loadDateTo={search.load_date_to ?? ""}
           onApply={updateFilters}
           onReset={resetFilters}
           pricePerKmFrom={search.price_per_km_from ? String(search.price_per_km_from) : ""}
           pricePerKmTo={search.price_per_km_to ? String(search.price_per_km_to) : ""}
           tradingStatus={search.status}
+          unloadCity={search.unload_city ?? ""}
+          unloadDateFrom={search.unload_date_from ?? ""}
+          unloadDateTo={search.unload_date_to ?? ""}
           weightFrom={search.weight_from ? String(search.weight_from) : ""}
           weightTo={search.weight_to ? String(search.weight_to) : ""}
         />

@@ -3,9 +3,11 @@ import { AuctionDetailPage } from "@/pages/AuctionDetail"
 import { AuctionDetailSearchSchema } from "@/pages/AuctionDetail/model/AuctionDetailSearch.schema"
 import { AuctionsListPage } from "@/pages/AuctionsList"
 import { AuctionsListSearchSchema } from "@/pages/AuctionsList/model/AuctionsListSearch.schema"
+import { NotFoundPage } from "@/pages/NotFound"
 
 const rootRoute = createRootRoute({
   component: () => <Outlet />,
+  notFoundComponent: NotFoundPage,
 })
 
 const indexRoute = createRoute({

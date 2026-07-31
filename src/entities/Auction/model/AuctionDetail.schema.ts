@@ -69,6 +69,17 @@ export const AuctionDetailResponseSchema = z
         body_type: z.string(),
         weight: z.number().optional(),
         volume: z.number().optional(),
+        car: z
+          .object({
+            type: z.string().nullable().optional(),
+            weight: z.number().nullable().optional(),
+            volume: z.number().nullable().optional(),
+            width: z.number().nullable().optional(),
+            length: z.number().nullable().optional(),
+            height: z.number().nullable().optional(),
+          })
+          .passthrough()
+          .optional(),
       })
       .passthrough(),
     trading: z
@@ -85,6 +96,7 @@ export const AuctionDetailResponseSchema = z
         price: z
           .object({
             current: z.number().nullable().optional(),
+            available: z.number().nullable().optional(),
             min: z.number().nullable().optional(),
             max: z.number().nullable().optional(),
             step: z.number().nullable().optional(),
@@ -92,6 +104,23 @@ export const AuctionDetailResponseSchema = z
           })
           .passthrough()
           .nullable()
+          .optional(),
+        your: z
+          .object({
+            bet: z.boolean(),
+            last_bet: z.number().nullable().optional(),
+            last_bet_with_vat: z.number().nullable().optional(),
+            win: z.boolean(),
+          })
+          .passthrough()
+          .optional(),
+        settings: z
+          .object({
+            prolong_after_bet: z.number().nullable().optional(),
+            winner_confirm: z.number().nullable().optional(),
+            transmission_time_in: z.number().nullable().optional(),
+          })
+          .passthrough()
           .optional(),
       })
       .passthrough(),

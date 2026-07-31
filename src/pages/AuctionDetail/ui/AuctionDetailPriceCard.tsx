@@ -39,8 +39,13 @@ export function AuctionDetailPriceCard({ auction, isBetMode }: AuctionDetailPric
         </div>
 
         <div className="grid gap-3 text-sm">
+          <InfoItem label="Доступная цена" value={formatPrice(price?.available ?? null)} />
           <InfoItem label="Минимум" value={formatPrice(price?.min ?? null)} />
           <InfoItem label="Максимум" value={formatPrice(price?.max ?? null)} />
+          <InfoItem label="Моя ставка" value={formatPrice(auction.trading.your?.last_bet_with_vat ?? null)} />
+          <InfoItem label="Участвую" value={auction.trading.your?.bet ? "Да" : "Нет"} />
+          <InfoItem label="Продление после ставки" value={auction.trading.settings?.prolong_after_bet ? `${auction.trading.settings.prolong_after_bet} мин` : "Не указано"} />
+          <InfoItem label="Передача ТС" value={auction.trading.settings?.transmission_time_in ? `${auction.trading.settings.transmission_time_in} ч` : "Не указана"} />
           <InfoItem label="Оплата" value={auction.payment.form} />
         </div>
 

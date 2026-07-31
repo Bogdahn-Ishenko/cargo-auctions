@@ -25,6 +25,14 @@ function createAuctionDetail(auction: AuctionListItem): AuctionDetailResponse {
       distance: auction.main.price_per_km && auction.trading.price?.current
         ? Math.round(auction.trading.price.current / auction.main.price_per_km)
         : null,
+      car: {
+        type: auction.cargo.body_type,
+        weight: auction.cargo.weight,
+        volume: auction.cargo.volume,
+        width: 2.45,
+        length: 13.6,
+        height: 2.7,
+      },
     },
     trading: {
       ...auction.trading,
@@ -35,12 +43,24 @@ function createAuctionDetail(auction: AuctionListItem): AuctionDetailResponse {
       price: auction.trading.price
         ? {
             current: auction.trading.price.current,
+            available: getAvailablePrice(auction),
             min: Math.max(1, Math.round(auction.trading.price.current * 0.85)),
             max: Math.round(auction.trading.price.current * 1.15),
             step: getStep(auction.trading.price.current),
             price_per_km: auction.main.price_per_km,
           }
         : null,
+      your: {
+        bet: isBidder(auction),
+        last_bet: isBidder(auction) ? auction.trading.price?.current ?? null : null,
+        last_bet_with_vat: isBidder(auction) ? auction.trading.price?.current ?? null : null,
+        win: auction.trading.status_mobile === "Winner",
+      },
+      settings: {
+        prolong_after_bet: 10,
+        winner_confirm: 1,
+        transmission_time_in: 24,
+      },
     },
     payment: {
       form: auction.payment.form,
@@ -93,4 +113,19 @@ function getStep(price: number) {
   if (price >= 50000) return 500
 
   return 250
+}
+
+function getAvailablePrice(auction: AuctionListItem) {
+  const current = auction.trading.price?.current
+  if (!current) return null
+
+  const step = getStep(current)
+  if (auction.main.auc_type === "Up") return current + step
+  if (auction.main.auc_type === "Down") return Math.max(1, current - step)
+
+  return current
+}
+
+function isBidder(auction: AuctionListItem) {
+  return !["NotParticipating", "Unknown"].includes(auction.trading.status_mobile)
 }

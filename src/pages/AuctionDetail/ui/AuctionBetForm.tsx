@@ -1,6 +1,9 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { RiSendPlaneLine } from "@remixicon/react";
+import type { SubmitErrorHandler } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -17,53 +20,52 @@ interface AuctionBetFormProps {
 }
 
 export const BetFormSchema = z.object({
-  price: z.transform((value, context) => {
-    const rawValue =
-      typeof value === "string"
-        ? value.trim()
-        : typeof value === "number"
-          ? String(value)
-          : "";
+  price: z
+    .string({ error: "Укажите сумму ставки" })
+    .trim()
+    .min(1, { message: "Укажите сумму ставки" })
+    .transform((rawValue, context) => {
+      const price = Number(rawValue.replace(",", "."));
 
-    if (!rawValue) {
-      context.addIssue({
-        code: "custom",
-        message: "Укажите сумму ставки",
-      });
-      return z.NEVER;
-    }
+      if (!Number.isFinite(price)) {
+          context.addIssue({
+            code: "custom",
+            message: "Укажите корректную сумму",
+          });
+          return z.NEVER;
+        }
 
-    const price = Number(rawValue.replace(",", "."));
+        if (price <= 0) {
+          context.addIssue({
+            code: "custom",
+            message: "Укажите сумму больше 0",
+          });
+          return z.NEVER;
+        }
 
-    if (!Number.isFinite(price)) {
-      context.addIssue({
-        code: "custom",
-        message: "Укажите корректную сумму",
-      });
-      return z.NEVER;
-    }
-
-    if (price <= 0) {
-      context.addIssue({
-        code: "custom",
-        message: "Укажите сумму больше 0",
-      });
-      return z.NEVER;
-    }
-
-    return price;
-  }),
+      return price;
+    }),
 });
 
-type BetFormValues = z.infer<typeof BetFormSchema>;
+interface BetFormInput {
+  price: string;
+}
+
+type BetFormValues = z.output<typeof BetFormSchema>;
 
 export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   const [error, setError] = useState("");
-  const [draftPrice, setDraftPrice] = useState("");
   const initialBidValue = getInitialBidValue(auction);
   const mutation = useSetAuctionBet(auction.main.order_uid);
   const isDisabled = !auction.trading.can_set_bet || mutation.isPending;
   const limitsText = getBetLimitsText(auction);
+  const form = useForm<BetFormInput, unknown, BetFormValues>({
+    defaultValues: {
+      price: "",
+    },
+    resolver: zodResolver(BetFormSchema),
+  });
+  const draftPrice = form.watch("price");
 
   function submitBet(values: BetFormValues) {
     const validationError = validateAuctionBet(auction, values.price);
@@ -77,22 +79,17 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
     mutation.mutate(values.price);
   }
 
+  const handleInvalidSubmit: SubmitErrorHandler<BetFormInput> = (errors) => {
+    const message = errors.price?.message ?? "Укажите сумму ставки";
+    setError(message);
+    toast.error(message);
+  };
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const result = BetFormSchema.safeParse({ price: draftPrice });
-    if (!result.success) {
-      const message = result.error.issues[0]?.message ?? "Укажите сумму ставки";
-      setError(message);
-      toast.error(message);
-      return;
-    }
-
-    submitBet(result.data);
+    void form.handleSubmit(submitBet, handleInvalidSubmit)(event);
   }
 
-  function changeDraftPrice(value: string) {
-    setDraftPrice(value);
+  function changeDraftPrice() {
     setError("");
 
     if (mutation.isError || mutation.isSuccess) {
@@ -113,19 +110,28 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
         >
           Ваша ставка
         </Label>
-        <Input
-          className="h-11 border-border bg-card text-center font-mono text-lg font-bold text-foreground focus-visible:border-ring"
-          disabled={isDisabled}
-          id="bet-price"
-          inputMode="numeric"
-          max={auction.trading.price?.max ?? undefined}
-          min={auction.trading.price?.min ?? 1}
-          placeholder={
-            initialBidValue ? String(initialBidValue) : "Введите сумму"
-          }
-          type="number"
-          value={draftPrice}
-          onChange={(event) => changeDraftPrice(event.target.value)}
+        <Controller
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <Input
+              className="h-11 border-border bg-card text-center font-mono text-lg font-bold text-foreground focus-visible:border-ring"
+              disabled={isDisabled}
+              id="bet-price"
+              inputMode="numeric"
+              max={auction.trading.price?.max ?? undefined}
+              min={auction.trading.price?.min ?? 1}
+              onChange={(event) => {
+                field.onChange(event.target.value);
+                changeDraftPrice();
+              }}
+              placeholder={
+                initialBidValue ? String(initialBidValue) : "Введите сумму"
+              }
+              type="number"
+              value={field.value}
+            />
+          )}
         />
       </div>
 

@@ -266,7 +266,10 @@ export function AuctionsListFilters({
               range_start: "bg-primary text-primary-foreground",
               selected: "bg-primary text-primary-foreground",
               today: "bg-muted text-foreground",
-              weekday: "text-[9px] text-muted-foreground",
+              week: "mt-1 flex w-full",
+              weekdays: "flex w-full",
+              weekday:
+                "flex h-(--cell-size) flex-1 items-center justify-center text-[9px] text-muted-foreground",
               root: "w-full",
             }}
             locale={ru}

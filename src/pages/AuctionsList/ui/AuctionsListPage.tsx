@@ -222,21 +222,29 @@ export function AuctionsListPage() {
             total={auctionsQuery.data?.meta.total}
           />
 
-          <div className="min-h-0 flex-1 overflow-y-auto p-5">
-            {auctionsQuery.isLoading ? <AuctionsListSkeleton /> : null}
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {auctionsQuery.isLoading ? (
+              <div className="p-5">
+                <AuctionsListSkeleton />
+              </div>
+            ) : null}
 
             {auctionsQuery.isError ? (
-              <AuctionsListErrorState
-                onRetry={() => void auctionsQuery.refetch()}
-              />
+              <div className="p-5">
+                <AuctionsListErrorState
+                  onRetry={() => void auctionsQuery.refetch()}
+                />
+              </div>
             ) : null}
 
             {auctionsQuery.data?.data.length === 0 ? (
-              <AuctionsListEmptyState />
+              <div className="p-5">
+                <AuctionsListEmptyState />
+              </div>
             ) : null}
 
             {auctionsQuery.data?.data.length ? (
-              <div className="grid max-w-[1100px] gap-4 xl:grid-cols-2">
+              <div className="grid max-w-[1100px] gap-4 p-5 xl:grid-cols-2">
                 {auctionsQuery.data.data.map((auction) => (
                   <AuctionListRow
                     key={auction.main.order_uid}

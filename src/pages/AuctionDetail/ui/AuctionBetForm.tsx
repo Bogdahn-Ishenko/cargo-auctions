@@ -109,6 +109,7 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   return (
     <form
       className="grid gap-3 rounded-xl border border-border bg-muted p-4"
+      noValidate
       onSubmit={handleSubmit}
     >
       <div className="grid gap-2">
@@ -128,7 +129,6 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
           placeholder={
             initialBidValue ? String(initialBidValue) : "Введите сумму"
           }
-          step={auction.trading.price?.step ?? 1}
           type="number"
           {...priceField}
         />

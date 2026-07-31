@@ -41,11 +41,53 @@ pnpm test:run
 pnpm build
 ```
 
+Полный набор перед отправкой изменений:
+
+```bash
+pnpm check:pre-commit
+pnpm check:pre-push
+```
+
 Git hooks:
 
 - `pre-commit`: `pnpm check:pre-commit`
 - `pre-push`: `pnpm check:pre-push`
 - `commit-msg`: проверка Conventional Commits
+
+## Сценарии проверки
+
+Я проверял результат через локальный запуск, production build и production deploy на Vercel.
+
+Ручные сценарии:
+
+- открыл список аукционов и проверил загрузку данных из MSW;
+- проверил пагинацию, смену размера страницы и сохранение footer при переходах между страницами;
+- проверил фильтры списка: номер заявки, тип аукциона, multi-value `statuses`, города, даты, цену, цену за км, вес, дистанцию и checkbox-фильтры;
+- проверил синхронизацию фильтров, сортировки и пагинации с URL search params;
+- проверил empty, loading skeleton и error-состояния на уровне компонентов и mock-сценариев;
+- открыл детальную страницу аукциона из карточки и проверил основные данные, маршрут, груз, оплату, контакты и торговую панель;
+- проверил режим ставки по ссылке `?bet=true`;
+- проверил успешную ставку: обновление текущей цены, статуса участия, списка ставок и invalidation query cache;
+- проверил ошибки формы ставки: пустое значение, значение вне min/max, неверный шаг и 422 validation error от MSW;
+- проверил скрытые состояния `hide_bets_history`, `hide_points_address_and_contacts`, `hide_places`, `no_view_cargo_price`;
+- проверил карту маршрута из карточки аукциона и расчет дистанции между городами;
+- проверил светлую, темную и системную тему;
+- проверил адаптивность списка, сайдбара фильтров, календаря, toolbar и страницы аукциона на узких экранах;
+- проверил production URL [https://cargo-auctions.vercel.app/](https://cargo-auctions.vercel.app/) с включенным MSW.
+
+## Тесты чистой логики
+
+Минимальные unit-тесты добавлены на:
+
+- `search params parsing`: `src/features/AuctionFilters/model/AuctionsListSearch.schema.test.ts`;
+- `request builder`: `src/features/AuctionFilters/model/BuildAuctionsListRequest.test.ts`;
+- validation schema ставки: `src/features/SetBet/model/AuctionBetForm.schema.test.ts`;
+- бизнес-валидацию ставки: `src/entities/Auction/lib/ValidateAuctionBet.test.ts`;
+- OpenAPI DTO-схемы списка, детальной карточки и ставок: `src/entities/Auction/model/*.schema.test.ts`;
+- сериализацию query params: `src/shared/api/Request.test.ts`;
+- расчет дистанции и route-map mapper: `src/shared/lib/RouteDistance.test.ts`, `src/widgets/RouteMap/model/BuildAuctionRouteMap.test.ts`.
+
+Отдельный слой ViewModel-мапперов не выделялся: форматирование и подготовка данных оставлены рядом с соответствующими feature/widget/entity модулями. Покрыты чистые функции, которые фактически выполняют роль маппинга данных для UI.
 
 ## MSW
 

@@ -1,4 +1,5 @@
 import { RiBookmarkFill, RiBookmarkLine } from "@remixicon/react"
+import { Link } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -9,9 +10,10 @@ import { AuctionBetForm } from "./AuctionBetForm"
 
 interface AuctionDetailPriceCardProps {
   auction: AuctionDetailResponse
+  isBetMode: boolean
 }
 
-export function AuctionDetailPriceCard({ auction }: AuctionDetailPriceCardProps) {
+export function AuctionDetailPriceCard({ auction, isBetMode }: AuctionDetailPriceCardProps) {
   const price = auction.trading.price
   const favoriteMutation = useToggleAuctionFavorite(auction.main.order_uid)
   const isFavorite = auction.trading.is_favorite
@@ -44,7 +46,23 @@ export function AuctionDetailPriceCard({ auction }: AuctionDetailPriceCardProps)
 
         <Separator className="bg-slate-800" />
 
-        <AuctionBetForm auction={auction} />
+        {isBetMode ? (
+          <AuctionBetForm auction={auction} />
+        ) : auction.trading.can_set_bet ? (
+          <Button asChild className="h-10 w-full bg-blue-600 text-white hover:bg-blue-700">
+            <Link
+              params={{ auctionUuid: auction.main.order_uid }}
+              search={{ bet: true }}
+              to="/auctions/$auctionUuid"
+            >
+              {auction.trading.status_mobile === "NotParticipating" ? "Сделать ставку" : "Изменить ставку"}
+            </Link>
+          </Button>
+        ) : (
+          <Button className="h-10 w-full" disabled type="button" variant="outline">
+            Ставка недоступна
+          </Button>
+        )}
         <Button
           className="h-10 w-full border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white"
           disabled={favoriteMutation.isPending}

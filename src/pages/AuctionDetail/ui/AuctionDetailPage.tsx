@@ -1,4 +1,4 @@
-import { Link, useParams } from "@tanstack/react-router"
+import { Link, useParams, useSearch } from "@tanstack/react-router"
 import { RiArrowLeftLine } from "@remixicon/react"
 import { Button } from "@/components/ui/button"
 import { useAuctionBets } from "@/entities/Auction/api/UseAuctionBets"
@@ -13,6 +13,7 @@ import { AuctionDetailSkeleton } from "./AuctionDetailSkeleton"
 
 export function AuctionDetailPage() {
   const { auctionUuid } = useParams({ from: "/auctions/$auctionUuid" })
+  const search = useSearch({ from: "/auctions/$auctionUuid" })
   const detailQuery = useAuctionDetail(auctionUuid)
   const betsQuery = useAuctionBets(auctionUuid)
 
@@ -63,7 +64,7 @@ export function AuctionDetailPage() {
                   isLoading={betsQuery.isLoading}
                 />
               </div>
-              <AuctionDetailPriceCard auction={detailQuery.data} />
+              <AuctionDetailPriceCard auction={detailQuery.data} isBetMode={search.bet} />
             </div>
           </>
         ) : null}

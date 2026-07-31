@@ -14,6 +14,7 @@ interface AuctionListRowProps {
 
 export function AuctionListRow({ auction }: AuctionListRowProps) {
   const currentPrice = auction.trading.price?.current ?? null
+  const primaryAction = getPrimaryActionLabel(auction)
   const sideBarClass = auction.trading.status_mobile === "Leading"
     ? "bg-emerald-500"
     : auction.trading.status_mobile === "Losing"
@@ -57,8 +58,12 @@ export function AuctionListRow({ auction }: AuctionListRowProps) {
             </div>
           </div>
           <Button asChild className="w-full" variant={auction.trading.can_set_bet ? "default" : "outline"}>
-            <Link to="/auctions/$auctionUuid" params={{ auctionUuid: auction.main.order_uid }}>
-              Открыть
+            <Link
+              params={{ auctionUuid: auction.main.order_uid }}
+              search={{ bet: auction.trading.can_set_bet }}
+              to="/auctions/$auctionUuid"
+            >
+              {primaryAction}
               <RiArrowRightLine />
             </Link>
           </Button>
@@ -66,4 +71,10 @@ export function AuctionListRow({ auction }: AuctionListRowProps) {
       </CardContent>
     </Card>
   )
+}
+
+function getPrimaryActionLabel(auction: AuctionListItem) {
+  if (!auction.trading.can_set_bet) return "Смотреть ставки"
+
+  return auction.trading.status_mobile === "NotParticipating" ? "Сделать ставку" : "Изменить ставку"
 }

@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router"
 import { AuctionDetailPage } from "@/pages/AuctionDetail"
+import { AuctionDetailSearchSchema } from "@/pages/AuctionDetail/model/AuctionDetailSearch.schema"
 import { AuctionsListPage } from "@/pages/AuctionsList"
 import { AuctionsListSearchSchema } from "@/pages/AuctionsList/model/AuctionsListSearch.schema"
 
@@ -17,6 +18,7 @@ const indexRoute = createRoute({
 const auctionDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/auctions/$auctionUuid",
+  validateSearch: (search) => AuctionDetailSearchSchema.parse(search),
   component: AuctionDetailPage,
 })
 

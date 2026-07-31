@@ -109,7 +109,9 @@ export function AuctionDetailPriceCard({
         <Button
           className="h-10 w-full border-border bg-card text-foreground hover:bg-muted"
           disabled={favoriteMutation.isPending}
-          onClick={() => favoriteMutation.mutate()}
+          onClick={() =>
+            favoriteMutation.mutate({ nextIsFavorite: !isFavorite })
+          }
           type="button"
           variant="outline"
         >

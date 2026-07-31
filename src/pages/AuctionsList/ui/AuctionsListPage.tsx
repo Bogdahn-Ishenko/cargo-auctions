@@ -1,5 +1,8 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { toast } from "sonner";
 import { useAuctionsList } from "@/entities/Auction/api/UseAuctionsList";
+import { getToastErrorMessage } from "@/shared/lib/GetToastErrorMessage";
 import { buildAuctionsListRequest } from "../model/BuildAuctionsListRequest";
 import { useAuctionsListUiStore } from "../model/UseAuctionsListUiStore";
 import { AuctionsListActiveFilters } from "./AuctionsListActiveFilters";
@@ -23,6 +26,21 @@ export function AuctionsListPage() {
   const auctionsQuery = useAuctionsList(request);
   const { closeFilters, isFiltersOpen, toggleFilters } =
     useAuctionsListUiStore();
+
+  useEffect(() => {
+    if (!auctionsQuery.isError) return;
+
+    toast.error(
+      getToastErrorMessage(
+        auctionsQuery.error,
+        "Не удалось загрузить список аукционов",
+      ),
+    );
+  }, [
+    auctionsQuery.error,
+    auctionsQuery.errorUpdatedAt,
+    auctionsQuery.isError,
+  ]);
 
   function updatePage(page: number) {
     void navigate({

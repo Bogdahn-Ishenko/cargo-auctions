@@ -1,8 +1,11 @@
 import { Link, useParams, useSearch } from "@tanstack/react-router";
 import { RiArrowLeftLine } from "@remixicon/react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuctionBets } from "@/entities/Auction/api/UseAuctionBets";
 import { useAuctionDetail } from "@/entities/Auction/api/UseAuctionDetail";
+import { getToastErrorMessage } from "@/shared/lib/GetToastErrorMessage";
 import { AuctionBidsTable } from "./AuctionBidsTable";
 import { AuctionDetailContactsCard } from "./AuctionDetailContactsCard";
 import { AuctionDetailErrorState } from "./AuctionDetailErrorState";
@@ -17,6 +20,22 @@ export function AuctionDetailPage() {
   const search = useSearch({ from: "/auctions/$auctionUuid" });
   const detailQuery = useAuctionDetail(auctionUuid);
   const betsQuery = useAuctionBets(auctionUuid);
+
+  useEffect(() => {
+    if (!detailQuery.isError) return;
+
+    toast.error(
+      getToastErrorMessage(detailQuery.error, "Не удалось загрузить аукцион"),
+    );
+  }, [detailQuery.error, detailQuery.errorUpdatedAt, detailQuery.isError]);
+
+  useEffect(() => {
+    if (!betsQuery.isError) return;
+
+    toast.error(
+      getToastErrorMessage(betsQuery.error, "Не удалось загрузить ставки"),
+    );
+  }, [betsQuery.error, betsQuery.errorUpdatedAt, betsQuery.isError]);
 
   return (
     <main className="flex min-h-screen flex-col bg-background text-foreground">

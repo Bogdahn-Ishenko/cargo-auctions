@@ -1,4 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { ApiError } from "@/shared/api/ApiError"
 import { auctionBetsQueryKey } from "./UseAuctionBets"
 import { auctionDetailQueryKey } from "./UseAuctionDetail"
 import { setAuctionBet } from "./SetAuctionBet"
@@ -10,9 +12,14 @@ export function useSetAuctionBet(auctionUuid: string) {
     mutationFn: (price: number) => setAuctionBet(auctionUuid, { price }),
     onSuccess: async () => {
       await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["auctions", "list"] }),
         queryClient.invalidateQueries({ queryKey: auctionBetsQueryKey(auctionUuid) }),
         queryClient.invalidateQueries({ queryKey: auctionDetailQueryKey(auctionUuid) }),
       ])
+      toast.success("Ставка отправлена")
+    },
+    onError: (error) => {
+      toast.error(error instanceof ApiError ? error.problem.message : "Не удалось отправить ставку")
     },
   })
 }

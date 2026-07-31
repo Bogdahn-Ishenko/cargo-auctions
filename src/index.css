@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist-mono";
 @import "@fontsource-variable/instrument-sans";
 
 @custom-variant dark (&:is(.dark *));
@@ -115,7 +114,7 @@ body {
 
 @theme inline {
   --font-sans: "Instrument Sans Variable", system-ui, sans-serif;
-  --font-mono: "Geist Mono Variable", monospace;
+  --font-mono: "Instrument Sans Variable", system-ui, sans-serif;
   --font-heading: "Instrument Sans Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -163,6 +162,7 @@ body {
   }
   body {
     @apply bg-background font-sans text-foreground;
+    font-variant-numeric: tabular-nums;
   }
   html {
     @apply font-sans;

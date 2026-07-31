@@ -10,8 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { BetItem } from "@/entities/Auction/model/AuctionBets.types";
+import { formatDateTime } from "@/shared/lib/FormatDateTime";
 import { formatPrice } from "@/shared/lib/FormatPrice";
-import { formatDateTime } from "../lib/FormatDateTime";
 
 interface AuctionBidsTableProps {
   bets: BetItem[];

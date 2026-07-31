@@ -5,7 +5,6 @@ import { RiSendPlaneLine } from "@remixicon/react";
 import type { SubmitErrorHandler } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,44 +13,15 @@ import { validateAuctionBet } from "@/entities/Auction/lib/ValidateAuctionBet";
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types";
 import { ApiError } from "@/shared/api/ApiError";
 import { formatPrice } from "@/shared/lib/FormatPrice";
+import {
+  BetFormSchema,
+  type BetFormInput,
+  type BetFormValues,
+} from "../model/AuctionBetForm.schema";
 
 interface AuctionBetFormProps {
   auction: AuctionDetailResponse;
 }
-
-export const BetFormSchema = z.object({
-  price: z
-    .string({ error: "Укажите сумму ставки" })
-    .trim()
-    .min(1, { message: "Укажите сумму ставки" })
-    .transform((rawValue, context) => {
-      const price = Number(rawValue.replace(",", "."));
-
-      if (!Number.isFinite(price)) {
-          context.addIssue({
-            code: "custom",
-            message: "Укажите корректную сумму",
-          });
-          return z.NEVER;
-        }
-
-        if (price <= 0) {
-          context.addIssue({
-            code: "custom",
-            message: "Укажите сумму больше 0",
-          });
-          return z.NEVER;
-        }
-
-      return price;
-    }),
-});
-
-interface BetFormInput {
-  price: string;
-}
-
-type BetFormValues = z.output<typeof BetFormSchema>;
 
 export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   const [error, setError] = useState("");

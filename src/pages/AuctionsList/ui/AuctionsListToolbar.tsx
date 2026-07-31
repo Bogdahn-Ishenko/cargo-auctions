@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ThemeModeSelect } from "@/features/ThemeMode";
-import type { AuctionsListSort } from "../model/AuctionsListSearch.schema";
+import type { AuctionsListSort } from "@/features/AuctionFilters/model/AuctionsListSearch.schema";
 
 interface AuctionsListToolbarProps {
   activeFilters?: ReactNode;

@@ -2,7 +2,7 @@ import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/re
 import { AuctionDetailPage } from "@/pages/AuctionDetail"
 import { AuctionDetailSearchSchema } from "@/pages/AuctionDetail/model/AuctionDetailSearch.schema"
 import { AuctionsListPage } from "@/pages/AuctionsList"
-import { AuctionsListSearchSchema } from "@/pages/AuctionsList/model/AuctionsListSearch.schema"
+import { AuctionsListSearchSchema } from "@/features/AuctionFilters/model/AuctionsListSearch.schema"
 import { NotFoundPage } from "@/pages/NotFound"
 
 const rootRoute = createRootRoute({

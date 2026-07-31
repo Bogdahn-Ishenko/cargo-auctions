@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToggleAuctionFavorite } from "@/entities/Auction/api/UseToggleAuctionFavorite";
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types";
+import { AuctionBetForm } from "@/features/SetBet";
 import { formatPrice } from "@/shared/lib/FormatPrice";
-import { AuctionBetForm } from "./AuctionBetForm";
 
 interface AuctionDetailPriceCardProps {
   auction: AuctionDetailResponse;

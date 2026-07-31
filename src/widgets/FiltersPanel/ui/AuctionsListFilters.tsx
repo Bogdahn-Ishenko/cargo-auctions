@@ -18,7 +18,7 @@ import { auctionCityOptions } from "../model/AuctionCityOptions";
 import type {
   AuctionsListTradingStatusSearch,
   AuctionsListTypeSearch,
-} from "../model/AuctionsListSearch.schema";
+} from "@/features/AuctionFilters/model/AuctionsListSearch.schema";
 
 const allCitySelectValue = "__all__";
 const labelClassName =

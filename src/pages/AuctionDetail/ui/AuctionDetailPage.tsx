@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuctionBets } from "@/entities/Auction/api/UseAuctionBets";
 import { useAuctionDetail } from "@/entities/Auction/api/UseAuctionDetail";
 import { getToastErrorMessage } from "@/shared/lib/GetToastErrorMessage";
-import { AuctionBidsTable } from "./AuctionBidsTable";
+import { AuctionBidsTable } from "@/widgets/BetsTable";
 import { AuctionDetailContactsCard } from "./AuctionDetailContactsCard";
 import { AuctionDetailErrorState } from "./AuctionDetailErrorState";
 import { AuctionDetailHeader } from "./AuctionDetailHeader";

@@ -1,5 +1,5 @@
 import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types";
-import { formatAuctionDate } from "../lib/FormatAuctionDate";
+import { formatAuctionDate } from "@/shared/lib/FormatAuctionDate";
 
 interface AuctionRoutePreviewProps {
   auction: AuctionListItem;

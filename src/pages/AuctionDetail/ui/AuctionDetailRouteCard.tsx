@@ -1,7 +1,7 @@
 import { RiMapPin2Line } from "@remixicon/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { AuctionDetailRoutePoint } from "@/entities/Auction/model/AuctionDetail.types";
-import { formatDateTime } from "../lib/FormatDateTime";
+import { formatDateTime } from "@/shared/lib/FormatDateTime";
 
 interface AuctionDetailRouteCardProps {
   hideContacts: boolean;

@@ -2,22 +2,23 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useAuctionsList } from "@/entities/Auction/api/UseAuctionsList";
+import { buildAuctionsListRequest } from "@/features/AuctionFilters/model/BuildAuctionsListRequest";
+import { useAuctionsListUiStore } from "@/features/AuctionFilters/model/UseAuctionsListUiStore";
 import { getToastErrorMessage } from "@/shared/lib/GetToastErrorMessage";
-import { buildAuctionsListRequest } from "../model/BuildAuctionsListRequest";
-import { useAuctionsListUiStore } from "../model/UseAuctionsListUiStore";
-import { AuctionsListActiveFilters } from "./AuctionsListActiveFilters";
-import { AuctionListRow } from "./AuctionListRow";
+import { AuctionListRow, AuctionsListSkeleton } from "@/widgets/AuctionCard";
+import {
+  AuctionsListActiveFilters,
+  AuctionsListFilters,
+} from "@/widgets/FiltersPanel";
 import { AuctionsListEmptyState } from "./AuctionsListEmptyState";
 import { AuctionsListErrorState } from "./AuctionsListErrorState";
-import { AuctionsListFilters } from "./AuctionsListFilters";
 import { AuctionsListPagination } from "./AuctionsListPagination";
-import { AuctionsListSkeleton } from "./AuctionsListSkeleton";
 import { AuctionsListToolbar } from "./AuctionsListToolbar";
 import type {
   AuctionsListSort,
   AuctionsListTradingStatusSearch,
   AuctionsListTypeSearch,
-} from "../model/AuctionsListSearch.schema";
+} from "@/features/AuctionFilters/model/AuctionsListSearch.schema";
 
 export function AuctionsListPage() {
   const search = useSearch({ from: "/" });

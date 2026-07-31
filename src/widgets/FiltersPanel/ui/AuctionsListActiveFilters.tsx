@@ -5,7 +5,7 @@ import {
   getAuctionTypeLabel,
   getTradingStatusLabel,
 } from "@/entities/Auction/lib/GetAuctionLabels";
-import type { AuctionsListSearch } from "../model/AuctionsListSearch.schema";
+import type { AuctionsListSearch } from "@/features/AuctionFilters/model/AuctionsListSearch.schema";
 
 interface AuctionsListActiveFiltersProps {
   onReset: () => void;

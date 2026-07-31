@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { BetFormSchema } from "./AuctionBetForm";
+import { BetFormSchema } from "./AuctionBetForm.schema";
 
 describe("BetFormSchema", () => {
   it("accepts numeric strings", () => {

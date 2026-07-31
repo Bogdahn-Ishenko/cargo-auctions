@@ -8,7 +8,7 @@ import {
   getTradingStatusLabel,
 } from "@/entities/Auction/lib/GetAuctionLabels";
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types";
-import { formatDateTime } from "../lib/FormatDateTime";
+import { formatDateTime } from "@/shared/lib/FormatDateTime";
 
 interface AuctionDetailHeaderProps {
   auction: AuctionDetailResponse;

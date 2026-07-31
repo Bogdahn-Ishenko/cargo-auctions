@@ -1,6 +1,6 @@
 import type { AuctionListItem, AuctionListResponse } from "@/entities/Auction/model/AuctionList.types"
 
-export const auctionListItemsMock: AuctionListItem[] = [
+const baseAuctionItemsMock: AuctionListItem[] = [
   createAuction({
     id: 1,
     cargoNum: "00000001059",
@@ -163,6 +163,11 @@ export const auctionListItemsMock: AuctionListItem[] = [
   }),
 ]
 
+export const auctionListItemsMock: AuctionListItem[] = [
+  ...baseAuctionItemsMock,
+  ...Array.from({ length: 40 }, (_, index) => createGeneratedAuction(index + 11)),
+]
+
 export const auctionListMock: AuctionListResponse = {
   data: auctionListItemsMock,
   meta: {
@@ -193,17 +198,16 @@ interface CreateAuctionOptions {
 }
 
 function createAuction(options: CreateAuctionOptions): AuctionListItem {
-  const baseDate = 25 + options.id
   const startPrice = options.currentPrice ? Math.round(options.currentPrice * 1.22) : null
 
   return {
     main: {
       id: options.id,
       cargo_num: options.cargoNum,
-      cargo_date: `2026-05-${String(baseDate - 20).padStart(2, "0")}T10:00:00`,
+      cargo_date: getDateTime(options.id, -20, 10),
       auc_type: options.type,
       order_uid: `00000000-0000-4000-8000-${String(options.id).padStart(12, "0")}`,
-      created_at: `2026-05-25T${String(8 + options.id).padStart(2, "0")}:10:00`,
+      created_at: getDateTime(options.id, -1, 8),
       priority_sort: options.id - 1,
       is_assembly: false,
       price_per_km: options.pricePerKm,
@@ -215,14 +219,14 @@ function createAuction(options: CreateAuctionOptions): AuctionListItem {
       load: {
         city: options.loadCity,
         address: getAddress(options.loadCity, options.id),
-        date: `2026-05-${String(baseDate).padStart(2, "0")}T09:00:00`,
+        date: getDateTime(options.id, 0, 9),
         city_gc_id: options.id * 10,
         points_count: 1,
       },
       unload: {
         city: options.unloadCity,
         address: getAddress(options.unloadCity, options.id + 20),
-        date: `2026-05-${String(baseDate + 1).padStart(2, "0")}T18:00:00`,
+        date: getDateTime(options.id, 1, 18),
         city_gc_id: options.id * 10 + 1,
         points_count: 1,
       },
@@ -238,8 +242,8 @@ function createAuction(options: CreateAuctionOptions): AuctionListItem {
     trading: {
       status: options.status,
       status_mobile: options.tradingStatus,
-      start_time: `2026-05-${String(baseDate).padStart(2, "0")}T09:00:00`,
-      stop_time: `2026-05-${String(baseDate).padStart(2, "0")}T18:00:00`,
+      start_time: getDateTime(options.id, 0, 9),
+      stop_time: getDateTime(options.id, 0, 18),
       can_set_bet: options.isAvailable,
       is_available: options.isAvailable,
       is_favorite: options.id % 3 === 0,
@@ -259,6 +263,60 @@ function createAuction(options: CreateAuctionOptions): AuctionListItem {
   }
 }
 
+function createGeneratedAuction(id: number): AuctionListItem {
+  const auctionTypes: CreateAuctionOptions["type"][] = ["Down", "Up", "Request", "FixPrice"]
+  const auctionStatuses: CreateAuctionOptions["status"][] = [
+    "Auction",
+    "Planning",
+    "DeterminateWinner",
+    "WaitDeal",
+    "Finished",
+    "Canceled",
+  ]
+  const tradingStatuses: CreateAuctionOptions["tradingStatus"][] = [
+    "NotParticipating",
+    "Leading",
+    "Losing",
+    "Confirmed",
+    "ChoosingWinner",
+    "Winner",
+    "Unknown",
+  ]
+  const loadCities = ["Пермь", "Казань", "Москва", "Екатеринбург", "Самара", "Воронеж", "Омск", "Челябинск"]
+  const unloadCities = ["Москва", "Екатеринбург", "Санкт-Петербург", "Новосибирск", "Уфа", "Краснодар", "Барнаул", "Тюмень"]
+  const cargos = [
+    "Паллетированный груз",
+    "Оборудование",
+    "Стройматериалы",
+    "Продукты питания",
+    "Автозапчасти",
+    "Мебель",
+    "Бытовая химия",
+    "Упаковка",
+  ]
+  const bodyTypes = ["тентованный", "фургон", "бортовой", "рефрижератор", "изотермический"]
+  const type = pickOption(auctionTypes, id)
+  const isPlannedRequest = type === "Request" && id % 3 === 0
+  const currentPrice = isPlannedRequest ? null : 32_000 + id * 2_750
+
+  return createAuction({
+    id,
+    cargoNum: String(1058 + id).padStart(11, "0"),
+    type,
+    status: pickOption(auctionStatuses, id),
+    tradingStatus: pickOption(tradingStatuses, id),
+    loadCity: pickOption(loadCities, id),
+    unloadCity: pickOption(unloadCities, id),
+    cargoName: pickOption(cargos, id),
+    weight: 2 + (id % 24),
+    volume: 12 + (id % 80),
+    bodyType: pickOption(bodyTypes, id),
+    currentPrice,
+    pricePerKm: currentPrice ? 90 + (id % 80) : null,
+    isAvailable: currentPrice !== null && id % 4 !== 0,
+  })
+}
+
 function getOrganizerName(id: number) {
   const names = [
     "ЛИМ",
@@ -276,8 +334,28 @@ function getOrganizerName(id: number) {
   return names[id - 1] ?? "Заказчик"
 }
 
+function pickOption<T>(options: T[], id: number) {
+  const option = options[id % options.length]
+
+  if (option === undefined) {
+    throw new Error("Mock options list must not be empty")
+  }
+
+  return option
+}
+
 function getAddress(city: string, seed: number) {
   return `${city}, склад ${seed}`
+}
+
+function getDateTime(id: number, dayOffset: number, hour: number) {
+  const date = new Date(Date.UTC(2026, 4, 25 + id + dayOffset, hour, 0, 0))
+  const year = date.getUTCFullYear()
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0")
+  const day = String(date.getUTCDate()).padStart(2, "0")
+  const hours = String(date.getUTCHours()).padStart(2, "0")
+
+  return `${year}-${month}-${day}T${hours}:00:00`
 }
 
 function getStep(price: number) {

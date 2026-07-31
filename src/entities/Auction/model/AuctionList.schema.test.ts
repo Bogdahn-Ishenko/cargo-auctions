@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest"
-import { AuctionListRequestSchema } from "./AuctionList.schema"
+import { auctionListItemsMock } from "@/shared/api/msw/AuctionList.mock"
+import { AuctionListItemSchema, AuctionListRequestSchema } from "./AuctionList.schema"
+
+describe("AuctionListItemSchema", () => {
+  it("parses 50 generated MSW auction list items", () => {
+    expect(auctionListItemsMock).toHaveLength(50)
+    auctionListItemsMock.forEach((auction) => {
+      expect(() => AuctionListItemSchema.parse(auction)).not.toThrow()
+    })
+  })
+})
 
 describe("AuctionListRequestSchema", () => {
   it("accepts list filters used by the auctions page", () => {

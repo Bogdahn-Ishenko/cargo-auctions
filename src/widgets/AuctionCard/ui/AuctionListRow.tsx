@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { RiArrowRightLine, RiBookmarkFill } from "@remixicon/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { usePrefetchAuctionDetail } from "@/entities/Auction/api/UsePrefetchAuctionDetail";
+import { usePrefetchAuctionDetail } from "@/entities/Auction";
 import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types";
 import { formatPrice } from "@/shared/lib/FormatPrice";
 import { AuctionCargoChips } from "./AuctionCargoChips";

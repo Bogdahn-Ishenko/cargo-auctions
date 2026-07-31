@@ -38,8 +38,8 @@ export function AuctionDetailPage() {
   }, [betsQuery.error, betsQuery.errorUpdatedAt, betsQuery.isError]);
 
   return (
-    <main className="flex min-h-screen flex-col bg-background text-foreground">
-      <div className="flex items-center gap-3 border-b border-border bg-card px-5 py-3">
+    <main className="flex h-screen flex-col overflow-hidden bg-background text-foreground">
+      <div className="flex shrink-0 items-center gap-3 border-b border-border bg-card px-5 py-3">
         <Button
           asChild
           className="text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -69,7 +69,7 @@ export function AuctionDetailPage() {
         ) : null}
       </div>
 
-      <section className="flex-1 overflow-y-auto p-5">
+      <section className="min-h-0 flex-1 overflow-y-auto p-5">
         <div className="mx-auto grid max-w-[1180px] gap-4">
           {detailQuery.isLoading ? <AuctionDetailSkeleton /> : null}
 

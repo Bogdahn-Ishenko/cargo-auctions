@@ -37,8 +37,8 @@ function createAuctionDetail(auction: AuctionListItem): AuctionDetailResponse {
     trading: {
       ...auction.trading,
       hide_bets_history: !auction.trading.can_set_bet,
-      hide_places: false,
-      no_view_cargo_price: false,
+      hide_places: auction.main.id % 4 === 0,
+      no_view_cargo_price: auction.main.id % 5 === 0,
       hide_points_address_and_contacts: !auction.trading.can_set_bet,
       price: auction.trading.price
         ? {

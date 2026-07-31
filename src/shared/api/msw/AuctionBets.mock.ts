@@ -21,6 +21,10 @@ function createBetList(auction: AuctionListItem): BetListResponse {
     bets.push(createBet(auction, 3, Math.round(basePrice * 1.08), "ЛогистПро", "Анна Смирнова"))
   }
 
+  if (auction.trading.status_mobile === "ChoosingWinner") {
+    bets.push(createBet(auction, 3, Math.round(basePrice * 0.96), "Экспресс Транс", "Павел Орлов", true))
+  }
+
   return { bets }
 }
 
@@ -30,6 +34,7 @@ function createBet(
   price: number,
   organizationName: string,
   contactName: string,
+  isRejected = false,
 ): BetItem {
   return {
     id: auction.main.id * 100 + place,
@@ -44,11 +49,11 @@ function createBet(
     organization_inn: `770000000${place}`,
     organization_name: organizationName,
     transporter_comment: null,
-    is_rejected: false,
+    is_rejected: isRejected,
     is_counter: false,
     place,
     is_win: auction.trading.status_mobile === "Winner" && place === 1,
     run_number: 0,
-    cancel_reason: "",
+    cancel_reason: isRejected ? "Перевозчик отменил ставку" : "",
   }
 }

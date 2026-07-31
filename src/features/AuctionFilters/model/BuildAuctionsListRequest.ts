@@ -11,6 +11,8 @@ export function buildAuctionsListRequest(search: AuctionsListSearch): AuctionLis
     ...(search.cargo_num ? { cargo_num: search.cargo_num } : {}),
     ...(search.current_price_from ? { current_price_from: search.current_price_from } : {}),
     ...(search.current_price_to ? { current_price_to: search.current_price_to } : {}),
+    ...(search.distance_from ? { distance_from: search.distance_from } : {}),
+    ...(search.distance_to ? { distance_to: search.distance_to } : {}),
     ...(search.load_city ? { load_city: search.load_city } : {}),
     ...(search.load_date_from ? { load_date_from: toApiDateTime(search.load_date_from, "from") } : {}),
     ...(search.load_date_to ? { load_date_to: toApiDateTime(search.load_date_to, "to") } : {}),

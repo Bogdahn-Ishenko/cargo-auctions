@@ -14,6 +14,8 @@ export const AuctionsListSearchSchema = z.object({
   cargo_num: z.string().trim().catch("").optional(),
   current_price_from: z.coerce.number().nonnegative().catch(0).optional(),
   current_price_to: z.coerce.number().nonnegative().catch(0).optional(),
+  distance_from: z.coerce.number().nonnegative().catch(0).optional(),
+  distance_to: z.coerce.number().nonnegative().catch(0).optional(),
   load_city: z.string().trim().catch("").optional(),
   load_date_from: z.string().trim().catch("").optional(),
   load_date_to: z.string().trim().catch("").optional(),

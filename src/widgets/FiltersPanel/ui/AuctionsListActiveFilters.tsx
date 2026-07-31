@@ -70,6 +70,9 @@ function getActiveFilters(search: AuctionsListSearch) {
     filters.push(`Цена от ${search.current_price_from} ₽`);
   if (search.current_price_to)
     filters.push(`Цена до ${search.current_price_to} ₽`);
+  if (search.distance_from)
+    filters.push(`Дистанция от ${search.distance_from} км`);
+  if (search.distance_to) filters.push(`Дистанция до ${search.distance_to} км`);
   if (search.price_per_km_from)
     filters.push(`Цена/км от ${search.price_per_km_from} ₽`);
   if (search.price_per_km_to)

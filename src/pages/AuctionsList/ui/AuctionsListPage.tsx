@@ -71,6 +71,8 @@ export function AuctionsListPage() {
     cargoNum: string;
     currentPriceFrom: string;
     currentPriceTo: string;
+    distanceFrom: string;
+    distanceTo: string;
     isAvailable?: boolean;
     isBidder?: boolean;
     isFavorite?: boolean;
@@ -90,6 +92,8 @@ export function AuctionsListPage() {
     const weightTo = Number(filters.weightTo);
     const currentPriceFrom = Number(filters.currentPriceFrom);
     const currentPriceTo = Number(filters.currentPriceTo);
+    const distanceFrom = Number(filters.distanceFrom);
+    const distanceTo = Number(filters.distanceTo);
     const pricePerKmFrom = Number(filters.pricePerKmFrom);
     const pricePerKmTo = Number(filters.pricePerKmTo);
 
@@ -106,6 +110,14 @@ export function AuctionsListPage() {
         current_price_to:
           Number.isFinite(currentPriceTo) && currentPriceTo > 0
             ? currentPriceTo
+            : undefined,
+        distance_from:
+          Number.isFinite(distanceFrom) && distanceFrom > 0
+            ? distanceFrom
+            : undefined,
+        distance_to:
+          Number.isFinite(distanceTo) && distanceTo > 0
+            ? distanceTo
             : undefined,
         is_available: filters.isAvailable,
         is_bidder: filters.isBidder,
@@ -146,6 +158,8 @@ export function AuctionsListPage() {
         cargo_num: undefined,
         current_price_from: undefined,
         current_price_to: undefined,
+        distance_from: undefined,
+        distance_to: undefined,
         is_available: undefined,
         is_bidder: undefined,
         is_favorite: undefined,
@@ -187,6 +201,8 @@ export function AuctionsListPage() {
           currentPriceTo={
             search.current_price_to ? String(search.current_price_to) : ""
           }
+          distanceFrom={search.distance_from ? String(search.distance_from) : ""}
+          distanceTo={search.distance_to ? String(search.distance_to) : ""}
           isAvailable={search.is_available}
           isBidder={search.is_bidder}
           isFavorite={search.is_favorite}

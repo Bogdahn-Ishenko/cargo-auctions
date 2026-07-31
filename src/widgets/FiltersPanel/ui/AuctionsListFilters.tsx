@@ -36,6 +36,8 @@ interface AuctionsListFiltersProps {
   cargoNum: string;
   currentPriceFrom: string;
   currentPriceTo: string;
+  distanceFrom: string;
+  distanceTo: string;
   isAvailable?: boolean;
   isBidder?: boolean;
   isOpen: boolean;
@@ -44,6 +46,8 @@ interface AuctionsListFiltersProps {
     cargoNum: string;
     currentPriceFrom: string;
     currentPriceTo: string;
+    distanceFrom: string;
+    distanceTo: string;
     isAvailable?: boolean;
     isBidder?: boolean;
     isFavorite?: boolean;
@@ -79,6 +83,8 @@ export function AuctionsListFilters({
   cargoNum,
   currentPriceFrom,
   currentPriceTo,
+  distanceFrom,
+  distanceTo,
   isAvailable,
   isBidder,
   isFavorite,
@@ -104,6 +110,8 @@ export function AuctionsListFilters({
     useState(currentPriceFrom);
   const [draftCurrentPriceTo, setDraftCurrentPriceTo] =
     useState(currentPriceTo);
+  const [draftDistanceFrom, setDraftDistanceFrom] = useState(distanceFrom);
+  const [draftDistanceTo, setDraftDistanceTo] = useState(distanceTo);
   const [draftIsAvailable, setDraftIsAvailable] = useState(
     isAvailable ?? false,
   );
@@ -130,6 +138,8 @@ export function AuctionsListFilters({
     setDraftCargoNum("");
     setDraftCurrentPriceFrom("");
     setDraftCurrentPriceTo("");
+    setDraftDistanceFrom("");
+    setDraftDistanceTo("");
     setDraftIsAvailable(false);
     setDraftIsBidder(false);
     setDraftIsFavorite(false);
@@ -162,6 +172,8 @@ export function AuctionsListFilters({
           cargoNum: draftCargoNum.trim(),
           currentPriceFrom: draftCurrentPriceFrom.trim(),
           currentPriceTo: draftCurrentPriceTo.trim(),
+          distanceFrom: draftDistanceFrom.trim(),
+          distanceTo: draftDistanceTo.trim(),
           isAvailable: draftIsAvailable ? true : undefined,
           isBidder: draftIsBidder ? true : undefined,
           isFavorite: draftIsFavorite ? true : undefined,
@@ -461,6 +473,30 @@ export function AuctionsListFilters({
               placeholder="До"
               type="number"
               value={draftPricePerKmTo}
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-2">
+          <Label className={labelClassName}>Дистанция, км</Label>
+          <div className="grid grid-cols-2 gap-2">
+            <Input
+              className={numberInputClassName}
+              inputMode="decimal"
+              min={0}
+              onChange={(event) => setDraftDistanceFrom(event.target.value)}
+              placeholder="От"
+              type="number"
+              value={draftDistanceFrom}
+            />
+            <Input
+              className={numberInputClassName}
+              inputMode="decimal"
+              min={0}
+              onChange={(event) => setDraftDistanceTo(event.target.value)}
+              placeholder="До"
+              type="number"
+              value={draftDistanceTo}
             />
           </div>
         </div>

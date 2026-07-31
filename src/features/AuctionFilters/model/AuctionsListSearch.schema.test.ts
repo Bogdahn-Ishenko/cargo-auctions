@@ -16,6 +16,8 @@ describe("AuctionsListSearchSchema", () => {
     expect(
       AuctionsListSearchSchema.parse({
         current_price_from: "30000",
+        distance_from: "250",
+        distance_to: "900",
         is_available: "true",
         is_bidder: "true",
         is_favorite: "true",
@@ -30,6 +32,8 @@ describe("AuctionsListSearchSchema", () => {
       }),
     ).toMatchObject({
       current_price_from: 30000,
+      distance_from: 250,
+      distance_to: 900,
       is_available: true,
       is_bidder: true,
       is_favorite: true,

@@ -19,6 +19,8 @@ describe("AuctionListRequestSchema", () => {
         cargo_num: "00000001059",
         current_price_from: 30_000,
         current_price_to: 90_000,
+        distance_from: 250,
+        distance_to: 900,
         is_available: true,
         is_bidder: true,
         is_favorite: true,
@@ -39,6 +41,8 @@ describe("AuctionListRequestSchema", () => {
     ).toMatchObject({
       auc_type: ["Down"],
       current_price_from: 30_000,
+      distance_from: 250,
+      distance_to: 900,
       is_available: true,
       is_bidder: true,
       is_favorite: true,

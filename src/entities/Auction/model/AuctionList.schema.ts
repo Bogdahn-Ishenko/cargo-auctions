@@ -35,6 +35,8 @@ export const AuctionListRequestSchema = z
     status: z.array(TradingStatusSchema).nullable().optional(),
     current_price_from: z.number().nonnegative().nullable().optional(),
     current_price_to: z.number().nonnegative().nullable().optional(),
+    distance_from: z.number().nonnegative().nullable().optional(),
+    distance_to: z.number().nonnegative().nullable().optional(),
     is_bidder: z.boolean().optional(),
     price_per_km_from: z.number().nonnegative().nullable().optional(),
     price_per_km_to: z.number().nonnegative().nullable().optional(),

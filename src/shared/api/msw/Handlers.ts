@@ -26,6 +26,13 @@ export const handlers = [
       if (body.current_price_to !== undefined && body.current_price_to !== null && (auction.trading.price?.current ?? 0) > body.current_price_to) {
         return false
       }
+      const distance = getAuctionDistance(auction)
+      if (body.distance_from !== undefined && body.distance_from !== null && (distance ?? 0) < body.distance_from) {
+        return false
+      }
+      if (body.distance_to !== undefined && body.distance_to !== null && (distance ?? 0) > body.distance_to) {
+        return false
+      }
       if (body.load_city && !includesText(auction.route.load.city, body.load_city)) return false
       if (body.load_date_from && new Date(auction.route.load.date).getTime() < new Date(body.load_date_from).getTime()) return false
       if (body.load_date_to && new Date(auction.route.load.date).getTime() > new Date(body.load_date_to).getTime()) return false
@@ -263,6 +270,15 @@ function includesText(value: string, search: string) {
 
 function isAuctionBidder(auction: AuctionListItem) {
   return !["NotParticipating", "Unknown"].includes(auction.trading.status_mobile)
+}
+
+function getAuctionDistance(auction: AuctionListItem) {
+  const currentPrice = auction.trading.price?.current
+  const pricePerKm = auction.main.price_per_km
+
+  if (!currentPrice || !pricePerKm) return null
+
+  return Math.round(currentPrice / pricePerKm)
 }
 
 function getAvailablePrice(auctionType: AuctionListItem["main"]["auc_type"], current: number, step: number | null | undefined) {

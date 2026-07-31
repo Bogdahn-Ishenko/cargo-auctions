@@ -249,6 +249,7 @@ function createAuction(options: CreateAuctionOptions): AuctionListItem {
             start: startPrice,
             current: options.currentPrice,
             current_no_vat: Number((options.currentPrice / 1.2).toFixed(2)),
+            step: getStep(options.currentPrice),
           },
     },
     payment: {
@@ -277,4 +278,11 @@ function getOrganizerName(id: number) {
 
 function getAddress(city: string, seed: number) {
   return `${city}, склад ${seed}`
+}
+
+function getStep(price: number) {
+  if (price >= 100000) return 1000
+  if (price >= 50000) return 500
+
+  return 250
 }

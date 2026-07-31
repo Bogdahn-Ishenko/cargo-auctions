@@ -59,8 +59,11 @@ export function AuctionListRow({ auction }: AuctionListRowProps) {
             <div className="font-mono text-xl font-bold tracking-tight text-slate-900">
               {formatPrice(currentPrice)}
             </div>
-            <div className="mt-2 text-[11px] text-slate-500">
-              {auction.trading.can_set_bet ? "Ставка доступна" : "Ставка недоступна"}
+            <div className="mt-2 grid gap-1 text-[11px] text-slate-500">
+              <span>{auction.trading.can_set_bet ? "Ставка доступна" : "Ставка недоступна"}</span>
+              <span>{hasUserBet(auction) ? "Моя ставка есть" : "Моей ставки нет"}</span>
+              <span>Цена/км: {formatPrice(auction.main.price_per_km ?? null)}</span>
+              <span>Шаг: {formatPrice(auction.trading.price?.step ?? null)}</span>
             </div>
           </div>
           <Button asChild className="w-full" variant={auction.trading.can_set_bet ? "default" : "outline"}>
@@ -83,4 +86,8 @@ function getPrimaryActionLabel(auction: AuctionListItem) {
   if (!auction.trading.can_set_bet) return "Смотреть ставки"
 
   return auction.trading.status_mobile === "NotParticipating" ? "Сделать ставку" : "Изменить ставку"
+}
+
+function hasUserBet(auction: AuctionListItem) {
+  return !["NotParticipating", "Unknown"].includes(auction.trading.status_mobile)
 }

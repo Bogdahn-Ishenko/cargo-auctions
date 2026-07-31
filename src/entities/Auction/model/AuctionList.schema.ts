@@ -112,6 +112,7 @@ export const AuctionListItemSchema = z
             start: z.number(),
             current: z.number(),
             current_no_vat: z.number(),
+            step: z.number().nullable().optional(),
           })
           .passthrough()
           .nullable()

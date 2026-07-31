@@ -35,7 +35,7 @@ export function ThemeModeSelect() {
     >
       <SelectTrigger
         aria-label="Тема интерфейса"
-        className="w-10 border-border bg-card px-2 text-foreground focus-visible:border-ring sm:w-[132px] sm:px-2.5 [&_[data-slot=select-value]]:hidden sm:[&_[data-slot=select-value]]:flex"
+        className="w-10 justify-center border-border bg-card px-0 text-foreground focus-visible:border-ring sm:w-[132px] sm:justify-between sm:px-2.5 [&>svg:last-child]:hidden sm:[&>svg:last-child]:block [&_[data-slot=select-value]]:hidden sm:[&_[data-slot=select-value]]:flex"
         size="sm"
       >
         <SelectedThemeIcon className="size-4 text-muted-foreground sm:hidden" />

@@ -20,6 +20,15 @@ export const handlers = [
       if (body.cargo_num && !auction.main.cargo_num.includes(body.cargo_num)) return false
       if (body.auc_type?.length && !body.auc_type.includes(auction.main.auc_type)) return false
       if (body.status?.length && !body.status.includes(auction.trading.status_mobile)) return false
+      if (body.current_price_from !== undefined && body.current_price_from !== null && (auction.trading.price?.current ?? 0) < body.current_price_from) {
+        return false
+      }
+      if (body.current_price_to !== undefined && body.current_price_to !== null && (auction.trading.price?.current ?? 0) > body.current_price_to) {
+        return false
+      }
+      if (body.load_city && !includesText(auction.route.load.city, body.load_city)) return false
+      if (body.load_date_from && new Date(auction.route.load.date).getTime() < new Date(body.load_date_from).getTime()) return false
+      if (body.load_date_to && new Date(auction.route.load.date).getTime() > new Date(body.load_date_to).getTime()) return false
       if (
         body.price_per_km_from !== undefined &&
         body.price_per_km_from !== null &&
@@ -34,9 +43,13 @@ export const handlers = [
       ) {
         return false
       }
+      if (body.unload_city && !includesText(auction.route.unload.city, body.unload_city)) return false
+      if (body.unload_date_from && new Date(auction.route.unload.date).getTime() < new Date(body.unload_date_from).getTime()) return false
+      if (body.unload_date_to && new Date(auction.route.unload.date).getTime() > new Date(body.unload_date_to).getTime()) return false
       if (body.weight_from !== undefined && body.weight_from !== null && auction.cargo.weight < body.weight_from) return false
       if (body.weight_to !== undefined && body.weight_to !== null && auction.cargo.weight > body.weight_to) return false
       if (body.is_available !== undefined && auction.trading.is_available !== body.is_available) return false
+      if (body.is_bidder !== undefined && isAuctionBidder(auction) !== body.is_bidder) return false
       if (body.is_favorite !== undefined && auction.trading.is_favorite !== body.is_favorite) return false
 
       return true
@@ -231,4 +244,12 @@ function compareAuctionField(left: AuctionListItem, right: AuctionListItem, fiel
   }
 
   return new Date(left.trading.stop_time).getTime() - new Date(right.trading.stop_time).getTime()
+}
+
+function includesText(value: string, search: string) {
+  return value.toLowerCase().includes(search.toLowerCase())
+}
+
+function isAuctionBidder(auction: AuctionListItem) {
+  return !["NotParticipating", "Unknown"].includes(auction.trading.status_mobile)
 }

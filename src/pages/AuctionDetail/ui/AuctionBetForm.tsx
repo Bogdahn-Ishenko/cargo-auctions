@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useSetAuctionBet } from "@/entities/Auction/api/UseSetAuctionBet"
+import { validateAuctionBet } from "@/entities/Auction/lib/ValidateAuctionBet"
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types"
 import { formatPrice } from "@/shared/lib/FormatPrice"
 
@@ -22,8 +23,9 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
     event.preventDefault()
 
     const parsedPrice = Number(price)
-    if (!Number.isFinite(parsedPrice) || parsedPrice <= 0) {
-      setError("Укажите сумму больше 0")
+    const validationError = validateAuctionBet(auction, parsedPrice)
+    if (validationError) {
+      setError(validationError)
       return
     }
 
@@ -42,8 +44,10 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
           disabled={isDisabled}
           id="bet-price"
           inputMode="numeric"
-          min={1}
+          max={auction.trading.price?.max ?? undefined}
+          min={auction.trading.price?.min ?? 1}
           onChange={(event) => setPrice(event.target.value)}
+          step={auction.trading.price?.step ?? 1}
           type="number"
           value={price}
         />

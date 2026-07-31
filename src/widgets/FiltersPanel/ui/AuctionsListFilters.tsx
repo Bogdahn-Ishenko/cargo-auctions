@@ -154,7 +154,7 @@ export function AuctionsListFilters({
 
   return (
     <form
-      className={`${isOpen ? "flex" : "hidden"} h-screen max-h-screen flex-col overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground lg:flex lg:w-[318px] lg:shrink-0 lg:border-b-0 lg:border-r`}
+      className={`${isOpen ? "flex" : "hidden"} h-screen max-h-screen flex-col overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground lg:flex lg:w-[328px] lg:shrink-0 lg:border-b-0 lg:border-r`}
       onSubmit={(event) => {
         event.preventDefault();
         onApply({
@@ -238,7 +238,7 @@ export function AuctionsListFilters({
           <Label className={labelClassName}>Даты</Label>
           <div className="grid gap-2 rounded-xl border border-border bg-card p-2">
             <div className="grid gap-1.5">
-              <div className="text-[10px] font-medium text-muted-foreground">
+              <div className="text-xs font-medium text-muted-foreground">
                 Погрузка
               </div>
               <div className="grid min-w-0 grid-cols-2 gap-1.5">
@@ -257,7 +257,7 @@ export function AuctionsListFilters({
               </div>
             </div>
             <div className="grid gap-1.5">
-              <div className="text-[10px] font-medium text-muted-foreground">
+              <div className="text-xs font-medium text-muted-foreground">
                 Выгрузка
               </div>
               <div className="grid min-w-0 grid-cols-2 gap-1.5">

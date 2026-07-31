@@ -21,10 +21,15 @@ import type {
 } from "../model/AuctionsListSearch.schema";
 
 const allCitySelectValue = "__all__";
+const labelClassName =
+  "text-[10px] font-semibold uppercase tracking-widest text-muted-foreground";
 const dateInputClassName =
-  "date-input-dark min-w-0 border-slate-700 bg-slate-900 px-2 text-[11px] text-slate-100 focus-visible:border-blue-500";
+  "date-input-dark min-w-0 border-border bg-card px-2 text-[11px] text-foreground focus-visible:border-ring";
 const filterSelectTriggerClassName =
-  "w-full border-slate-700 bg-slate-900 text-slate-100 focus-visible:border-blue-500";
+  "w-full border-border bg-card text-foreground focus-visible:border-ring";
+const numberInputClassName =
+  "border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring";
+const checkboxClassName = "border-border";
 
 interface AuctionsListFiltersProps {
   auctionType: AuctionsListTypeSearch;
@@ -149,7 +154,7 @@ export function AuctionsListFilters({
 
   return (
     <form
-      className={`${isOpen ? "flex" : "hidden"} h-screen max-h-screen flex-col overflow-hidden border-b border-slate-800 bg-slate-900 text-slate-200 lg:flex lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r`}
+      className={`${isOpen ? "flex" : "hidden"} h-screen max-h-screen flex-col overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground lg:flex lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r`}
       onSubmit={(event) => {
         event.preventDefault();
         onApply({
@@ -174,15 +179,13 @@ export function AuctionsListFilters({
         });
       }}
     >
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-900 px-5 py-4">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-sidebar-border bg-sidebar px-5 py-4">
         <div className="flex items-center gap-2">
-          <RiFilter3Line className="size-4 text-slate-500" />
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
-            Фильтры
-          </div>
+          <RiFilter3Line className="size-4 text-muted-foreground" />
+          <div className={labelClassName}>Фильтры</div>
         </div>
         <button
-          className="text-[11px] font-medium text-blue-400 transition-colors hover:text-blue-300"
+          className="text-[11px] font-medium text-primary transition-colors hover:text-primary/80"
           onClick={resetDraftFilters}
           type="button"
         >
@@ -192,16 +195,13 @@ export function AuctionsListFilters({
 
       <div className="flex-1 space-y-6 overflow-y-auto p-5">
         <div className="grid gap-2">
-          <Label
-            className="text-[10px] font-semibold uppercase tracking-widest text-slate-500"
-            htmlFor="cargo-num"
-          >
+          <Label className={labelClassName} htmlFor="cargo-num">
             Номер заявки
           </Label>
           <div className="relative">
-            <RiSearchLine className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
+            <RiSearchLine className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              className="border-slate-700 bg-slate-800 pl-8 font-mono text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+              className="border-border bg-card pl-8 font-mono text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring"
               id="cargo-num"
               onChange={(event) => setDraftCargoNum(event.target.value)}
               placeholder="00000001059"
@@ -211,12 +211,10 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-            Текущая цена, ₽
-          </Label>
+          <Label className={labelClassName}>Текущая цена, ₽</Label>
           <div className="grid grid-cols-2 gap-2">
             <Input
-              className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+              className={numberInputClassName}
               inputMode="decimal"
               min={0}
               onChange={(event) => setDraftCurrentPriceFrom(event.target.value)}
@@ -225,7 +223,7 @@ export function AuctionsListFilters({
               value={draftCurrentPriceFrom}
             />
             <Input
-              className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+              className={numberInputClassName}
               inputMode="decimal"
               min={0}
               onChange={(event) => setDraftCurrentPriceTo(event.target.value)}
@@ -237,9 +235,7 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-            Дата погрузки
-          </Label>
+          <Label className={labelClassName}>Дата погрузки</Label>
           <div className="grid min-w-0 grid-cols-2 gap-2">
             <Input
               className={dateInputClassName}
@@ -256,21 +252,21 @@ export function AuctionsListFilters({
           </div>
           <Calendar
             buttonVariant="ghost"
-            className="w-full rounded-xl border border-slate-700 bg-slate-800 p-2 text-slate-300 [--cell-size:--spacing(6)] [&_.rdp-button_next]:text-slate-400 [&_.rdp-button_next]:hover:bg-slate-700 [&_.rdp-button_next]:hover:text-slate-100 [&_.rdp-button_previous]:text-slate-400 [&_.rdp-button_previous]:hover:bg-slate-700 [&_.rdp-button_previous]:hover:text-slate-100 [&_.rdp-nav]:z-10"
+            className="w-full rounded-xl border border-border bg-card p-2 text-foreground [--cell-size:--spacing(6)] [&_.rdp-button_next]:text-muted-foreground [&_.rdp-button_next]:hover:bg-muted [&_.rdp-button_next]:hover:text-foreground [&_.rdp-button_previous]:text-muted-foreground [&_.rdp-button_previous]:hover:bg-muted [&_.rdp-button_previous]:hover:text-foreground [&_.rdp-nav]:z-10"
             classNames={{
-              caption_label: "text-[11px] font-semibold text-slate-300",
+              caption_label: "text-[11px] font-semibold text-foreground",
               day_button:
-                "text-[10px] text-slate-300 hover:bg-slate-700 hover:text-slate-100",
+                "text-[10px] text-foreground hover:bg-muted hover:text-foreground",
               month: "flex w-full flex-col gap-2",
               month_grid: "w-full",
               months: "relative flex w-full flex-col gap-4",
-              outside: "text-slate-600",
-              range_end: "bg-blue-600 text-white",
-              range_middle: "bg-blue-600/20 text-blue-200",
-              range_start: "bg-blue-600 text-white",
-              selected: "bg-blue-600 text-white",
-              today: "bg-slate-700 text-slate-100",
-              weekday: "text-[9px] text-slate-600",
+              outside: "text-muted-foreground/50",
+              range_end: "bg-primary text-primary-foreground",
+              range_middle: "bg-primary/20 text-primary",
+              range_start: "bg-primary text-primary-foreground",
+              selected: "bg-primary text-primary-foreground",
+              today: "bg-muted text-foreground",
+              weekday: "text-[9px] text-muted-foreground",
               root: "w-full",
             }}
             locale={ru}
@@ -282,10 +278,7 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label
-            className="text-[10px] font-semibold uppercase tracking-widest text-slate-500"
-            htmlFor="auction-type"
-          >
+          <Label className={labelClassName} htmlFor="auction-type">
             Тип аукциона
           </Label>
           <Select
@@ -311,10 +304,7 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label
-            className="text-[10px] font-semibold uppercase tracking-widest text-slate-500"
-            htmlFor="trading-status"
-          >
+          <Label className={labelClassName} htmlFor="trading-status">
             Участие
           </Label>
           <Select
@@ -343,10 +333,7 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label
-            className="text-[10px] font-semibold uppercase tracking-widest text-slate-500"
-            htmlFor="load-city"
-          >
+          <Label className={labelClassName} htmlFor="load-city">
             Город погрузки
           </Label>
           <Select
@@ -373,10 +360,7 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label
-            className="text-[10px] font-semibold uppercase tracking-widest text-slate-500"
-            htmlFor="unload-city"
-          >
+          <Label className={labelClassName} htmlFor="unload-city">
             Город выгрузки
           </Label>
           <Select
@@ -403,9 +387,7 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-            Дата выгрузки
-          </Label>
+          <Label className={labelClassName}>Дата выгрузки</Label>
           <div className="grid min-w-0 grid-cols-2 gap-2">
             <Input
               className={dateInputClassName}
@@ -423,12 +405,10 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-            Вес, т
-          </Label>
+          <Label className={labelClassName}>Вес, т</Label>
           <div className="grid grid-cols-2 gap-2">
             <Input
-              className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+              className={numberInputClassName}
               inputMode="decimal"
               min={0}
               onChange={(event) => setDraftWeightFrom(event.target.value)}
@@ -437,7 +417,7 @@ export function AuctionsListFilters({
               value={draftWeightFrom}
             />
             <Input
-              className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+              className={numberInputClassName}
               inputMode="decimal"
               min={0}
               onChange={(event) => setDraftWeightTo(event.target.value)}
@@ -449,12 +429,10 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
-            Цена за км, ₽
-          </Label>
+          <Label className={labelClassName}>Цена за км, ₽</Label>
           <div className="grid grid-cols-2 gap-2">
             <Input
-              className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+              className={numberInputClassName}
               inputMode="decimal"
               min={0}
               onChange={(event) => setDraftPricePerKmFrom(event.target.value)}
@@ -463,7 +441,7 @@ export function AuctionsListFilters({
               value={draftPricePerKmFrom}
             />
             <Input
-              className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+              className={numberInputClassName}
               inputMode="decimal"
               min={0}
               onChange={(event) => setDraftPricePerKmTo(event.target.value)}
@@ -477,51 +455,51 @@ export function AuctionsListFilters({
         <div className="flex items-center gap-2">
           <Checkbox
             checked={draftIsBidder}
-            className="border-slate-600"
+            className={checkboxClassName}
             id="is-bidder"
             onCheckedChange={(value) => setDraftIsBidder(value === true)}
           />
-          <Label className="text-xs text-slate-300" htmlFor="is-bidder">
+          <Label className="text-xs text-foreground" htmlFor="is-bidder">
             Только с моим участием
           </Label>
         </div>
 
         <div className="flex items-center gap-2">
           <Checkbox
-            className="border-slate-600"
+            className={checkboxClassName}
             id="is-available"
             checked={draftIsAvailable}
             onCheckedChange={(value) => setDraftIsAvailable(value === true)}
           />
-          <Label className="text-xs text-slate-300" htmlFor="is-available">
+          <Label className="text-xs text-foreground" htmlFor="is-available">
             Только доступные
           </Label>
         </div>
 
         <div className="flex items-center gap-2">
           <Checkbox
-            className="border-slate-600"
+            className={checkboxClassName}
             id="is-favorite"
             checked={draftIsFavorite}
             onCheckedChange={(value) => setDraftIsFavorite(value === true)}
           />
-          <Label className="text-xs text-slate-300" htmlFor="is-favorite">
+          <Label className="text-xs text-foreground" htmlFor="is-favorite">
             Только избранные
           </Label>
         </div>
 
-        <div className="border-t border-slate-800/80" />
+        <div className="border-t border-border/80" />
       </div>
 
-      <div className="grid gap-2 border-t border-slate-800 bg-slate-900 p-4">
+      <div className="grid gap-2 border-t border-sidebar-border bg-sidebar p-4">
         <Button
-          className="w-full bg-blue-600 text-white hover:bg-blue-700"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
           type="submit"
         >
           Применить фильтры
         </Button>
         <Button
-          className="w-full border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
+          className="w-full border-border bg-card text-foreground hover:bg-muted"
           type="button"
           variant="outline"
           onClick={resetDraftFilters}

@@ -20,19 +20,21 @@ export function AuctionsListPagination({
   onPageSizeChange,
 }: AuctionsListPaginationProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 bg-slate-900/60 px-5 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-5 py-3">
       <div className="flex flex-wrap items-center gap-3">
-        <div className="text-sm text-slate-500">
+        <div className="text-sm text-muted-foreground">
           Страница {meta.current_page} из {meta.last_page}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-slate-500">На странице:</span>
+          <span className="text-[11px] text-muted-foreground">
+            На странице:
+          </span>
           <Select
             onValueChange={(value) => onPageSizeChange(Number(value))}
             value={String(meta.per_page)}
           >
             <SelectTrigger
-              className="w-20 border-slate-700 bg-slate-900 text-slate-100 focus-visible:border-blue-500"
+              className="w-20 border-border bg-card text-foreground focus-visible:border-ring"
               size="sm"
             >
               <SelectValue />
@@ -47,7 +49,7 @@ export function AuctionsListPagination({
       </div>
       <div className="flex items-center gap-2">
         <Button
-          className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
+          className="border-border bg-card text-foreground hover:bg-muted"
           type="button"
           variant="outline"
           disabled={meta.current_page <= 1}
@@ -56,7 +58,7 @@ export function AuctionsListPagination({
           Назад
         </Button>
         <Button
-          className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
+          className="border-border bg-card text-foreground hover:bg-muted"
           type="button"
           variant="outline"
           disabled={meta.current_page >= meta.last_page}

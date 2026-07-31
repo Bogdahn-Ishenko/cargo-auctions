@@ -1,54 +1,65 @@
-import { RiMapPin2Line } from "@remixicon/react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { AuctionDetailRoutePoint } from "@/entities/Auction/model/AuctionDetail.types"
-import { formatDateTime } from "../lib/FormatDateTime"
+import { RiMapPin2Line } from "@remixicon/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { AuctionDetailRoutePoint } from "@/entities/Auction/model/AuctionDetail.types";
+import { formatDateTime } from "../lib/FormatDateTime";
 
 interface AuctionDetailRouteCardProps {
-  hideContacts: boolean
-  routes: AuctionDetailRoutePoint[]
+  hideContacts: boolean;
+  routes: AuctionDetailRoutePoint[];
 }
 
 function getOperationLabel(opType: AuctionDetailRoutePoint["op_type"]) {
   switch (opType) {
     case "Loading":
-      return "Погрузка"
+      return "Погрузка";
     case "Unloading":
-      return "Выгрузка"
+      return "Выгрузка";
     default:
-      return "Операция"
+      return "Операция";
   }
 }
 
-export function AuctionDetailRouteCard({ hideContacts, routes }: AuctionDetailRouteCardProps) {
+export function AuctionDetailRouteCard({
+  hideContacts,
+  routes,
+}: AuctionDetailRouteCardProps) {
   return (
-    <Card className="rounded-2xl border-slate-200 bg-white shadow-sm">
+    <Card className="rounded-2xl border-border bg-card shadow-sm">
       <CardHeader>
-        <CardTitle className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+        <CardTitle className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
           Маршрут и точки
         </CardTitle>
       </CardHeader>
       <CardContent className="grid gap-0">
         {routes.map((route, index) => (
-          <div className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 pb-5 last:pb-0" key={`${route.row_num}-${route.op_type}`}>
+          <div
+            className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 pb-5 last:pb-0"
+            key={`${route.row_num}-${route.op_type}`}
+          >
             <div className="flex flex-col items-center">
-              <div className="flex size-7 items-center justify-center rounded-full bg-slate-900 text-white">
+              <div className="flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 <RiMapPin2Line className="size-3.5" />
               </div>
-              {index < routes.length - 1 ? <div className="mt-2 h-full w-px bg-slate-200" /> : null}
+              {index < routes.length - 1 ? (
+                <div className="mt-2 h-full w-px bg-border" />
+              ) : null}
             </div>
-            <div className="min-w-0 rounded-xl border border-slate-100 bg-slate-50 p-3 text-sm">
-              <div className="font-semibold text-slate-800">
+            <div className="min-w-0 rounded-xl border border-border bg-muted p-3 text-sm">
+              <div className="font-semibold text-foreground">
                 {getOperationLabel(route.op_type)}: {route.location.city_name}
               </div>
-              <div className="mt-1 text-xs text-slate-500">
-                {hideContacts ? "Адрес и контакты скрыты организатором" : route.location.loading_address}
+              <div className="mt-1 text-xs text-muted-foreground">
+                {hideContacts
+                  ? "Адрес и контакты скрыты организатором"
+                  : route.location.loading_address}
               </div>
-              <div className="mt-2 font-mono text-[11px] text-slate-400">
+              <div className="mt-2 font-mono text-[11px] text-muted-foreground">
                 {formatDateTime(route.start_date)}
               </div>
               {!hideContacts && route.contact ? (
-                <div className="mt-2 text-xs text-slate-500">
-                  Контакт: {route.contact.name ?? "Не указан"} · {route.contact.phone ?? "Телефон не указан"}
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Контакт: {route.contact.name ?? "Не указан"} ·{" "}
+                  {route.contact.phone ?? "Телефон не указан"}
                 </div>
               ) : null}
             </div>
@@ -56,5 +67,5 @@ export function AuctionDetailRouteCard({ hideContacts, routes }: AuctionDetailRo
         ))}
       </CardContent>
     </Card>
-  )
+  );
 }

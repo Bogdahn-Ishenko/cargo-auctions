@@ -32,7 +32,7 @@ export function ThemeModeSelect() {
     >
       <SelectTrigger
         aria-label="Тема интерфейса"
-        className="w-[132px] border-slate-700 bg-slate-900 text-slate-100 focus-visible:border-blue-500"
+        className="w-[132px] border-border bg-card text-foreground focus-visible:border-ring"
         size="sm"
       >
         <SelectValue />
@@ -40,7 +40,7 @@ export function ThemeModeSelect() {
       <SelectContent position="popper">
         {themeOptions.map(({ icon: Icon, label, value }) => (
           <SelectItem key={value} value={value}>
-            <Icon className="size-4 text-slate-400" />
+            <Icon className="size-4 text-muted-foreground" />
             {label}
           </SelectItem>
         ))}

@@ -33,13 +33,13 @@ export function AuctionsListToolbar({
   total,
 }: AuctionsListToolbarProps) {
   return (
-    <header className="grid gap-3 border-b border-slate-800 bg-slate-900/60 px-5 py-4">
+    <header className="grid gap-3 border-b border-border bg-card px-5 py-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-heading text-[15px] font-bold leading-tight text-slate-100">
+          <h1 className="font-heading text-[15px] font-bold leading-tight text-foreground">
             Список аукционов
           </h1>
-          <p className="mt-0.5 text-[11px] text-slate-500">
+          <p className="mt-0.5 text-[11px] text-muted-foreground">
             {total === undefined
               ? "Загрузка результатов"
               : `Показано ${from}-${to} из ${total}`}
@@ -49,7 +49,7 @@ export function AuctionsListToolbar({
         <div className="flex items-center gap-2">
           <Button
             aria-expanded={isFiltersOpen}
-            className="border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800 lg:hidden"
+            className="border-border bg-card text-foreground hover:bg-muted lg:hidden"
             onClick={onFiltersToggle}
             type="button"
             variant="outline"
@@ -57,18 +57,18 @@ export function AuctionsListToolbar({
             <RiFilter3Line />
             Фильтры
           </Button>
-          <span className="hidden text-[11px] text-slate-500 md:inline">
+          <span className="hidden text-[11px] text-muted-foreground md:inline">
             Тема:
           </span>
           <ThemeModeSelect />
-          <span className="hidden text-[11px] text-slate-500 sm:inline">
+          <span className="hidden text-[11px] text-muted-foreground sm:inline">
             Сортировка:
           </span>
           <Select
             onValueChange={(value) => onSortChange(value as AuctionsListSort)}
             value={sort}
           >
-            <SelectTrigger className="w-[210px] border-slate-700 bg-slate-900 text-slate-100 focus-visible:border-blue-500">
+            <SelectTrigger className="w-[210px] border-border bg-card text-foreground focus-visible:border-ring">
               <SelectValue />
             </SelectTrigger>
             <SelectContent position="popper">

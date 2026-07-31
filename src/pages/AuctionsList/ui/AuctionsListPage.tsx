@@ -136,8 +136,8 @@ export function AuctionsListPage() {
   }
 
   return (
-    <main className="flex min-h-screen bg-slate-950 text-slate-100">
-      <section className="flex min-h-screen w-full flex-col lg:flex-row">
+    <main className="flex h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <section className="flex min-h-0 w-full flex-col overflow-hidden lg:flex-row">
         <AuctionsListFilters
           auctionType={search.auc_type}
           cargoNum={search.cargo_num ?? ""}
@@ -162,7 +162,7 @@ export function AuctionsListPage() {
           weightTo={search.weight_to ? String(search.weight_to) : ""}
         />
 
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
           <AuctionsListToolbar
             activeFilters={<AuctionsListActiveFilters onReset={resetFilters} search={search} />}
             from={auctionsQuery.data?.meta.from}
@@ -174,7 +174,7 @@ export function AuctionsListPage() {
             total={auctionsQuery.data?.meta.total}
           />
 
-          <div className="flex-1 overflow-y-auto p-5">
+          <div className="min-h-0 flex-1 overflow-y-auto p-5">
             {auctionsQuery.isLoading ? <AuctionsListSkeleton /> : null}
 
             {auctionsQuery.isError ? (

@@ -93,9 +93,31 @@ export function AuctionsListFilters({
   const [draftWeightFrom, setDraftWeightFrom] = useState(weightFrom)
   const [draftWeightTo, setDraftWeightTo] = useState(weightTo)
 
+  function resetDraftFilters() {
+    setDraftAuctionType("all")
+    setDraftCargoNum("")
+    setDraftCurrentPriceFrom("")
+    setDraftCurrentPriceTo("")
+    setDraftIsAvailable(false)
+    setDraftIsBidder(false)
+    setDraftIsFavorite(false)
+    setDraftLoadCity("")
+    setDraftLoadDateFrom("")
+    setDraftLoadDateTo("")
+    setDraftPricePerKmFrom("")
+    setDraftPricePerKmTo("")
+    setDraftTradingStatus("all")
+    setDraftUnloadCity("")
+    setDraftUnloadDateFrom("")
+    setDraftUnloadDateTo("")
+    setDraftWeightFrom("")
+    setDraftWeightTo("")
+    onReset()
+  }
+
   return (
     <form
-      className={`${isOpen ? "flex" : "hidden"} flex-col gap-5 border-b border-slate-800 bg-slate-950 p-4 text-slate-200 lg:flex lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r`}
+      className={`${isOpen ? "flex" : "hidden"} h-screen max-h-screen flex-col overflow-hidden border-b border-slate-800 bg-slate-900 text-slate-200 lg:flex lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r`}
       onSubmit={(event) => {
         event.preventDefault()
         onApply({
@@ -120,29 +142,39 @@ export function AuctionsListFilters({
         })
       }}
     >
-      <div className="flex items-center gap-2">
-        <RiFilter3Line className="size-4 text-slate-500" />
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Фильтры</div>
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-900 px-5 py-4">
+        <div className="flex items-center gap-2">
+          <RiFilter3Line className="size-4 text-slate-500" />
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Фильтры</div>
+        </div>
+        <button
+          className="text-[11px] font-medium text-blue-400 transition-colors hover:text-blue-300"
+          onClick={resetDraftFilters}
+          type="button"
+        >
+          Сбросить
+        </button>
       </div>
 
+      <div className="flex-1 space-y-6 overflow-y-auto p-5">
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400" htmlFor="cargo-num">
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500" htmlFor="cargo-num">
           Номер заявки
         </Label>
         <div className="relative">
           <RiSearchLine className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-slate-500" />
-        <Input
-          className="border-slate-700 bg-slate-900 pl-8 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
-          id="cargo-num"
-          value={draftCargoNum}
-          placeholder="00000001059"
-          onChange={(event) => setDraftCargoNum(event.target.value)}
-        />
+          <Input
+            className="border-slate-700 bg-slate-800 pl-8 font-mono text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
+            id="cargo-num"
+            onChange={(event) => setDraftCargoNum(event.target.value)}
+            placeholder="00000001059"
+            value={draftCargoNum}
+          />
         </div>
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400" htmlFor="auction-type">
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500" htmlFor="auction-type">
           Тип аукциона
         </Label>
         <NativeSelect
@@ -160,7 +192,7 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400" htmlFor="trading-status">
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500" htmlFor="trading-status">
           Участие
         </Label>
         <NativeSelect
@@ -181,7 +213,7 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400" htmlFor="load-city">
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500" htmlFor="load-city">
           Город погрузки
         </Label>
         <NativeSelect
@@ -200,7 +232,7 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400" htmlFor="unload-city">
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500" htmlFor="unload-city">
           Город выгрузки
         </Label>
         <NativeSelect
@@ -219,7 +251,7 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400">Дата погрузки</Label>
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Дата погрузки</Label>
         <div className="grid grid-cols-2 gap-2">
           <Input
             className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
@@ -237,7 +269,7 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400">Дата выгрузки</Label>
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Дата выгрузки</Label>
         <div className="grid grid-cols-2 gap-2">
           <Input
             className="border-slate-700 bg-slate-900 text-sm text-slate-100 focus-visible:border-blue-500"
@@ -255,7 +287,7 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400">Вес, т</Label>
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Вес, т</Label>
         <div className="grid grid-cols-2 gap-2">
           <Input
             className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
@@ -279,7 +311,7 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400">Текущая цена, ₽</Label>
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Текущая цена, ₽</Label>
         <div className="grid grid-cols-2 gap-2">
           <Input
             className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
@@ -303,7 +335,7 @@ export function AuctionsListFilters({
       </div>
 
       <div className="grid gap-2">
-        <Label className="text-xs text-slate-400">Цена за км, ₽</Label>
+        <Label className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Цена за км, ₽</Label>
         <div className="grid grid-cols-2 gap-2">
           <Input
             className="border-slate-700 bg-slate-900 text-sm text-slate-100 placeholder:text-slate-600 focus-visible:border-blue-500"
@@ -362,35 +394,18 @@ export function AuctionsListFilters({
         </Label>
       </div>
 
-      <div className="mt-auto grid gap-2">
+      <div className="border-t border-slate-800/80" />
+      </div>
+
+      <div className="grid gap-2 border-t border-slate-800 bg-slate-900 p-4">
         <Button className="w-full bg-blue-600 text-white hover:bg-blue-700" type="submit">
-          Применить
+          Применить фильтры
         </Button>
         <Button
-          className="w-full border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-slate-100"
+          className="w-full border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
           type="button"
           variant="outline"
-          onClick={() => {
-            setDraftAuctionType("all")
-            setDraftCargoNum("")
-            setDraftCurrentPriceFrom("")
-            setDraftCurrentPriceTo("")
-            setDraftIsAvailable(false)
-            setDraftIsBidder(false)
-            setDraftIsFavorite(false)
-            setDraftLoadCity("")
-            setDraftLoadDateFrom("")
-            setDraftLoadDateTo("")
-            setDraftPricePerKmFrom("")
-            setDraftPricePerKmTo("")
-            setDraftTradingStatus("all")
-            setDraftUnloadCity("")
-            setDraftUnloadDateFrom("")
-            setDraftUnloadDateTo("")
-            setDraftWeightFrom("")
-            setDraftWeightTo("")
-            onReset()
-          }}
+          onClick={resetDraftFilters}
         >
           <RiRefreshLine />
           Сбросить

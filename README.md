@@ -2,6 +2,11 @@
 
 SPA для работы с грузовыми аукционами. Backend для тестового задания не требуется: HTTP-контракт эмулируется через MSW по OpenAPI-схеме из `src/shared/api/openapi.json`.
 
+## Ссылки
+
+- Production: [https://cargo-auctions.vercel.app/](https://cargo-auctions.vercel.app/)
+- GitHub: [https://github.com/Bogdahn-Ishenko/cargo-auctions/tree/main](https://github.com/Bogdahn-Ishenko/cargo-auctions/tree/main)
+
 ## Стек
 
 - React 18, TypeScript, Vite
@@ -89,7 +94,7 @@ MSW включен по умолчанию и в локальной, и в produ
 | Категория | Есть | Нет |
 | --- | --- | --- |
 | Данные | 50 mock-аукционов, детальные данные, ставки | Реального backend и внешней БД |
-| UI | Список, фильтры, календарь, карточка, карта маршрута, детали, ставки, тема | Production-деплоя |
+| UI | Список, фильтры, календарь, карточка, карта маршрута, детали, ставки, тема, production deploy на Vercel | Реального backend |
 | Проверки | ESLint, TypeScript, Vitest, Vite build, Husky | E2E-тестов в браузере |
 | Документация | README для запуска и проверки | Отдельных markdown-черновиков |
 

@@ -9,6 +9,7 @@ describe("AuctionsListSearchSchema", () => {
       per_page: 6,
       sort: "stop_time_asc",
       status: "all",
+      statuses: [],
     })
   })
 
@@ -26,6 +27,7 @@ describe("AuctionsListSearchSchema", () => {
         page: "2",
         per_page: "10",
         price_per_km_from: "100",
+        statuses: ["Leading", "Losing"],
         unload_city: "Москва",
         unload_date_to: "2026-05-29",
         weight_to: "20",
@@ -42,6 +44,7 @@ describe("AuctionsListSearchSchema", () => {
       page: 2,
       per_page: 10,
       price_per_km_from: 100,
+      statuses: ["Leading", "Losing"],
       unload_city: "Москва",
       unload_date_to: "2026-05-29",
       weight_to: 20,
@@ -54,11 +57,23 @@ describe("AuctionsListSearchSchema", () => {
         auc_type: "Invalid",
         sort: "unknown",
         status: "Invalid",
+        statuses: "Invalid",
       }),
     ).toMatchObject({
       auc_type: "all",
       sort: "stop_time_asc",
       status: "all",
+      statuses: [],
+    })
+  })
+
+  it("normalizes a single statuses search param to an array", () => {
+    expect(
+      AuctionsListSearchSchema.parse({
+        statuses: "Leading",
+      }),
+    ).toMatchObject({
+      statuses: ["Leading"],
     })
   })
 })

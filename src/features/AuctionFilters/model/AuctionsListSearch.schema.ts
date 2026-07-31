@@ -4,6 +4,14 @@ import { z } from "zod"
 export const AuctionsListSortSchema = z.enum(["stop_time_asc", "price_asc", "price_desc", "load_date_asc"])
 export const AuctionsListTypeSearchSchema = z.union([AuctionTypeSchema, z.literal("all")])
 export const AuctionsListTradingStatusSearchSchema = z.union([TradingStatusSchema, z.literal("all")])
+export const AuctionsListTradingStatusesSearchSchema = z
+  .preprocess((value: unknown) => {
+    if (value === undefined || value === null || value === "") return []
+    if (Array.isArray(value)) return value.map((item: unknown) => item)
+
+    return [value]
+  }, z.array(TradingStatusSchema))
+  .catch([])
 
 export const AuctionsListSearchSchema = z.object({
   page: z.coerce.number().int().positive().catch(1),
@@ -11,6 +19,7 @@ export const AuctionsListSearchSchema = z.object({
   sort: AuctionsListSortSchema.catch("stop_time_asc"),
   auc_type: AuctionsListTypeSearchSchema.catch("all"),
   status: AuctionsListTradingStatusSearchSchema.catch("all"),
+  statuses: AuctionsListTradingStatusesSearchSchema,
   cargo_num: z.string().trim().catch("").optional(),
   current_price_from: z.coerce.number().nonnegative().catch(0).optional(),
   current_price_to: z.coerce.number().nonnegative().catch(0).optional(),
@@ -41,6 +50,7 @@ export const AuctionsListSearchSchema = z.object({
 })
 
 export type AuctionsListSort = z.infer<typeof AuctionsListSortSchema>
+export type AuctionsListTradingStatusesSearch = z.infer<typeof AuctionsListTradingStatusesSearchSchema>
 export type AuctionsListTradingStatusSearch = z.infer<typeof AuctionsListTradingStatusSearchSchema>
 export type AuctionsListTypeSearch = z.infer<typeof AuctionsListTypeSearchSchema>
 export type AuctionsListSearch = z.infer<typeof AuctionsListSearchSchema>

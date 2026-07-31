@@ -18,7 +18,7 @@ import { AuctionsListPagination } from "./AuctionsListPagination";
 import { AuctionsListToolbar } from "./AuctionsListToolbar";
 import type {
   AuctionsListSort,
-  AuctionsListTradingStatusSearch,
+  AuctionsListTradingStatusesSearch,
   AuctionsListTypeSearch,
 } from "@/features/AuctionFilters/model/AuctionsListSearch.schema";
 
@@ -81,7 +81,7 @@ export function AuctionsListPage() {
     loadDateTo: string;
     pricePerKmFrom: string;
     pricePerKmTo: string;
-    tradingStatus: AuctionsListTradingStatusSearch;
+    tradingStatuses: AuctionsListTradingStatusesSearch;
     unloadCity: string;
     unloadDateFrom: string;
     unloadDateTo: string;
@@ -133,7 +133,10 @@ export function AuctionsListPage() {
           Number.isFinite(pricePerKmTo) && pricePerKmTo > 0
             ? pricePerKmTo
             : undefined,
-        status: filters.tradingStatus,
+        status: "all",
+        statuses: filters.tradingStatuses.length
+          ? filters.tradingStatuses
+          : undefined,
         unload_city: filters.unloadCity || undefined,
         unload_date_from: filters.unloadDateFrom || undefined,
         unload_date_to: filters.unloadDateTo || undefined,
@@ -169,6 +172,7 @@ export function AuctionsListPage() {
         price_per_km_from: undefined,
         price_per_km_to: undefined,
         status: "all",
+        statuses: [],
         unload_city: undefined,
         unload_date_from: undefined,
         unload_date_to: undefined,
@@ -218,7 +222,13 @@ export function AuctionsListPage() {
           pricePerKmTo={
             search.price_per_km_to ? String(search.price_per_km_to) : ""
           }
-          tradingStatus={search.status}
+          tradingStatuses={
+            search.statuses.length
+              ? search.statuses
+              : search.status === "all"
+                ? []
+                : [search.status]
+          }
           unloadCity={search.unload_city ?? ""}
           unloadDateFrom={search.unload_date_from ?? ""}
           unloadDateTo={search.unload_date_to ?? ""}

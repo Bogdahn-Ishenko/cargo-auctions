@@ -14,9 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getTradingStatusLabel } from "@/entities/Auction/lib/GetAuctionLabels";
+import type { TradingStatus } from "@/entities/Auction/model/AuctionList.types";
 import { auctionCityOptions } from "../model/AuctionCityOptions";
 import type {
-  AuctionsListTradingStatusSearch,
+  AuctionsListTradingStatusesSearch,
   AuctionsListTypeSearch,
 } from "@/features/AuctionFilters/model/AuctionsListSearch.schema";
 
@@ -30,6 +32,17 @@ const filterSelectTriggerClassName =
 const numberInputClassName =
   "border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring";
 const checkboxClassName = "border-border";
+const tradingStatusOptions: TradingStatus[] = [
+  "NotParticipating",
+  "Leading",
+  "Losing",
+  "OnPending",
+  "Confirmed",
+  "ChoosingWinner",
+  "Winner",
+  "Accepted",
+  "Unknown",
+];
 
 interface AuctionsListFiltersProps {
   auctionType: AuctionsListTypeSearch;
@@ -56,7 +69,7 @@ interface AuctionsListFiltersProps {
     loadDateTo: string;
     pricePerKmFrom: string;
     pricePerKmTo: string;
-    tradingStatus: AuctionsListTradingStatusSearch;
+    tradingStatuses: AuctionsListTradingStatusesSearch;
     unloadCity: string;
     unloadDateFrom: string;
     unloadDateTo: string;
@@ -70,7 +83,7 @@ interface AuctionsListFiltersProps {
   loadDateTo: string;
   pricePerKmFrom: string;
   pricePerKmTo: string;
-  tradingStatus: AuctionsListTradingStatusSearch;
+  tradingStatuses: AuctionsListTradingStatusesSearch;
   unloadCity: string;
   unloadDateFrom: string;
   unloadDateTo: string;
@@ -96,7 +109,7 @@ export function AuctionsListFilters({
   onReset,
   pricePerKmFrom,
   pricePerKmTo,
-  tradingStatus,
+  tradingStatuses,
   unloadCity,
   unloadDateFrom,
   unloadDateTo,
@@ -123,8 +136,8 @@ export function AuctionsListFilters({
   const [draftPricePerKmFrom, setDraftPricePerKmFrom] =
     useState(pricePerKmFrom);
   const [draftPricePerKmTo, setDraftPricePerKmTo] = useState(pricePerKmTo);
-  const [draftTradingStatus, setDraftTradingStatus] =
-    useState<AuctionsListTradingStatusSearch>(tradingStatus);
+  const [draftTradingStatuses, setDraftTradingStatuses] =
+    useState<AuctionsListTradingStatusesSearch>(tradingStatuses);
   const [draftUnloadCity, setDraftUnloadCity] = useState(unloadCity);
   const [draftUnloadDateFrom, setDraftUnloadDateFrom] =
     useState(unloadDateFrom);
@@ -148,7 +161,7 @@ export function AuctionsListFilters({
     setDraftLoadDateTo("");
     setDraftPricePerKmFrom("");
     setDraftPricePerKmTo("");
-    setDraftTradingStatus("all");
+    setDraftTradingStatuses([]);
     setDraftUnloadCity("");
     setDraftUnloadDateFrom("");
     setDraftUnloadDateTo("");
@@ -182,7 +195,7 @@ export function AuctionsListFilters({
           loadDateTo: draftLoadDateTo,
           pricePerKmFrom: draftPricePerKmFrom.trim(),
           pricePerKmTo: draftPricePerKmTo.trim(),
-          tradingStatus: draftTradingStatus,
+          tradingStatuses: draftTradingStatuses,
           unloadCity: draftUnloadCity,
           unloadDateFrom: draftUnloadDateFrom,
           unloadDateTo: draftUnloadDateTo,
@@ -347,32 +360,33 @@ export function AuctionsListFilters({
         </div>
 
         <div className="grid gap-2">
-          <Label className={labelClassName} htmlFor="trading-status">
+          <Label className={labelClassName}>
             Участие
           </Label>
-          <Select
-            onValueChange={(value) =>
-              setDraftTradingStatus(value as AuctionsListTradingStatusSearch)
-            }
-            value={draftTradingStatus}
-          >
-            <SelectTrigger
-              className={filterSelectTriggerClassName}
-              id="trading-status"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              <SelectItem value="all">Любой статус</SelectItem>
-              <SelectItem value="NotParticipating">Не участвуете</SelectItem>
-              <SelectItem value="Leading">Вы лидируете</SelectItem>
-              <SelectItem value="Losing">Вас обогнали</SelectItem>
-              <SelectItem value="Confirmed">Подтверждено</SelectItem>
-              <SelectItem value="ChoosingWinner">Выбор победителя</SelectItem>
-              <SelectItem value="Winner">Победа</SelectItem>
-              <SelectItem value="Unknown">Без участия</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="grid gap-2 rounded-xl border border-border bg-card p-3">
+            {tradingStatusOptions.map((status) => (
+              <div className="flex items-center gap-2" key={status}>
+                <Checkbox
+                  checked={draftTradingStatuses.includes(status)}
+                  className={checkboxClassName}
+                  id={`trading-status-${status}`}
+                  onCheckedChange={(value) =>
+                    setDraftTradingStatuses((previous) =>
+                      value === true
+                        ? [...new Set([...previous, status])]
+                        : previous.filter((item) => item !== status),
+                    )
+                  }
+                />
+                <Label
+                  className="text-xs text-foreground"
+                  htmlFor={`trading-status-${status}`}
+                >
+                  {getTradingStatusLabel(status)}
+                </Label>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="grid gap-2">

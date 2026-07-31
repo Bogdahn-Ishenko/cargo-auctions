@@ -50,8 +50,14 @@ function getActiveFilters(search: AuctionsListSearch) {
   if (search.cargo_num) filters.push(`Заявка: ${search.cargo_num}`);
   if (search.auc_type !== "all")
     filters.push(`Тип: ${getAuctionTypeLabel(search.auc_type)}`);
-  if (search.status !== "all")
-    filters.push(`Участие: ${getTradingStatusLabel(search.status)}`);
+  const statuses = search.statuses.length
+    ? search.statuses
+    : search.status === "all"
+      ? []
+      : [search.status];
+  statuses.forEach((status) => {
+    filters.push(`Участие: ${getTradingStatusLabel(status)}`);
+  });
   if (search.is_available) filters.push("Только доступные");
   if (search.is_bidder) filters.push("С моим участием");
   if (search.is_favorite) filters.push("Только избранные");

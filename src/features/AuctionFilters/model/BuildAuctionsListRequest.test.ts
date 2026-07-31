@@ -8,6 +8,7 @@ const baseSearch: AuctionsListSearch = {
   per_page: 6,
   sort: "stop_time_asc",
   status: "all",
+  statuses: [],
 }
 
 describe("buildAuctionsListRequest", () => {
@@ -37,7 +38,7 @@ describe("buildAuctionsListRequest", () => {
         load_date_to: "2026-05-28",
         price_per_km_from: 100,
         price_per_km_to: 150,
-        status: "Leading",
+        statuses: ["Leading", "Losing"],
         unload_city: "Москва",
         unload_date_from: "2026-05-27",
         unload_date_to: "2026-05-29",
@@ -59,7 +60,7 @@ describe("buildAuctionsListRequest", () => {
       load_date_to: "2026-05-28T23:59:59+03:00",
       price_per_km_from: 100,
       price_per_km_to: 150,
-      status: ["Leading"],
+      status: ["Leading", "Losing"],
       unload_city: "Москва",
       unload_date_from: "2026-05-27T00:00:00+03:00",
       unload_date_to: "2026-05-29T23:59:59+03:00",
@@ -71,5 +72,16 @@ describe("buildAuctionsListRequest", () => {
   it("does not send inactive all filters", () => {
     expect(buildAuctionsListRequest(baseSearch)).not.toHaveProperty("auc_type")
     expect(buildAuctionsListRequest(baseSearch)).not.toHaveProperty("status")
+  })
+
+  it("keeps backward compatibility with the legacy single status param", () => {
+    expect(
+      buildAuctionsListRequest({
+        ...baseSearch,
+        status: "Leading",
+      }),
+    ).toMatchObject({
+      status: ["Leading"],
+    })
   })
 })

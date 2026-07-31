@@ -20,6 +20,7 @@ export function AuctionDetailPriceCard({
   const price = auction.trading.price;
   const favoriteMutation = useToggleAuctionFavorite(auction.main.order_uid);
   const isFavorite = auction.trading.is_favorite;
+  const isPriceHidden = auction.trading.no_view_cargo_price ?? false;
 
   return (
     <Card className="h-fit rounded-2xl border-border bg-card py-0 text-card-foreground shadow-sm">
@@ -33,26 +34,37 @@ export function AuctionDetailPriceCard({
           <div className="mb-2 text-[10px] font-medium uppercase text-muted-foreground">
             Текущая цена
           </div>
-          <div className="font-mono text-3xl font-bold tracking-tight text-foreground">
-            {formatPrice(price?.current ?? null)}
+          <div className="font-mono text-2xl font-bold tracking-tight text-foreground">
+            {formatTradingPrice(price?.current ?? null, isPriceHidden)}
           </div>
           <div className="mt-2 flex flex-wrap gap-2 text-[11px] text-muted-foreground">
-            <span>{formatPrice(price?.price_per_km ?? null)} / км</span>
+            <span>
+              {formatTradingPrice(price?.price_per_km ?? null, isPriceHidden)} / км
+            </span>
             <span className="text-border">·</span>
-            <span>шаг {formatPrice(price?.step ?? null)}</span>
+            <span>шаг {formatTradingPrice(price?.step ?? null, isPriceHidden)}</span>
           </div>
         </div>
 
         <div className="grid gap-3 text-sm">
           <InfoItem
             label="Доступная цена"
-            value={formatPrice(price?.available ?? null)}
+            value={formatTradingPrice(price?.available ?? null, isPriceHidden)}
           />
-          <InfoItem label="Минимум" value={formatPrice(price?.min ?? null)} />
-          <InfoItem label="Максимум" value={formatPrice(price?.max ?? null)} />
+          <InfoItem
+            label="Минимум"
+            value={formatTradingPrice(price?.min ?? null, isPriceHidden)}
+          />
+          <InfoItem
+            label="Максимум"
+            value={formatTradingPrice(price?.max ?? null, isPriceHidden)}
+          />
           <InfoItem
             label="Моя ставка"
-            value={formatPrice(auction.trading.your?.last_bet_with_vat ?? null)}
+            value={formatTradingPrice(
+              auction.trading.your?.last_bet_with_vat ?? null,
+              isPriceHidden,
+            )}
           />
           <InfoItem
             label="Участвую"
@@ -79,7 +91,11 @@ export function AuctionDetailPriceCard({
 
         <Separator className="bg-border" />
 
-        {isBetMode ? (
+        {isPriceHidden ? (
+          <div className="rounded-xl border border-dashed border-border bg-muted p-4 text-center text-sm text-muted-foreground">
+            Торговые цены скрыты организатором
+          </div>
+        ) : isBetMode ? (
           <AuctionBetForm auction={auction} />
         ) : auction.trading.can_set_bet ? (
           <Button
@@ -134,4 +150,8 @@ function InfoItem({ label, value }: { label: string; value: string }) {
       <span className="text-right font-medium text-foreground">{value}</span>
     </div>
   );
+}
+
+function formatTradingPrice(value: number | null | undefined, isHidden: boolean) {
+  return isHidden ? "Скрыта организатором" : formatPrice(value ?? null);
 }

@@ -53,6 +53,7 @@ export function AuctionDetailPage() {
               sort: "stop_time_asc",
               auc_type: "all",
               status: "all",
+              statuses: [],
             }}
           >
             <RiArrowLeftLine />

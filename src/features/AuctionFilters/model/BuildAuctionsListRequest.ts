@@ -2,12 +2,14 @@ import type { AuctionListRequest } from "@/entities/Auction/model/AuctionList.ty
 import type { AuctionsListSearch, AuctionsListSort } from "./AuctionsListSearch.schema"
 
 export function buildAuctionsListRequest(search: AuctionsListSearch): AuctionListRequest {
+  const statuses = getApiStatuses(search)
+
   return {
     page: search.page,
     per_page: search.per_page,
     sort: getApiSort(search.sort),
     ...(search.auc_type === "all" ? {} : { auc_type: [search.auc_type] }),
-    ...(search.status === "all" ? {} : { status: [search.status] }),
+    ...(statuses.length ? { status: statuses } : {}),
     ...(search.cargo_num ? { cargo_num: search.cargo_num } : {}),
     ...(search.current_price_from ? { current_price_from: search.current_price_from } : {}),
     ...(search.current_price_to ? { current_price_to: search.current_price_to } : {}),
@@ -27,6 +29,13 @@ export function buildAuctionsListRequest(search: AuctionsListSearch): AuctionLis
     ...(search.is_bidder === undefined ? {} : { is_bidder: search.is_bidder }),
     ...(search.is_favorite === undefined ? {} : { is_favorite: search.is_favorite }),
   }
+}
+
+function getApiStatuses(search: AuctionsListSearch) {
+  if (search.statuses.length) return search.statuses
+  if (search.status !== "all") return [search.status]
+
+  return []
 }
 
 function getApiSort(sort: AuctionsListSort): AuctionListRequest["sort"] {

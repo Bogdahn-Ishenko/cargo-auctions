@@ -31,6 +31,7 @@ export function NotFoundPage() {
               sort: "stop_time_asc",
               auc_type: "all",
               status: "all",
+              statuses: [],
             }}
             to="/"
           >

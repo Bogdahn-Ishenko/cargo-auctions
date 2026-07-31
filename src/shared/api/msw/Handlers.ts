@@ -1,6 +1,7 @@
 import { delay, http, HttpResponse } from "msw"
 import { SetBetRequestSchema } from "@/entities/Auction/model/AuctionBets.schema"
 import type { BetItem } from "@/entities/Auction/model/AuctionBets.types"
+import { validateAuctionBet } from "@/entities/Auction/lib/ValidateAuctionBet"
 import { AuctionListRequestSchema } from "@/entities/Auction/model/AuctionList.schema"
 import type { AuctionListItem, AuctionListResponse } from "@/entities/Auction/model/AuctionList.types"
 import { auctionBetsMocks } from "./AuctionBets.mock"
@@ -133,6 +134,18 @@ export const handlers = [
           code: "validation_failed",
           title: "Ошибка валидации",
           message: "Укажите корректную сумму ставки",
+        },
+        { status: 422 },
+      )
+    }
+
+    const validationError = validateAuctionBet(auction, parsed.data.price)
+    if (validationError) {
+      return HttpResponse.json(
+        {
+          code: "validation_failed",
+          title: "Ошибка валидации",
+          message: validationError,
         },
         { status: 422 },
       )

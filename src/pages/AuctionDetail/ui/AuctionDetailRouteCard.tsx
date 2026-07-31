@@ -4,6 +4,7 @@ import type { AuctionDetailRoutePoint } from "@/entities/Auction/model/AuctionDe
 import { formatDateTime } from "../lib/FormatDateTime"
 
 interface AuctionDetailRouteCardProps {
+  hideContacts: boolean
   routes: AuctionDetailRoutePoint[]
 }
 
@@ -18,7 +19,7 @@ function getOperationLabel(opType: AuctionDetailRoutePoint["op_type"]) {
   }
 }
 
-export function AuctionDetailRouteCard({ routes }: AuctionDetailRouteCardProps) {
+export function AuctionDetailRouteCard({ hideContacts, routes }: AuctionDetailRouteCardProps) {
   return (
     <Card className="rounded-2xl border-slate-200 bg-white shadow-sm">
       <CardHeader>
@@ -39,10 +40,17 @@ export function AuctionDetailRouteCard({ routes }: AuctionDetailRouteCardProps) 
               <div className="font-semibold text-slate-800">
                 {getOperationLabel(route.op_type)}: {route.location.city_name}
               </div>
-              <div className="mt-1 text-xs text-slate-500">{route.location.loading_address}</div>
+              <div className="mt-1 text-xs text-slate-500">
+                {hideContacts ? "Адрес и контакты скрыты организатором" : route.location.loading_address}
+              </div>
               <div className="mt-2 font-mono text-[11px] text-slate-400">
                 {formatDateTime(route.start_date)}
               </div>
+              {!hideContacts && route.contact ? (
+                <div className="mt-2 text-xs text-slate-500">
+                  Контакт: {route.contact.name ?? "Не указан"} · {route.contact.phone ?? "Телефон не указан"}
+                </div>
+              ) : null}
             </div>
           </div>
         ))}

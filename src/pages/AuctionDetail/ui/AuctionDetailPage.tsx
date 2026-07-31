@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useAuctionBets } from "@/entities/Auction/api/UseAuctionBets"
 import { useAuctionDetail } from "@/entities/Auction/api/UseAuctionDetail"
 import { AuctionBidsTable } from "./AuctionBidsTable"
+import { AuctionDetailContactsCard } from "./AuctionDetailContactsCard"
 import { AuctionDetailErrorState } from "./AuctionDetailErrorState"
 import { AuctionDetailHeader } from "./AuctionDetailHeader"
 import { AuctionDetailInfoTable } from "./AuctionDetailInfoTable"
@@ -56,7 +57,11 @@ export function AuctionDetailPage() {
             <AuctionDetailHeader auction={detailQuery.data} />
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
               <div className="grid gap-4">
-                <AuctionDetailRouteCard routes={detailQuery.data.routes} />
+                <AuctionDetailRouteCard
+                  hideContacts={detailQuery.data.trading.hide_points_address_and_contacts ?? false}
+                  routes={detailQuery.data.routes}
+                />
+                <AuctionDetailContactsCard auction={detailQuery.data} />
                 <AuctionDetailInfoTable auction={detailQuery.data} />
                 <AuctionBidsTable
                   bets={betsQuery.data?.bets ?? []}

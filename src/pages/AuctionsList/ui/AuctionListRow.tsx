@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types"
 import { formatPrice } from "@/shared/lib/FormatPrice"
+import { usePrefetchAuctionDetail } from "../api/UsePrefetchAuctionDetail"
 import { AuctionCargoChips } from "./AuctionCargoChips"
 import { AuctionListBadges } from "./AuctionListBadges"
 import { AuctionRoutePreview } from "./AuctionRoutePreview"
@@ -14,6 +15,7 @@ interface AuctionListRowProps {
 
 export function AuctionListRow({ auction }: AuctionListRowProps) {
   const currentPrice = auction.trading.price?.current ?? null
+  const prefetchAuctionDetail = usePrefetchAuctionDetail()
   const primaryAction = getPrimaryActionLabel(auction)
   const sideBarClass = auction.trading.status_mobile === "Leading"
     ? "bg-emerald-500"
@@ -22,7 +24,11 @@ export function AuctionListRow({ auction }: AuctionListRowProps) {
       : "bg-slate-200"
 
   return (
-    <Card className="relative gap-0 overflow-hidden rounded-2xl border-slate-200 bg-white py-0 shadow-sm transition-shadow hover:shadow-lg">
+    <Card
+      className="relative gap-0 overflow-hidden rounded-2xl border-slate-200 bg-white py-0 shadow-sm transition-shadow hover:shadow-lg"
+      onFocus={() => prefetchAuctionDetail(auction.main.order_uid)}
+      onMouseEnter={() => prefetchAuctionDetail(auction.main.order_uid)}
+    >
       <div className={`absolute bottom-0 left-0 top-0 w-1 ${sideBarClass}`} />
       <CardContent className="grid gap-4 p-5 pl-6 lg:grid-cols-[minmax(0,1fr)_190px]">
         <div className="min-w-0">

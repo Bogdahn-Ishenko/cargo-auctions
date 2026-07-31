@@ -18,6 +18,7 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   const [error, setError] = useState("")
   const mutation = useSetAuctionBet(auction.main.order_uid)
   const isDisabled = !auction.trading.can_set_bet || mutation.isPending
+  const limitsText = getBetLimitsText(auction)
 
   function submitBet(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -57,6 +58,8 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
         {error ? error : mutation.isError ? "Не удалось отправить ставку" : `Будет отправлено: ${formatPrice(Number(price) || null)}`}
       </div>
 
+      {limitsText ? <div className="text-center text-[11px] leading-4 text-slate-400">{limitsText}</div> : null}
+
       <Button className="h-10 w-full bg-blue-600 text-white hover:bg-blue-700" disabled={isDisabled} type="submit">
         <RiSendPlaneLine />
         {mutation.isPending ? "Отправка" : auction.trading.can_set_bet ? "Сделать ставку" : "Ставка недоступна"}
@@ -81,4 +84,17 @@ function getInitialBidValue(auction: AuctionDetailResponse) {
   }
 
   return String(current)
+}
+
+function getBetLimitsText(auction: AuctionDetailResponse) {
+  const price = auction.trading.price
+
+  if (!price) return ""
+
+  const direction = auction.main.auc_type === "Down" ? "ниже текущей цены" : "выше текущей цены"
+  const min = price.min ? `мин. ${formatPrice(price.min)}` : ""
+  const max = price.max ? `макс. ${formatPrice(price.max)}` : ""
+  const step = price.step ? `шаг ${formatPrice(price.step)}` : ""
+
+  return [direction, min, max, step].filter(Boolean).join(" · ")
 }

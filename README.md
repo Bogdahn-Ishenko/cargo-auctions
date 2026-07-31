@@ -46,6 +46,8 @@ Git hooks:
 
 Моки находятся в `src/shared/api/msw`. Worker лежит в `public/mockServiceWorker.js` и нужен для работы MSW в браузере.
 
+MSW включен по умолчанию и в локальной, и в production-сборке, потому что backend по заданию не предоставляется. Для отключения mock API можно задать `VITE_ENABLE_MSW=false`.
+
 Реализованные mock endpoints:
 
 - `POST /auctions/list`

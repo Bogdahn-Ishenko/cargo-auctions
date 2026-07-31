@@ -1,4 +1,4 @@
-import type { FormEvent } from "react"
+import type { ChangeEvent, FormEvent } from "react"
 import { useState } from "react"
 import { RiSendPlaneLine } from "@remixicon/react"
 import { Button } from "@/components/ui/button"
@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { useSetAuctionBet } from "@/entities/Auction/api/UseSetAuctionBet"
 import { validateAuctionBet } from "@/entities/Auction/lib/ValidateAuctionBet"
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types"
+import { ApiError } from "@/shared/api/ApiError"
 import { formatPrice } from "@/shared/lib/FormatPrice"
 
 interface AuctionBetFormProps {
@@ -19,6 +20,15 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   const mutation = useSetAuctionBet(auction.main.order_uid)
   const isDisabled = !auction.trading.can_set_bet || mutation.isPending
   const limitsText = getBetLimitsText(auction)
+
+  function changePrice(event: ChangeEvent<HTMLInputElement>) {
+    setPrice(event.target.value)
+    setError("")
+
+    if (mutation.isError || mutation.isSuccess) {
+      mutation.reset()
+    }
+  }
 
   function submitBet(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -47,7 +57,7 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
           inputMode="numeric"
           max={auction.trading.price?.max ?? undefined}
           min={auction.trading.price?.min ?? 1}
-          onChange={(event) => setPrice(event.target.value)}
+          onChange={changePrice}
           step={auction.trading.price?.step ?? 1}
           type="number"
           value={price}
@@ -55,7 +65,13 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
       </div>
 
       <div className="min-h-4 text-center text-[11px] text-slate-500">
-        {error ? error : mutation.isError ? "Не удалось отправить ставку" : `Будет отправлено: ${formatPrice(Number(price) || null)}`}
+        {getBetStatusText({
+          error,
+          mutationError: mutation.error,
+          isError: mutation.isError,
+          isSuccess: mutation.isSuccess,
+          price: Number(price) || null,
+        })}
       </div>
 
       {limitsText ? <div className="text-center text-[11px] leading-4 text-slate-400">{limitsText}</div> : null}
@@ -66,6 +82,22 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
       </Button>
     </form>
   )
+}
+
+interface BetStatusTextOptions {
+  error: string
+  mutationError: Error | null
+  isError: boolean
+  isSuccess: boolean
+  price: number | null
+}
+
+function getBetStatusText({ error, mutationError, isError, isSuccess, price }: BetStatusTextOptions) {
+  if (error) return error
+  if (isSuccess) return "Ставка отправлена"
+  if (isError) return mutationError instanceof ApiError ? mutationError.problem.message : "Не удалось отправить ставку"
+
+  return `Будет отправлено: ${formatPrice(price)}`
 }
 
 function getInitialBidValue(auction: AuctionDetailResponse) {

@@ -1,8 +1,6 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { RiSendPlaneLine } from "@remixicon/react";
-import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -58,33 +56,16 @@ export const BetFormSchema = z.object({
 });
 
 type BetFormValues = z.infer<typeof BetFormSchema>;
-type BetFormInput = z.input<typeof BetFormSchema>;
 
 export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   const [error, setError] = useState("");
+  const [draftPrice, setDraftPrice] = useState("");
   const initialBidValue = getInitialBidValue(auction);
-  const form = useForm<BetFormInput, unknown, BetFormValues>({
-    defaultValues: {
-      price: "",
-    },
-    resolver: zodResolver(BetFormSchema),
-  });
   const mutation = useSetAuctionBet(auction.main.order_uid);
   const isDisabled = !auction.trading.can_set_bet || mutation.isPending;
   const limitsText = getBetLimitsText(auction);
-  const price = form.watch("price");
-  const priceField = form.register("price", {
-    onChange: () => {
-      setError("");
-      form.clearErrors("price");
 
-      if (mutation.isError || mutation.isSuccess) {
-        mutation.reset();
-      }
-    },
-  });
-
-  const submitBet: SubmitHandler<BetFormValues> = (values) => {
+  function submitBet(values: BetFormValues) {
     const validationError = validateAuctionBet(auction, values.price);
     if (validationError) {
       setError(validationError);
@@ -94,16 +75,29 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
 
     setError("");
     mutation.mutate(values.price);
-  };
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    void form.handleSubmit(submitBet, (errors) => {
-      const message = errors.price?.message;
+    event.preventDefault();
 
-      if (message) {
-        toast.error(message);
-      }
-    })(event);
+    const result = BetFormSchema.safeParse({ price: draftPrice });
+    if (!result.success) {
+      const message = result.error.issues[0]?.message ?? "Укажите сумму ставки";
+      setError(message);
+      toast.error(message);
+      return;
+    }
+
+    submitBet(result.data);
+  }
+
+  function changeDraftPrice(value: string) {
+    setDraftPrice(value);
+    setError("");
+
+    if (mutation.isError || mutation.isSuccess) {
+      mutation.reset();
+    }
   }
 
   return (
@@ -130,17 +124,18 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
             initialBidValue ? String(initialBidValue) : "Введите сумму"
           }
           type="number"
-          {...priceField}
+          value={draftPrice}
+          onChange={(event) => changeDraftPrice(event.target.value)}
         />
       </div>
 
       <div className="min-h-4 text-center text-[11px] text-muted-foreground">
         {getBetStatusText({
-          error: error || form.formState.errors.price?.message || "",
+          error,
           mutationError: mutation.error,
           isError: mutation.isError,
           isSuccess: mutation.isSuccess,
-          price: Number(price) || null,
+          price: Number(draftPrice) || null,
         })}
       </div>
 

@@ -4,6 +4,7 @@ import type { BetItem } from "@/entities/Auction/model/AuctionBets.types"
 import { validateAuctionBet } from "@/entities/Auction/lib/ValidateAuctionBet"
 import { AuctionListRequestSchema } from "@/entities/Auction/model/AuctionList.schema"
 import type { AuctionListItem, AuctionListResponse } from "@/entities/Auction/model/AuctionList.types"
+import { getRouteDistanceKm } from "@/shared/lib/RouteDistance"
 import { auctionBetsMocks } from "./AuctionBets.mock"
 import { auctionDetailMocks } from "./AuctionDetail.mock"
 import { auctionListMock } from "./AuctionList.mock"
@@ -273,12 +274,7 @@ function isAuctionBidder(auction: AuctionListItem) {
 }
 
 function getAuctionDistance(auction: AuctionListItem) {
-  const currentPrice = auction.trading.price?.current
-  const pricePerKm = auction.main.price_per_km
-
-  if (!currentPrice || !pricePerKm) return null
-
-  return Math.round(currentPrice / pricePerKm)
+  return getRouteDistanceKm(auction.route.load.city, auction.route.unload.city)
 }
 
 function getAvailablePrice(auctionType: AuctionListItem["main"]["auc_type"], current: number, step: number | null | undefined) {

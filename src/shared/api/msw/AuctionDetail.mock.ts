@@ -1,5 +1,6 @@
 import type { AuctionDetailResponse } from "@/entities/Auction/model/AuctionDetail.types"
 import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types"
+import { getRouteDistanceKm } from "@/shared/lib/RouteDistance"
 import { auctionListMock } from "./AuctionList.mock"
 
 export const auctionDetailMocks: Record<string, AuctionDetailResponse> = Object.fromEntries(
@@ -24,9 +25,10 @@ function createAuctionDetail(auction: AuctionListItem): AuctionDetailResponse {
     cargo: {
       ...auction.cargo,
       price: String(auction.trading.price?.current ?? 0),
-      distance: auction.main.price_per_km && auction.trading.price?.current
-        ? Math.round(auction.trading.price.current / auction.main.price_per_km)
-        : null,
+      distance: getRouteDistanceKm(
+        auction.route.load.city,
+        auction.route.unload.city,
+      ),
       car: {
         type: auction.cargo.body_type,
         weight: auction.cargo.weight,

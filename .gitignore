@@ -76,6 +76,8 @@ chatgpt-logs/
 
 # Local planning/docs drafts
 *.md
+!README.md
+!AI_USAGE.md
 docs/
 
 # Husky generated internals

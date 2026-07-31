@@ -56,7 +56,9 @@ export function AuctionDetailHeader({ auction }: AuctionDetailHeaderProps) {
               {getAuctionStatusLabel(auction.trading.status)}
             </Badge>
             <Badge
-              className="border-border bg-muted text-muted-foreground"
+              className={getTradingStatusBadgeClass(
+                auction.trading.status_mobile,
+              )}
               variant="outline"
             >
               {getTradingStatusLabel(auction.trading.status_mobile)}
@@ -84,6 +86,16 @@ export function AuctionDetailHeader({ auction }: AuctionDetailHeaderProps) {
       </CardContent>
     </Card>
   );
+}
+
+function getTradingStatusBadgeClass(
+  status: AuctionDetailResponse["trading"]["status_mobile"],
+) {
+  if (status === "Leading")
+    return "border-emerald-200 bg-emerald-50 text-emerald-700";
+  if (status === "Losing") return "border-rose-200 bg-rose-50 text-rose-700";
+
+  return "border-border bg-muted text-muted-foreground";
 }
 
 function InfoItem({

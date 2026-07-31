@@ -7,6 +7,8 @@ export const auctionDetailMocks: Record<string, AuctionDetailResponse> = Object.
 )
 
 function createAuctionDetail(auction: AuctionListItem): AuctionDetailResponse {
+  const yourLastBet = getYourLastBet(auction)
+
   return {
     main: auction.main,
     organizer: auction.organizer,
@@ -52,8 +54,8 @@ function createAuctionDetail(auction: AuctionListItem): AuctionDetailResponse {
         : null,
       your: {
         bet: isBidder(auction),
-        last_bet: isBidder(auction) ? auction.trading.price?.current ?? null : null,
-        last_bet_with_vat: isBidder(auction) ? auction.trading.price?.current ?? null : null,
+        last_bet: yourLastBet,
+        last_bet_with_vat: yourLastBet,
         win: auction.trading.status_mobile === "Winner",
       },
       settings: {
@@ -128,4 +130,19 @@ function getAvailablePrice(auction: AuctionListItem) {
 
 function isBidder(auction: AuctionListItem) {
   return !["NotParticipating", "Unknown"].includes(auction.trading.status_mobile)
+}
+
+function getYourLastBet(auction: AuctionListItem) {
+  if (!isBidder(auction)) return null
+
+  const current = auction.trading.price?.current
+  if (!current) return null
+
+  const step = getStep(current)
+  if (auction.trading.status_mobile !== "Losing") return current
+
+  if (auction.main.auc_type === "Up") return Math.max(1, current - step)
+  if (auction.main.auc_type === "Down") return current + step
+
+  return Math.max(1, current - step)
 }

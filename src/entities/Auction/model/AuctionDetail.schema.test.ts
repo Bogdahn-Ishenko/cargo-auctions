@@ -36,4 +36,26 @@ describe("AuctionDetailResponseSchema", () => {
     expect(details.some((auction) => auction.trading.no_view_cargo_price)).toBe(true)
     expect(details.some((auction) => auction.trading.hide_points_address_and_contacts)).toBe(true)
   })
+
+  it("keeps losing auctions behind the current price", () => {
+    const losingAuction = Object.values(auctionDetailMocks).find(
+      (auction) => auction.trading.status_mobile === "Losing" && auction.trading.price,
+    )
+    const parsed = AuctionDetailResponseSchema.parse(losingAuction)
+
+    expect(parsed).toBeDefined()
+    expect(parsed.trading.your?.last_bet_with_vat).not.toBe(parsed.trading.price?.current)
+
+    if (parsed.main.auc_type === "Up") {
+      expect(parsed.trading.your?.last_bet_with_vat).toBeLessThan(
+        parsed.trading.price?.current ?? 0,
+      )
+    }
+
+    if (parsed.main.auc_type === "Down") {
+      expect(parsed.trading.your?.last_bet_with_vat).toBeGreaterThan(
+        parsed.trading.price?.current ?? 0,
+      )
+    }
+  })
 })

@@ -292,24 +292,24 @@ export function AuctionsListFilters({
           </div>
           <Calendar
             buttonVariant="ghost"
-            className="w-full rounded-xl border border-border bg-card p-2 text-foreground [--cell-size:--spacing(6)] [&_.rdp-button_next]:text-muted-foreground [&_.rdp-button_next]:hover:bg-muted [&_.rdp-button_next]:hover:text-foreground [&_.rdp-button_previous]:text-muted-foreground [&_.rdp-button_previous]:hover:bg-muted [&_.rdp-button_previous]:hover:text-foreground [&_.rdp-nav]:z-10"
+            className="w-full rounded-xl border border-border bg-card p-1.5 text-foreground [--cell-size:--spacing(5)] sm:p-2 sm:[--cell-size:--spacing(6)] [&_.rdp-button_next]:text-muted-foreground [&_.rdp-button_next]:hover:bg-muted [&_.rdp-button_next]:hover:text-foreground [&_.rdp-button_previous]:text-muted-foreground [&_.rdp-button_previous]:hover:bg-muted [&_.rdp-button_previous]:hover:text-foreground [&_.rdp-nav]:z-10"
             classNames={{
-              caption_label: "text-[11px] font-semibold text-foreground",
+              caption_label: "text-[10px] font-semibold text-foreground sm:text-[11px]",
               day_button:
-                "text-[10px] text-foreground hover:bg-muted hover:text-foreground",
-              month: "flex w-full flex-col gap-2",
+                "text-[9px] text-foreground hover:bg-muted hover:text-foreground sm:text-[10px]",
+              month: "flex w-full flex-col gap-1.5 sm:gap-2",
               month_grid: "w-full",
-              months: "relative flex w-full flex-col gap-4",
+              months: "relative flex w-full flex-col gap-2 sm:gap-4",
               outside: "text-muted-foreground/50",
               range_end: "bg-primary text-primary-foreground",
               range_middle: "bg-primary/20 text-primary",
               range_start: "bg-primary text-primary-foreground",
               selected: "bg-primary text-primary-foreground",
               today: "bg-muted text-foreground",
-              week: "mt-1 flex w-full",
+              week: "mt-0.5 flex w-full sm:mt-1",
               weekdays: "flex w-full",
               weekday:
-                "flex h-(--cell-size) flex-1 items-center justify-center text-[9px] text-muted-foreground",
+                "flex h-(--cell-size) flex-1 items-center justify-center text-[8px] text-muted-foreground sm:text-[9px]",
               root: "w-full",
             }}
             locale={ru}

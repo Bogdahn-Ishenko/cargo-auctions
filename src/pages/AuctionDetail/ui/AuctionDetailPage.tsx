@@ -61,6 +61,7 @@ export function AuctionDetailPage() {
                 <AuctionBidsTable
                   bets={betsQuery.data?.bets ?? []}
                   isError={betsQuery.isError}
+                  isHidden={detailQuery.data.trading.hide_bets_history ?? false}
                   isLoading={betsQuery.isLoading}
                 />
               </div>

@@ -14,39 +14,52 @@ import { formatDateTime } from "../lib/FormatDateTime"
 
 interface AuctionBidsTableProps {
   bets: BetItem[]
+  isHidden: boolean
   isError: boolean
   isLoading: boolean
 }
 
-export function AuctionBidsTable({ bets, isError, isLoading }: AuctionBidsTableProps) {
+export function AuctionBidsTable({ bets, isError, isHidden, isLoading }: AuctionBidsTableProps) {
+  const participantsCount = new Set(bets.map((bet) => bet.organization_id)).size
+
   return (
     <Card className="rounded-2xl border-slate-200 bg-white shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between gap-3">
         <CardTitle className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">
           Таблица участников
         </CardTitle>
-        <span className="font-mono text-[11px] text-slate-400">{bets.length} ставок</span>
+        <span className="font-mono text-[11px] text-slate-400">
+          {participantsCount} участников · {bets.length} ставок
+        </span>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
+        {isHidden ? (
+          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
+            <div className="text-sm font-semibold text-slate-700">История ставок скрыта</div>
+            <div className="mt-1 text-xs text-slate-500">Организатор ограничил просмотр истории по этому аукциону</div>
+          </div>
+        ) : null}
+
+        {!isHidden && isLoading ? (
           <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
             <div className="text-sm font-semibold text-slate-700">Загрузка ставок</div>
           </div>
         ) : null}
 
-        {isError ? (
+        {!isHidden && isError ? (
           <div className="rounded-xl border border-rose-200 bg-rose-50 p-8 text-center">
             <div className="text-sm font-semibold text-rose-700">Не удалось загрузить ставки</div>
           </div>
         ) : null}
 
-        {!isLoading && !isError && bets.length ? (
+        {!isHidden && !isLoading && !isError && bets.length ? (
           <Table>
             <TableHeader>
               <TableRow className="border-slate-100 hover:bg-transparent">
                 <TableHead className="text-xs text-slate-500">Место</TableHead>
                 <TableHead className="text-xs text-slate-500">Перевозчик</TableHead>
-                <TableHead className="text-right text-xs text-slate-500">Ставка</TableHead>
+                <TableHead className="text-right text-xs text-slate-500">С НДС</TableHead>
+                <TableHead className="text-right text-xs text-slate-500">Без НДС</TableHead>
                 <TableHead className="text-right text-xs text-slate-500">Время</TableHead>
               </TableRow>
             </TableHeader>
@@ -75,9 +88,15 @@ export function AuctionBidsTable({ bets, isError, isLoading }: AuctionBidsTableP
                       ) : null}
                     </div>
                     <div className="mt-1 text-xs text-slate-500">{bet.contact_name}</div>
+                    {bet.is_rejected && bet.cancel_reason ? (
+                      <div className="mt-1 text-xs text-rose-600">{bet.cancel_reason}</div>
+                    ) : null}
                   </TableCell>
                   <TableCell className="py-3 text-right font-mono text-sm font-bold text-slate-900">
                     {formatPrice(bet.price_with_vat)}
+                  </TableCell>
+                  <TableCell className="py-3 text-right font-mono text-xs text-slate-500">
+                    {formatPrice(bet.price_no_vat)}
                   </TableCell>
                   <TableCell className="py-3 text-right font-mono text-xs text-slate-400">
                     {formatDateTime(bet.created_at)}
@@ -88,7 +107,7 @@ export function AuctionBidsTable({ bets, isError, isLoading }: AuctionBidsTableP
           </Table>
         ) : null}
 
-        {!isLoading && !isError && !bets.length ? (
+        {!isHidden && !isLoading && !isError && !bets.length ? (
           <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
             <div className="text-sm font-semibold text-slate-700">Ставок пока нет</div>
             <div className="mt-1 text-xs text-slate-500">Участники появятся после первой ставки</div>

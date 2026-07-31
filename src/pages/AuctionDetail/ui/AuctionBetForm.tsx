@@ -18,26 +18,43 @@ interface AuctionBetFormProps {
   auction: AuctionDetailResponse;
 }
 
-const BetFormSchema = z.object({
-  price: z.preprocess(
-    (value) => {
-      if (typeof value === "string") return value;
-      if (typeof value === "number") return String(value);
+export const BetFormSchema = z.object({
+  price: z.transform((value, context) => {
+    const rawValue =
+      typeof value === "string"
+        ? value.trim()
+        : typeof value === "number"
+          ? String(value)
+          : "";
 
-      return "";
-    },
-    z
-      .string()
-      .trim()
-      .min(1, "Укажите сумму ставки")
-      .transform(Number)
-      .pipe(
-        z
-          .number({ error: "Укажите сумму ставки" })
-          .finite("Укажите корректную сумму")
-          .positive("Укажите сумму больше 0"),
-      ),
-  ),
+    if (!rawValue) {
+      context.addIssue({
+        code: "custom",
+        message: "Укажите сумму ставки",
+      });
+      return z.NEVER;
+    }
+
+    const price = Number(rawValue.replace(",", "."));
+
+    if (!Number.isFinite(price)) {
+      context.addIssue({
+        code: "custom",
+        message: "Укажите корректную сумму",
+      });
+      return z.NEVER;
+    }
+
+    if (price <= 0) {
+      context.addIssue({
+        code: "custom",
+        message: "Укажите сумму больше 0",
+      });
+      return z.NEVER;
+    }
+
+    return price;
+  }),
 });
 
 type BetFormValues = z.infer<typeof BetFormSchema>;
@@ -59,6 +76,7 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   const priceField = form.register("price", {
     onChange: () => {
       setError("");
+      form.clearErrors("price");
 
       if (mutation.isError || mutation.isSuccess) {
         mutation.reset();

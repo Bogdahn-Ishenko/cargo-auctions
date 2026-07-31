@@ -19,6 +19,9 @@ export function ThemeModeSelect() {
   const [isMounted, setIsMounted] = useState(false);
   const { setTheme, theme } = useTheme();
   const selectedTheme = isMounted ? (theme ?? "system") : "system";
+  const SelectedThemeIcon =
+    themeOptions.find((option) => option.value === selectedTheme)?.icon ??
+    RiComputerLine;
 
   useEffect(() => {
     setIsMounted(true);
@@ -32,9 +35,10 @@ export function ThemeModeSelect() {
     >
       <SelectTrigger
         aria-label="Тема интерфейса"
-        className="w-[132px] border-border bg-card text-foreground focus-visible:border-ring"
+        className="w-10 border-border bg-card px-2 text-foreground focus-visible:border-ring sm:w-[132px] sm:px-2.5 [&_[data-slot=select-value]]:hidden sm:[&_[data-slot=select-value]]:flex"
         size="sm"
       >
+        <SelectedThemeIcon className="size-4 text-muted-foreground sm:hidden" />
         <SelectValue />
       </SelectTrigger>
       <SelectContent position="popper">

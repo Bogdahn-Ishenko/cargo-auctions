@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { RiFilter3Line } from "@remixicon/react";
+import { RiFilter3Line, RiSortAsc } from "@remixicon/react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -34,7 +34,7 @@ export function AuctionsListToolbar({
 }: AuctionsListToolbarProps) {
   return (
     <header className="grid gap-3 border-b border-border bg-card px-5 py-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-heading text-[15px] font-bold leading-tight text-foreground">
             Список аукционов
@@ -46,16 +46,17 @@ export function AuctionsListToolbar({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="sidebar-scrollbar -mx-1 flex max-w-full items-center gap-2 overflow-x-auto px-1 pb-1 whitespace-nowrap sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
           <Button
             aria-expanded={isFiltersOpen}
-            className="border-border bg-card text-foreground hover:bg-muted lg:hidden"
+            aria-label="Фильтры"
+            className="h-8 w-10 shrink-0 border-border bg-card px-0 text-foreground hover:bg-muted sm:w-auto sm:px-3 lg:hidden"
             onClick={onFiltersToggle}
             type="button"
             variant="outline"
           >
             <RiFilter3Line />
-            Фильтры
+            <span className="hidden sm:inline">Фильтры</span>
           </Button>
           <span className="hidden text-[11px] text-muted-foreground md:inline">
             Тема:
@@ -68,7 +69,11 @@ export function AuctionsListToolbar({
             onValueChange={(value) => onSortChange(value as AuctionsListSort)}
             value={sort}
           >
-            <SelectTrigger className="w-[210px] border-border bg-card text-foreground focus-visible:border-ring">
+            <SelectTrigger
+              aria-label="Сортировка"
+              className="w-[168px] shrink-0 border-border bg-card text-foreground focus-visible:border-ring sm:w-[210px]"
+            >
+              <RiSortAsc className="size-4 text-muted-foreground sm:hidden" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent position="popper">

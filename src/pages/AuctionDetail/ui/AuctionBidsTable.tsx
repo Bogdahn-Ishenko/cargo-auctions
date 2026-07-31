@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -36,9 +37,13 @@ export function AuctionBidsTable({
         <CardTitle className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
           Таблица участников
         </CardTitle>
-        <span className="font-mono text-[11px] text-muted-foreground">
-          {participantsCount} участников · {bets.length} ставок
-        </span>
+        {isLoading ? (
+          <Skeleton className="h-4 w-32" />
+        ) : (
+          <span className="font-mono text-[11px] text-muted-foreground">
+            {participantsCount} участников · {bets.length} ставок
+          </span>
+        )}
       </CardHeader>
       <CardContent>
         {isHidden ? (
@@ -52,13 +57,7 @@ export function AuctionBidsTable({
           </div>
         ) : null}
 
-        {!isHidden && isLoading ? (
-          <div className="rounded-xl border border-dashed border-border bg-muted p-8 text-center">
-            <div className="text-sm font-semibold text-foreground">
-              Загрузка ставок
-            </div>
-          </div>
-        ) : null}
+        {!isHidden && isLoading ? <AuctionBidsTableSkeleton /> : null}
 
         {!isHidden && isError ? (
           <div className="rounded-xl border border-rose-200 bg-rose-50 p-8 text-center">
@@ -163,5 +162,53 @@ export function AuctionBidsTable({
         ) : null}
       </CardContent>
     </Card>
+  );
+}
+
+function AuctionBidsTableSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow className="border-border hover:bg-transparent">
+          <TableHead className="text-xs text-muted-foreground">Место</TableHead>
+          <TableHead className="text-xs text-muted-foreground">
+            Перевозчик
+          </TableHead>
+          <TableHead className="text-right text-xs text-muted-foreground">
+            С НДС
+          </TableHead>
+          <TableHead className="text-right text-xs text-muted-foreground">
+            Без НДС
+          </TableHead>
+          <TableHead className="text-right text-xs text-muted-foreground">
+            Время
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: 4 }).map((_, index) => (
+          <TableRow className="border-border" key={index}>
+            <TableCell className="py-3">
+              <Skeleton className="size-6 rounded-full" />
+            </TableCell>
+            <TableCell className="py-3">
+              <div className="grid gap-2">
+                <Skeleton className="h-4 w-44 max-w-full" />
+                <Skeleton className="h-3 w-32 max-w-full" />
+              </div>
+            </TableCell>
+            <TableCell className="py-3">
+              <Skeleton className="ml-auto h-4 w-24" />
+            </TableCell>
+            <TableCell className="py-3">
+              <Skeleton className="ml-auto h-3 w-20" />
+            </TableCell>
+            <TableCell className="py-3">
+              <Skeleton className="ml-auto h-3 w-28" />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

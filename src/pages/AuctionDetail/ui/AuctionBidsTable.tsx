@@ -15,11 +15,12 @@ import { formatDateTime } from "../lib/FormatDateTime"
 interface AuctionBidsTableProps {
   bets: BetItem[]
   isHidden: boolean
+  isPlacesHidden: boolean
   isError: boolean
   isLoading: boolean
 }
 
-export function AuctionBidsTable({ bets, isError, isHidden, isLoading }: AuctionBidsTableProps) {
+export function AuctionBidsTable({ bets, isError, isHidden, isLoading, isPlacesHidden }: AuctionBidsTableProps) {
   const participantsCount = new Set(bets.map((bet) => bet.organization_id)).size
 
   return (
@@ -68,8 +69,9 @@ export function AuctionBidsTable({ bets, isError, isHidden, isLoading }: Auction
                 <TableRow className="border-slate-100 hover:bg-slate-50/70" key={bet.id}>
                   <TableCell className="py-3">
                     <span className="flex size-6 items-center justify-center rounded-full bg-slate-100 font-mono text-xs font-bold text-slate-600">
-                      {bet.place ?? "-"}
+                      {isPlacesHidden ? "-" : bet.place ?? "-"}
                     </span>
+                    {isPlacesHidden ? <div className="mt-1 text-[10px] text-slate-400">Скрыто</div> : null}
                   </TableCell>
                   <TableCell className="py-3">
                     <div className="flex flex-wrap items-center gap-2">

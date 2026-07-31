@@ -70,16 +70,16 @@ const baseAuctionItemsMock: AuctionListItem[] = [
     cargoNum: "00000001063",
     type: "FixPrice",
     status: "Planning",
-    tradingStatus: "NotParticipating",
+    tradingStatus: "Unknown",
     loadCity: "Казань",
     unloadCity: "Уфа",
     cargoName: "Продукты питания",
     weight: 14,
     volume: 60,
     bodyType: "рефрижератор",
-    currentPrice: 62000,
-    pricePerKm: 118,
-    isAvailable: true,
+    currentPrice: null,
+    pricePerKm: null,
+    isAvailable: false,
   }),
   createAuction({
     id: 6,
@@ -296,15 +296,17 @@ function createGeneratedAuction(id: number): AuctionListItem {
   ]
   const bodyTypes = ["тентованный", "фургон", "бортовой", "рефрижератор", "изотермический"]
   const type = pickOption(auctionTypes, id)
+  const status = pickOption(auctionStatuses, id)
   const isPlannedRequest = type === "Request" && id % 3 === 0
-  const currentPrice = isPlannedRequest ? null : 32_000 + id * 2_750
+  const hasTradingPrice = status !== "Planning" && !isPlannedRequest
+  const currentPrice = hasTradingPrice ? 32_000 + id * 2_750 : null
 
   return createAuction({
     id,
     cargoNum: String(1058 + id).padStart(11, "0"),
     type,
-    status: pickOption(auctionStatuses, id),
-    tradingStatus: pickOption(tradingStatuses, id),
+    status,
+    tradingStatus: hasTradingPrice ? pickOption(tradingStatuses, id) : "Unknown",
     loadCity: pickOption(loadCities, id),
     unloadCity: pickOption(unloadCities, id),
     cargoName: pickOption(cargos, id),
@@ -313,7 +315,7 @@ function createGeneratedAuction(id: number): AuctionListItem {
     bodyType: pickOption(bodyTypes, id),
     currentPrice,
     pricePerKm: currentPrice ? 90 + (id % 80) : null,
-    isAvailable: currentPrice !== null && id % 4 !== 0,
+    isAvailable: status === "Auction" && currentPrice !== null && id % 4 !== 0,
   })
 }
 

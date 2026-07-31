@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { auctionBetsMocks } from "@/shared/api/msw/AuctionBets.mock"
+import { auctionDetailMocks } from "@/shared/api/msw/AuctionDetail.mock"
 import { BetListResponseSchema, SetBetRequestSchema } from "./AuctionBets.schema"
 
 describe("BetListResponseSchema", () => {
@@ -23,6 +24,16 @@ describe("BetListResponseSchema", () => {
 
     expect(rejectedBet).toBeDefined()
     expect(rejectedBet?.cancel_reason).toBeTruthy()
+  })
+
+  it("keeps visible current prices consistent with visible bet history", () => {
+    Object.values(auctionDetailMocks).forEach((auction) => {
+      const betList = auctionBetsMocks[auction.main.order_uid]
+
+      if (auction.trading.price?.current && !auction.trading.hide_bets_history) {
+        expect(betList?.bets.length).toBeGreaterThan(0)
+      }
+    })
   })
 })
 

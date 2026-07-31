@@ -20,7 +20,7 @@ export function AuctionsListPagination({
   onPageSizeChange,
 }: AuctionsListPaginationProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-5 py-3">
+    <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-5 py-3">
       <div className="flex flex-wrap items-center gap-3">
         <div className="text-sm text-muted-foreground">
           Страница {meta.current_page} из {meta.last_page}

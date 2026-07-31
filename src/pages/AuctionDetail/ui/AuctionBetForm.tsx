@@ -18,9 +18,17 @@ interface AuctionBetFormProps {
 }
 
 const BetFormSchema = z.object({
-  price: z.coerce
-    .number({ error: "Укажите сумму ставки" })
-    .positive("Укажите сумму больше 0"),
+  price: z
+    .string()
+    .trim()
+    .min(1, "Укажите сумму ставки")
+    .transform(Number)
+    .pipe(
+      z
+        .number({ error: "Укажите сумму ставки" })
+        .finite("Укажите корректную сумму")
+        .positive("Укажите сумму больше 0"),
+    ),
 });
 
 type BetFormValues = z.infer<typeof BetFormSchema>;
@@ -28,9 +36,10 @@ type BetFormInput = z.input<typeof BetFormSchema>;
 
 export function AuctionBetForm({ auction }: AuctionBetFormProps) {
   const [error, setError] = useState("");
+  const initialBidValue = getInitialBidValue(auction);
   const form = useForm<BetFormInput, unknown, BetFormValues>({
     defaultValues: {
-      price: getInitialBidValue(auction),
+      price: "",
     },
     resolver: zodResolver(BetFormSchema),
   });
@@ -82,6 +91,7 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
           inputMode="numeric"
           max={auction.trading.price?.max ?? undefined}
           min={auction.trading.price?.min ?? 1}
+          placeholder={initialBidValue ? String(initialBidValue) : "Введите сумму"}
           step={auction.trading.price?.step ?? 1}
           type="number"
           {...priceField}

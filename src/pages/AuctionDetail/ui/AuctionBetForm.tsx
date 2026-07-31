@@ -1,6 +1,9 @@
-import type { ChangeEvent, FormEvent } from "react"
+import type { FormEvent } from "react"
 import { useState } from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { RiSendPlaneLine } from "@remixicon/react"
+import { useForm, type SubmitHandler } from "react-hook-form"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,38 +17,52 @@ interface AuctionBetFormProps {
   auction: AuctionDetailResponse
 }
 
+const BetFormSchema = z.object({
+  price: z.coerce.number({ error: "Укажите сумму ставки" }).positive("Укажите сумму больше 0"),
+})
+
+type BetFormValues = z.infer<typeof BetFormSchema>
+type BetFormInput = z.input<typeof BetFormSchema>
+
 export function AuctionBetForm({ auction }: AuctionBetFormProps) {
-  const [price, setPrice] = useState(getInitialBidValue(auction))
   const [error, setError] = useState("")
+  const form = useForm<BetFormInput, unknown, BetFormValues>({
+    defaultValues: {
+      price: getInitialBidValue(auction),
+    },
+    resolver: zodResolver(BetFormSchema),
+  })
   const mutation = useSetAuctionBet(auction.main.order_uid)
   const isDisabled = !auction.trading.can_set_bet || mutation.isPending
   const limitsText = getBetLimitsText(auction)
+  const price = form.watch("price")
+  const priceField = form.register("price", {
+    onChange: () => {
+      setError("")
 
-  function changePrice(event: ChangeEvent<HTMLInputElement>) {
-    setPrice(event.target.value)
-    setError("")
+      if (mutation.isError || mutation.isSuccess) {
+        mutation.reset()
+      }
+    },
+  })
 
-    if (mutation.isError || mutation.isSuccess) {
-      mutation.reset()
-    }
-  }
-
-  function submitBet(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
-    const parsedPrice = Number(price)
-    const validationError = validateAuctionBet(auction, parsedPrice)
+  const submitBet: SubmitHandler<BetFormValues> = (values) => {
+    const validationError = validateAuctionBet(auction, values.price)
     if (validationError) {
       setError(validationError)
       return
     }
 
     setError("")
-    mutation.mutate(parsedPrice)
+    mutation.mutate(values.price)
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    void form.handleSubmit(submitBet)(event)
   }
 
   return (
-    <form className="grid gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4" onSubmit={submitBet}>
+    <form className="grid gap-3 rounded-xl border border-slate-800 bg-slate-900 p-4" onSubmit={handleSubmit}>
       <div className="grid gap-2">
         <Label className="text-[10px] font-medium uppercase tracking-widest text-slate-500" htmlFor="bet-price">
           Ваша ставка
@@ -57,16 +74,15 @@ export function AuctionBetForm({ auction }: AuctionBetFormProps) {
           inputMode="numeric"
           max={auction.trading.price?.max ?? undefined}
           min={auction.trading.price?.min ?? 1}
-          onChange={changePrice}
           step={auction.trading.price?.step ?? 1}
           type="number"
-          value={price}
+          {...priceField}
         />
       </div>
 
       <div className="min-h-4 text-center text-[11px] text-slate-500">
         {getBetStatusText({
-          error,
+          error: error || form.formState.errors.price?.message || "",
           mutationError: mutation.error,
           isError: mutation.isError,
           isSuccess: mutation.isSuccess,
@@ -105,17 +121,17 @@ function getInitialBidValue(auction: AuctionDetailResponse) {
   const current = price?.current
   const step = price?.step ?? 0
 
-  if (!current) return ""
+  if (!current) return 0
 
   if (auction.main.auc_type === "Down") {
-    return String(Math.max(1, current - step))
+    return Math.max(1, current - step)
   }
 
   if (auction.main.auc_type === "Up") {
-    return String(current + step)
+    return current + step
   }
 
-  return String(current)
+  return current
 }
 
 function getBetLimitsText(auction: AuctionDetailResponse) {

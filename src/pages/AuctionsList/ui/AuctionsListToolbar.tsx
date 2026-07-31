@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ThemeModeSelect } from "@/features/ThemeMode";
 import type { AuctionsListSort } from "../model/AuctionsListSearch.schema";
 
 interface AuctionsListToolbarProps {
@@ -56,6 +57,10 @@ export function AuctionsListToolbar({
             <RiFilter3Line />
             Фильтры
           </Button>
+          <span className="hidden text-[11px] text-slate-500 md:inline">
+            Тема:
+          </span>
+          <ThemeModeSelect />
           <span className="hidden text-[11px] text-slate-500 sm:inline">
             Сортировка:
           </span>

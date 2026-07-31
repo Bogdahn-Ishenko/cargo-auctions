@@ -22,7 +22,7 @@ import type {
 
 const allCitySelectValue = "__all__";
 const dateInputClassName =
-  "min-w-0 border-slate-700 bg-slate-900 px-2 text-[11px] text-slate-100 [color-scheme:dark] focus-visible:border-blue-500 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-70 [&::-webkit-calendar-picker-indicator]:invert";
+  "date-input-dark min-w-0 border-slate-700 bg-slate-900 px-2 text-[11px] text-slate-100 focus-visible:border-blue-500";
 const filterSelectTriggerClassName =
   "w-full border-slate-700 bg-slate-900 text-slate-100 focus-visible:border-blue-500";
 

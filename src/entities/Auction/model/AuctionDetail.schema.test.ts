@@ -18,4 +18,14 @@ describe("AuctionDetailResponseSchema", () => {
     expect(detailWithoutPrice).toBeDefined()
     expect(AuctionDetailResponseSchema.parse(detailWithoutPrice).trading.price).toBeNull()
   })
+
+  it("accepts trading state and vehicle requirements from detail DTO", () => {
+    const detail = Object.values(auctionDetailMocks).find((auction) => auction.trading.price !== null)
+    const parsed = AuctionDetailResponseSchema.parse(detail)
+
+    expect(parsed.cargo.car?.type).toBeTruthy()
+    expect(parsed.trading.price?.available).toBeTypeOf("number")
+    expect(parsed.trading.settings?.prolong_after_bet).toBeTypeOf("number")
+    expect(parsed.trading.your?.bet).toBeTypeOf("boolean")
+  })
 })

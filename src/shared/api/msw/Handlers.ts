@@ -193,11 +193,22 @@ export const handlers = [
 
     if (auction.trading.price) {
       auction.trading.price.current = parsed.data.price
+      auction.trading.price.available = getAvailablePrice(auction.main.auc_type, parsed.data.price, auction.trading.price.step)
+    }
+    auction.trading.status_mobile = "Leading"
+    auction.trading.your = {
+      bet: true,
+      last_bet: parsed.data.price,
+      last_bet_with_vat: parsed.data.price,
+      win: false,
     }
 
     const listAuction = auctionListMock.data.find((item) => item.main.order_uid === params.auctionUuid)
     if (listAuction?.trading.price) {
       listAuction.trading.price.current = parsed.data.price
+    }
+    if (listAuction) {
+      listAuction.trading.status_mobile = "Leading"
     }
 
     return HttpResponse.json({ ok: true })
@@ -252,4 +263,12 @@ function includesText(value: string, search: string) {
 
 function isAuctionBidder(auction: AuctionListItem) {
   return !["NotParticipating", "Unknown"].includes(auction.trading.status_mobile)
+}
+
+function getAvailablePrice(auctionType: AuctionListItem["main"]["auc_type"], current: number, step: number | null | undefined) {
+  const priceStep = step ?? 0
+  if (auctionType === "Up") return current + priceStep
+  if (auctionType === "Down") return Math.max(1, current - priceStep)
+
+  return current
 }

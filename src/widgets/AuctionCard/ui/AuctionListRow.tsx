@@ -1,5 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { RiArrowRightLine, RiBookmarkFill } from "@remixicon/react";
+import {
+  RiArrowRightLine,
+  RiBookmarkFill,
+  RiRouteLine,
+} from "@remixicon/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePrefetchAuctionDetail } from "@/entities/Auction";
@@ -11,9 +15,13 @@ import { AuctionRoutePreview } from "./AuctionRoutePreview";
 
 interface AuctionListRowProps {
   auction: AuctionListItem;
+  onRoutePreview: (auction: AuctionListItem) => void;
 }
 
-export function AuctionListRow({ auction }: AuctionListRowProps) {
+export function AuctionListRow({
+  auction,
+  onRoutePreview,
+}: AuctionListRowProps) {
   const currentPrice = auction.trading.price?.current ?? null;
   const prefetchAuctionDetail = usePrefetchAuctionDetail();
   const primaryAction = getPrimaryActionLabel(auction);
@@ -80,20 +88,31 @@ export function AuctionListRow({ auction }: AuctionListRowProps) {
               </span>
             </div>
           </div>
-          <Button
-            asChild
-            className="w-full"
-            variant={auction.trading.can_set_bet ? "default" : "outline"}
-          >
-            <Link
-              params={{ auctionUuid: auction.main.order_uid }}
-              search={{ bet: auction.trading.can_set_bet }}
-              to="/auctions/$auctionUuid"
+          <div className="grid gap-2">
+            <Button
+              asChild
+              className="w-full"
+              variant={auction.trading.can_set_bet ? "default" : "outline"}
             >
-              {primaryAction}
-              <RiArrowRightLine />
-            </Link>
-          </Button>
+              <Link
+                params={{ auctionUuid: auction.main.order_uid }}
+                search={{ bet: auction.trading.can_set_bet }}
+                to="/auctions/$auctionUuid"
+              >
+                {primaryAction}
+                <RiArrowRightLine />
+              </Link>
+            </Button>
+            <Button
+              className="w-full border-border bg-card text-foreground hover:bg-muted"
+              onClick={() => onRoutePreview(auction)}
+              type="button"
+              variant="outline"
+            >
+              <RiRouteLine />
+              Маршрут
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

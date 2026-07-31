@@ -1,7 +1,8 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useAuctionsList } from "@/entities/Auction/api/UseAuctionsList";
+import type { AuctionListItem } from "@/entities/Auction/model/AuctionList.types";
 import { buildAuctionsListRequest } from "@/features/AuctionFilters/model/BuildAuctionsListRequest";
 import { useAuctionsListUiStore } from "@/features/AuctionFilters/model/UseAuctionsListUiStore";
 import { getToastErrorMessage } from "@/shared/lib/GetToastErrorMessage";
@@ -10,6 +11,7 @@ import {
   AuctionsListActiveFilters,
   AuctionsListFilters,
 } from "@/widgets/FiltersPanel";
+import { RouteMapPanel } from "@/widgets/RouteMap";
 import { AuctionsListEmptyState } from "./AuctionsListEmptyState";
 import { AuctionsListErrorState } from "./AuctionsListErrorState";
 import { AuctionsListPagination } from "./AuctionsListPagination";
@@ -25,6 +27,8 @@ export function AuctionsListPage() {
   const navigate = useNavigate({ from: "/" });
   const request = buildAuctionsListRequest(search);
   const auctionsQuery = useAuctionsList(request);
+  const [routePreviewAuction, setRoutePreviewAuction] =
+    useState<AuctionListItem | null>(null);
   const { closeFilters, isFiltersOpen, toggleFilters } =
     useAuctionsListUiStore();
 
@@ -172,7 +176,7 @@ export function AuctionsListPage() {
   }
 
   return (
-    <main className="flex h-screen overflow-hidden bg-background text-foreground">
+    <main className="relative flex h-screen overflow-hidden bg-background text-foreground">
       <section className="flex min-h-0 w-full flex-col overflow-hidden lg:flex-row">
         <AuctionsListFilters
           auctionType={search.auc_type}
@@ -250,6 +254,7 @@ export function AuctionsListPage() {
                   <AuctionListRow
                     key={auction.main.order_uid}
                     auction={auction}
+                    onRoutePreview={setRoutePreviewAuction}
                   />
                 ))}
               </div>
@@ -265,6 +270,10 @@ export function AuctionsListPage() {
           ) : null}
         </div>
       </section>
+      <RouteMapPanel
+        auction={routePreviewAuction}
+        onClose={() => setRoutePreviewAuction(null)}
+      />
     </main>
   );
 }

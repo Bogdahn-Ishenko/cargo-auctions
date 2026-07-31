@@ -24,7 +24,7 @@ const allCitySelectValue = "__all__";
 const labelClassName =
   "text-[10px] font-semibold uppercase tracking-widest text-muted-foreground";
 const dateInputClassName =
-  "date-input-dark h-8 min-w-0 border-border bg-card px-1.5 text-[10px] leading-none text-foreground focus-visible:border-ring";
+  "date-input-dark h-8 min-w-0 border-border bg-card px-1.5 text-[10px] font-normal leading-none text-foreground focus-visible:border-ring";
 const filterSelectTriggerClassName =
   "w-full border-border bg-card text-foreground focus-visible:border-ring";
 const numberInputClassName =
@@ -154,7 +154,7 @@ export function AuctionsListFilters({
 
   return (
     <form
-      className={`${isOpen ? "flex" : "hidden"} h-screen max-h-screen flex-col overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground lg:flex lg:w-72 lg:shrink-0 lg:border-b-0 lg:border-r`}
+      className={`${isOpen ? "flex" : "hidden"} h-screen max-h-screen flex-col overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground lg:flex lg:w-[318px] lg:shrink-0 lg:border-b-0 lg:border-r`}
       onSubmit={(event) => {
         event.preventDefault();
         onApply({

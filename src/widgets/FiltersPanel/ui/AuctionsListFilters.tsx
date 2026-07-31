@@ -24,7 +24,7 @@ const allCitySelectValue = "__all__";
 const labelClassName =
   "text-[10px] font-semibold uppercase tracking-widest text-muted-foreground";
 const dateInputClassName =
-  "date-input-dark min-w-0 border-border bg-card px-2 text-[11px] text-foreground focus-visible:border-ring";
+  "date-input-dark h-8 min-w-0 border-border bg-card px-1.5 text-[10px] leading-none text-foreground focus-visible:border-ring";
 const filterSelectTriggerClassName =
   "w-full border-border bg-card text-foreground focus-visible:border-ring";
 const numberInputClassName =
@@ -234,21 +234,49 @@ export function AuctionsListFilters({
           </div>
         </div>
 
-        <div className="grid gap-2">
-          <Label className={labelClassName}>Дата погрузки</Label>
-          <div className="grid min-w-0 grid-cols-2 gap-2">
-            <Input
-              className={dateInputClassName}
-              onChange={(event) => setDraftLoadDateFrom(event.target.value)}
-              type="date"
-              value={draftLoadDateFrom}
-            />
-            <Input
-              className={dateInputClassName}
-              onChange={(event) => setDraftLoadDateTo(event.target.value)}
-              type="date"
-              value={draftLoadDateTo}
-            />
+        <div className="grid gap-3">
+          <Label className={labelClassName}>Даты</Label>
+          <div className="grid gap-2 rounded-xl border border-border bg-card p-2">
+            <div className="grid gap-1.5">
+              <div className="text-[10px] font-medium text-muted-foreground">
+                Погрузка
+              </div>
+              <div className="grid min-w-0 grid-cols-2 gap-1.5">
+                <Input
+                  className={dateInputClassName}
+                  onChange={(event) => setDraftLoadDateFrom(event.target.value)}
+                  type="date"
+                  value={draftLoadDateFrom}
+                />
+                <Input
+                  className={dateInputClassName}
+                  onChange={(event) => setDraftLoadDateTo(event.target.value)}
+                  type="date"
+                  value={draftLoadDateTo}
+                />
+              </div>
+            </div>
+            <div className="grid gap-1.5">
+              <div className="text-[10px] font-medium text-muted-foreground">
+                Выгрузка
+              </div>
+              <div className="grid min-w-0 grid-cols-2 gap-1.5">
+                <Input
+                  className={dateInputClassName}
+                  onChange={(event) =>
+                    setDraftUnloadDateFrom(event.target.value)
+                  }
+                  type="date"
+                  value={draftUnloadDateFrom}
+                />
+                <Input
+                  className={dateInputClassName}
+                  onChange={(event) => setDraftUnloadDateTo(event.target.value)}
+                  type="date"
+                  value={draftUnloadDateTo}
+                />
+              </div>
+            </div>
           </div>
           <Calendar
             buttonVariant="ghost"
@@ -387,24 +415,6 @@ export function AuctionsListFilters({
               ))}
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="grid gap-2">
-          <Label className={labelClassName}>Дата выгрузки</Label>
-          <div className="grid min-w-0 grid-cols-2 gap-2">
-            <Input
-              className={dateInputClassName}
-              onChange={(event) => setDraftUnloadDateFrom(event.target.value)}
-              type="date"
-              value={draftUnloadDateFrom}
-            />
-            <Input
-              className={dateInputClassName}
-              onChange={(event) => setDraftUnloadDateTo(event.target.value)}
-              type="date"
-              value={draftUnloadDateTo}
-            />
-          </div>
         </div>
 
         <div className="grid gap-2">
